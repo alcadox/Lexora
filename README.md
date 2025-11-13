@@ -97,7 +97,7 @@ git merge desarrollo
 git push origin main
 ```
 
-> Normalmente este paso lo hará **Alex** (coordinador del proyecto).
+> Normalmente este paso lo hará **Alex** (dueño del repositorio de git).
 
 ---
 
