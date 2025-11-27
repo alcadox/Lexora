@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace Lexora
 {
@@ -18,7 +19,10 @@ namespace Lexora
         {
             InitializeComponent();
             conectarPrueba();
+            
         }
+
+        
 
         private void conectarPrueba()
         {
@@ -30,7 +34,26 @@ namespace Lexora
                 MessageBox.Show("Conexión exitosa a la base de datos.");
             }
         }
+        
 
+        private void label1_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void lblPWolvidado_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnOmitir_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnIniciarSesion_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
