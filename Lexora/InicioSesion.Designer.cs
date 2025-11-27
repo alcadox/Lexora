@@ -131,6 +131,7 @@
             this.lblCrearCuenta.Size = new System.Drawing.Size(195, 13);
             this.lblCrearCuenta.TabIndex = 7;
             this.lblCrearCuenta.Text = "¿No tienes cuenta? Crear cuenta";
+            this.lblCrearCuenta.Click += new System.EventHandler(this.lblCrearCuenta_Click);
             // 
             // btnIniciarSesion
             // 

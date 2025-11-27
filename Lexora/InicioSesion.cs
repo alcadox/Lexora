@@ -55,5 +55,10 @@ namespace Lexora
         {
 
         }
+
+        private void lblCrearCuenta_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

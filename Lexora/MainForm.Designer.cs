@@ -141,6 +141,7 @@
             this.listViewArchivos.Size = new System.Drawing.Size(942, 572);
             this.listViewArchivos.TabIndex = 0;
             this.listViewArchivos.UseCompatibleStateImageBehavior = false;
+            this.listViewArchivos.SelectedIndexChanged += new System.EventHandler(this.listViewArchivos_SelectedIndexChanged);
             // 
             // MainForm
             // 

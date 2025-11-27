@@ -17,5 +17,10 @@ namespace Lexora
             InitializeComponent();
             
         }
+
+        private void listViewArchivos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
