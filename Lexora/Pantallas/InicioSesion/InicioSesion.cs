@@ -22,7 +22,6 @@ namespace Lexora
 
         private void conectarPrueba()
         {
-
             string connectionString = ConfigurationManager.ConnectionStrings["conexionDBLexora"].ConnectionString;
 
             using (var conn = new NpgsqlConnection(connectionString))

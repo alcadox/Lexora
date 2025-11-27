@@ -90,16 +90,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InicioSesion.cs">
+    <Compile Include="Pantallas\InicioSesion\InicioSesion.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InicioSesion.Designer.cs">
+    <Compile Include="Pantallas\InicioSesion\InicioSesion.Designer.cs">
       <DependentUpon>InicioSesion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pantallas\Menu\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pantallas\Menu\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="InicioSesion.resx">
+    <EmbeddedResource Include="Pantallas\InicioSesion\InicioSesion.resx">
       <DependentUpon>InicioSesion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pantallas\Menu\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
