@@ -48,7 +48,8 @@ namespace Lexora
 
         private void btnOmitir_Click(object sender, EventArgs e)
         {
-
+            MainForm ventanaPrincipal = new MainForm();
+            ventanaPrincipal.Show();
         }
 
         private void btnIniciarSesion_Click(object sender, EventArgs e)
