@@ -29,31 +29,8 @@ namespace Lexora
         public InicioSesion()
         {
             InitializeComponent();
-            conectarPrueba();
             
         }
-
-
-
-        private void conectarPrueba()
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["conexionDBLexora"].ConnectionString;
-
-            try
-            {
-                using (var conn = new NpgsqlConnection(connectionString))
-                {
-                    conn.Open(); // aquí sí comprueba de verdad
-                    MessageBox.Show("Conexión exitosa a la base de datos.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al conectar con la base de datos: " + ex.Message);
-            }
-        }
-
-
 
         private void label1_Click(object sender, EventArgs e)
         {
