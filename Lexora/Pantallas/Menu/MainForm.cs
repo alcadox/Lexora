@@ -138,8 +138,16 @@ namespace Lexora
 
         private void btnSesion_Click(object sender, EventArgs e)
         {
-            InicioSesion ventanaLogin = new InicioSesion();
-            ventanaLogin.Show();
+            using (InicioSesion ventanaLogin = new InicioSesion())
+            {
+                var resultado = ventanaLogin.ShowDialog();
+
+                if (resultado == DialogResult.OK && ventanaLogin.LoginCorrecto)
+                {
+                    string nombre = ventanaLogin.NombreUsuario;
+                    btnSesion.Text = "Hola, " + nombre;
+                }
+            }
         }
     }
 }
