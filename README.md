@@ -6,9 +6,9 @@
 
 ## 👥 Equipo de desarrollo
 
-- **Alex** 🧩 – Coordinador del proyecto  
-- **Avril** 💻 – Desarrollo front-end  
-- **Aaron** ⚙️ – Lógica y backend
+- **Alex** 🧩
+- **Avril** 💻 
+- **Aaron** ⚙️
 
 ---
 
