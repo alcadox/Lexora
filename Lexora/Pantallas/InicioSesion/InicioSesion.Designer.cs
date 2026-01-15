@@ -157,7 +157,6 @@
             this.Name = "InicioSesion";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Iniciar Sesión - Lexora";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.PanelPrincipal.ResumeLayout(false);
             this.PanelPrincipal.PerformLayout();
             this.ResumeLayout(false);

@@ -85,7 +85,7 @@
             this.btnIA.ForeColor = System.Drawing.Color.White;
             this.btnIA.Location = new System.Drawing.Point(5, 6);
             this.btnIA.Name = "btnIA";
-            this.btnIA.Size = new System.Drawing.Size(32, 23);
+            this.btnIA.Size = new System.Drawing.Size(39, 23);
             this.btnIA.TabIndex = 1;
             this.btnIA.Text = "IA";
             this.btnIA.UseVisualStyleBackColor = false;
@@ -100,6 +100,7 @@
             this.btnFiltros.TabIndex = 0;
             this.btnFiltros.Text = "Filtros";
             this.btnFiltros.UseVisualStyleBackColor = false;
+            this.btnFiltros.Click += new System.EventHandler(this.btnFiltros_Click);
             // 
             // btnSesion
             // 
@@ -136,7 +137,7 @@
             // 
             this.btnDiscoPrincipal.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(141)))), ((int)(((byte)(227)))));
             this.btnDiscoPrincipal.ForeColor = System.Drawing.Color.White;
-            this.btnDiscoPrincipal.Location = new System.Drawing.Point(11, 31);
+            this.btnDiscoPrincipal.Location = new System.Drawing.Point(14, 19);
             this.btnDiscoPrincipal.Name = "btnDiscoPrincipal";
             this.btnDiscoPrincipal.Size = new System.Drawing.Size(133, 28);
             this.btnDiscoPrincipal.TabIndex = 1;
@@ -203,7 +204,6 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Lexora";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.panelTop.ResumeLayout(false);
             this.panelBuscador.ResumeLayout(false);
             this.panelBuscador.PerformLayout();

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Lexora.Pantallas.Menu.Filtros;
 
 namespace Lexora
 {
@@ -148,6 +149,13 @@ namespace Lexora
                     btnSesion.Text = "Hola, " + nombre;
                 }
             }
+        }
+
+        // cuando pulse el botón de filtros se abrirá una nueva ventana de filtros
+        private void btnFiltros_Click(object sender, EventArgs e)
+        {
+            MainFiltros ventanaFiltros = new MainFiltros();
+            ventanaFiltros.ShowDialog();
         }
     }
 }

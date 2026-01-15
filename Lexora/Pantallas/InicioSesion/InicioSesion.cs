@@ -45,7 +45,9 @@ namespace Lexora
         private void btnOmitir_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            MainForm mainForm = new MainForm();
+            mainForm.Show();
+            this.Hide();
         }
 
         private void btnIniciarSesion_Click(object sender, EventArgs e)

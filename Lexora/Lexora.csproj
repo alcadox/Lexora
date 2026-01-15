@@ -96,6 +96,12 @@
     <Compile Include="Pantallas\InicioSesion\InicioSesion.Designer.cs">
       <DependentUpon>InicioSesion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pantallas\Menu\Filtros\MainFiltros.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pantallas\Menu\Filtros\MainFiltros.Designer.cs">
+      <DependentUpon>MainFiltros.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pantallas\Menu\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +112,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Pantallas\InicioSesion\InicioSesion.resx">
       <DependentUpon>InicioSesion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pantallas\Menu\Filtros\MainFiltros.resx">
+      <DependentUpon>MainFiltros.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pantallas\Menu\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
