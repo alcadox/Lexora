@@ -10,10 +10,14 @@ namespace Lexora
     {
         string rutaActual = "";
 
+        // instancia de la clase filtros
+        ClaseFiltros filtros = new ClaseFiltros();
+
         public MainForm()
         {
             InitializeComponent();
             CargarVolumenPrincipal();
+               
         }
 
 
@@ -38,6 +42,10 @@ namespace Lexora
 
         private void btnDiscoPrincipal_Click(object sender, EventArgs e)
         {
+
+            string texto = string.Join("\n", filtros.TiposArchivo.Select(f => $"{f.Key}: {f.Value}"));
+            MessageBox.Show(texto);
+
             CargarCarpetas(rutaActual);
         }
 
@@ -154,7 +162,7 @@ namespace Lexora
         // cuando pulse el botón de filtros se abrirá una nueva ventana de filtros
         private void btnFiltros_Click(object sender, EventArgs e)
         {
-            MainFiltros ventanaFiltros = new MainFiltros();
+            MainFiltros ventanaFiltros = new MainFiltros(filtros);
             ventanaFiltros.ShowDialog();
         }
     }

@@ -96,6 +96,7 @@
     <Compile Include="Pantallas\InicioSesion\InicioSesion.Designer.cs">
       <DependentUpon>InicioSesion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pantallas\Menu\Filtros\ClaseFiltros.cs" />
     <Compile Include="Pantallas\Menu\Filtros\MainFiltros.cs">
       <SubType>Form</SubType>
     </Compile>

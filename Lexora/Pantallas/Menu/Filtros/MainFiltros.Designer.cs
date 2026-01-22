@@ -38,10 +38,18 @@
             this.tabPageFiltroSeguridad = new System.Windows.Forms.TabPage();
             this.tabPageFiltroEstructura = new System.Windows.Forms.TabPage();
             this.panelPrincipal = new System.Windows.Forms.Panel();
-            this.botonCerrar = new System.Windows.Forms.Button();
             this.botonAplicar = new System.Windows.Forms.Button();
+            this.botonCerrar = new System.Windows.Forms.Button();
+            this.lblTituloFiltroTipoArchivo = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.checkedListBoxTipoArchivo = new System.Windows.Forms.CheckedListBox();
             this.tabControl.SuspendLayout();
+            this.tabPageFiltroTipoArchivo.SuspendLayout();
             this.panelPrincipal.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -63,6 +71,9 @@
             // 
             // tabPageFiltroTipoArchivo
             // 
+            this.tabPageFiltroTipoArchivo.Controls.Add(this.panel3);
+            this.tabPageFiltroTipoArchivo.Controls.Add(this.panel2);
+            this.tabPageFiltroTipoArchivo.Controls.Add(this.panel1);
             this.tabPageFiltroTipoArchivo.Location = new System.Drawing.Point(4, 25);
             this.tabPageFiltroTipoArchivo.Name = "tabPageFiltroTipoArchivo";
             this.tabPageFiltroTipoArchivo.Padding = new System.Windows.Forms.Padding(3);
@@ -146,16 +157,6 @@
             this.panelPrincipal.Size = new System.Drawing.Size(782, 456);
             this.panelPrincipal.TabIndex = 1;
             // 
-            // botonCerrar
-            // 
-            this.botonCerrar.Location = new System.Drawing.Point(594, 417);
-            this.botonCerrar.Name = "botonCerrar";
-            this.botonCerrar.Size = new System.Drawing.Size(83, 26);
-            this.botonCerrar.TabIndex = 1;
-            this.botonCerrar.Text = "Cerrar";
-            this.botonCerrar.UseVisualStyleBackColor = true;
-            this.botonCerrar.Click += new System.EventHandler(this.botonCerrar_Click);
-            // 
             // botonAplicar
             // 
             this.botonAplicar.Location = new System.Drawing.Point(683, 417);
@@ -166,6 +167,71 @@
             this.botonAplicar.UseVisualStyleBackColor = true;
             this.botonAplicar.Click += new System.EventHandler(this.botonAplicar_Click);
             // 
+            // botonCerrar
+            // 
+            this.botonCerrar.Location = new System.Drawing.Point(594, 417);
+            this.botonCerrar.Name = "botonCerrar";
+            this.botonCerrar.Size = new System.Drawing.Size(83, 26);
+            this.botonCerrar.TabIndex = 1;
+            this.botonCerrar.Text = "Cerrar";
+            this.botonCerrar.UseVisualStyleBackColor = true;
+            this.botonCerrar.Click += new System.EventHandler(this.botonCerrar_Click);
+            // 
+            // lblTituloFiltroTipoArchivo
+            // 
+            this.lblTituloFiltroTipoArchivo.AutoSize = true;
+            this.lblTituloFiltroTipoArchivo.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloFiltroTipoArchivo.Location = new System.Drawing.Point(3, 11);
+            this.lblTituloFiltroTipoArchivo.Name = "lblTituloFiltroTipoArchivo";
+            this.lblTituloFiltroTipoArchivo.Size = new System.Drawing.Size(245, 27);
+            this.lblTituloFiltroTipoArchivo.TabIndex = 0;
+            this.lblTituloFiltroTipoArchivo.Text = "Filtros por tipo de archivo:";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lblTituloFiltroTipoArchivo);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(744, 52);
+            this.panel1.TabIndex = 2;
+            // 
+            // panel2
+            // 
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel2.Location = new System.Drawing.Point(375, 55);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(372, 313);
+            this.panel2.TabIndex = 3;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.checkedListBoxTipoArchivo);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel3.Location = new System.Drawing.Point(3, 55);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(373, 313);
+            this.panel3.TabIndex = 4;
+            // 
+            // checkedListBoxTipoArchivo
+            // 
+            this.checkedListBoxTipoArchivo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.checkedListBoxTipoArchivo.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkedListBoxTipoArchivo.FormattingEnabled = true;
+            this.checkedListBoxTipoArchivo.Items.AddRange(new object[] {
+            "Documentos (pdf, docx, txt...)",
+            "Imágenes (png, jpg, svg...)",
+            "Vídeos (mp4, avi...)",
+            "Audio (mp3, wav...)",
+            "Comprimidos (zip, rar, 7z...)",
+            "Instaladores (exe, msi...)",
+            "Código (java, js, py...)",
+            "Cifrados"});
+            this.checkedListBoxTipoArchivo.Location = new System.Drawing.Point(8, 12);
+            this.checkedListBoxTipoArchivo.Name = "checkedListBoxTipoArchivo";
+            this.checkedListBoxTipoArchivo.Size = new System.Drawing.Size(358, 288);
+            this.checkedListBoxTipoArchivo.TabIndex = 2;
+            // 
             // MainFiltros
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -175,7 +241,11 @@
             this.Name = "MainFiltros";
             this.Text = "Filtros";
             this.tabControl.ResumeLayout(false);
+            this.tabPageFiltroTipoArchivo.ResumeLayout(false);
             this.panelPrincipal.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -194,5 +264,10 @@
         private System.Windows.Forms.TabPage tabPageFiltroEstructura;
         private System.Windows.Forms.Button botonAplicar;
         private System.Windows.Forms.Button botonCerrar;
+        private System.Windows.Forms.Label lblTituloFiltroTipoArchivo;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.CheckedListBox checkedListBoxTipoArchivo;
     }
 }
