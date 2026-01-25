@@ -7,8 +7,9 @@ namespace Lexora.Pantallas.Menu.Filtros
     public partial class MainFiltros : Form
     {
 
-        ClaseFiltros filtros;
+        public event EventHandler FiltrosAplicados; // evento para notificar que se aplicaron los filtros
 
+        ClaseFiltros filtros;
 
         public MainFiltros(ClaseFiltros filtrosTraidos)
         {
@@ -20,6 +21,9 @@ namespace Lexora.Pantallas.Menu.Filtros
         // ========== CARGAR FILTROS ==========
         private void cargarFiltros()
         {
+            botonAplicar.Enabled = false; // Desactivar botón aplicar al cargar filtros
+
+            // Recorrer el diccionario de TiposArchivo y marcar los ítems correspondientes en el CheckedListBox
             foreach (var item in filtros.TiposArchivo)
             {
                 // Si el valor es false, no marcar
@@ -36,6 +40,8 @@ namespace Lexora.Pantallas.Menu.Filtros
         // ========== GUARDAR FILTROS ==========
         private void botonAplicar_Click(object sender, EventArgs e)
         {
+            botonAplicar.Enabled = false; // Desactivar botón aplicar al guardar filtros
+
             /* ========== APLICAR FILTROS TIPO ARCHIVO ==========
             / 1. Limpiar los filtros actuales para evitar acumular filtros antiguos
             / 2. Agregar el tipo de archivo seleccionado al diccionario de filtros
@@ -50,7 +56,8 @@ namespace Lexora.Pantallas.Menu.Filtros
                 filtros.TiposArchivo[item.ToString()] = true;
             }
 
-
+            // Disparar el evento para notificar que los filtros han sido aplicados
+            FiltrosAplicados?.Invoke(this, EventArgs.Empty);
         }
 
         private void botonCerrar_Click(object sender, EventArgs e)
@@ -58,7 +65,13 @@ namespace Lexora.Pantallas.Menu.Filtros
             Close();
         }
 
+        private void checkedListBoxTipoArchivo_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
 
-
+            if (botonAplicar.Enabled == false)
+            {
+                botonAplicar.Enabled = true; // Activar botón aplicar al cambiar cualquier ítem
+            }
+        }
     }
 }

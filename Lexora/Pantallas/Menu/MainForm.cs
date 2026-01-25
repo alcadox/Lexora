@@ -163,7 +163,65 @@ namespace Lexora
         private void btnFiltros_Click(object sender, EventArgs e)
         {
             MainFiltros ventanaFiltros = new MainFiltros(filtros);
+
+            // Suscribirse al evento para actualizar la lista al aplicar filtros
+            ventanaFiltros.FiltrosAplicados += (s, args) =>
+            {
+                // Llamar al método para aplicar los filtros seleccionados
+                AplicarFiltrosTipoArchivo();
+            };
+
             ventanaFiltros.ShowDialog();
         }
+
+        // ========================= MÉTODO PARA APLICAR FILTROS DE TIPO DE ARCHIVO A TODO EL DISCO =========================
+        private void AplicarFiltrosTipoArchivo()
+        {
+            try
+            {
+                // Limpiamos la lista antes de mostrar los resultados filtrados
+                listViewArchivos.Items.Clear();
+
+                // Obtener todas las unidades disponibles
+                DriveInfo[] drives = DriveInfo.GetDrives().Where(d => d.IsReady).ToArray();
+
+                foreach (var drive in drives)
+                {
+                    string rutaRaiz = drive.RootDirectory.FullName;
+
+                    // Recorrer todas las carpetas y archivos de la unidad
+                    foreach (string archivo in Directory.GetFiles(rutaRaiz, "*.*", SearchOption.AllDirectories))
+                    {
+                        FileInfo info = new FileInfo(archivo);
+
+                        // Aplicar filtro de tipo de archivo
+                        if (!filtros.TiposArchivo.ContainsKey(info.Extension.ToLower()) ||
+                            !filtros.TiposArchivo[info.Extension.ToLower()])
+                        {
+                            continue; // Saltar si el tipo de archivo no está activo
+                        }
+
+                        // Si pasa el filtro, agregar al listView
+                        ListViewItem item = new ListViewItem(info.FullName);
+                        item.SubItems.Add(info.Extension + " (Archivo)");
+                        item.SubItems.Add(FormatearTamaño(info.Length));
+                        item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
+
+                        listViewArchivos.Items.Add(item);
+                    }
+                }
+
+                MessageBox.Show("Filtros aplicados a todo el disco.");
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                MessageBox.Show("No tienes permiso para acceder a algunas carpetas del sistema.\n" + uaEx.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error aplicando filtros: " + ex.Message);
+            }
+        }
+
     }
 }
