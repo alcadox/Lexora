@@ -14,9 +14,26 @@ namespace Lexora.Pantallas.Menu.Filtros
         {
             InitializeComponent();
             filtros = filtrosTraidos;
+            cargarFiltros();
         }
 
-        // ========== CARGAR FILTROS GUARDADOS ==========
+        // ========== CARGAR FILTROS ==========
+        private void cargarFiltros()
+        {
+            foreach (var item in filtros.TiposArchivo)
+            {
+                // Si el valor es false, no marcar
+                if (!item.Value) continue;
+
+                // Buscar el índice del ítem en el CheckedListBox
+                int index = checkedListBoxTipoArchivo.Items.IndexOf(item.Key);
+
+                // Marcar el ítem si se encuentra
+                if (index >= 0) checkedListBoxTipoArchivo.SetItemChecked(index, true);
+            }
+        }
+
+        // ========== GUARDAR FILTROS ==========
         private void botonAplicar_Click(object sender, EventArgs e)
         {
             /* ========== APLICAR FILTROS TIPO ARCHIVO ==========
