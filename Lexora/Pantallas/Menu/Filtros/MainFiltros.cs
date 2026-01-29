@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Lexora.Pantallas.Menu.Filtros
@@ -24,8 +25,8 @@ namespace Lexora.Pantallas.Menu.Filtros
         {
             botonAplicar.Enabled = false; // Desactivar botón aplicar al cargar filtros
 
-            // Recorrer el diccionario de TiposArchivo y marcar los ítems correspondientes en el CheckedListBox
-            foreach (var item in filtros.TiposArchivo)
+            // Recorrer el diccionario de TiposArchivoSinFormatear y marcar los ítems correspondientes en el CheckedListBox
+            foreach (var item in filtros.TiposArchivoSinFormatear)
             {
                 // Si el valor es false, no marcar
                 if (!item.Value) continue;
@@ -50,12 +51,20 @@ namespace Lexora.Pantallas.Menu.Filtros
             */
 
             filtros.TiposArchivo.Clear(); // 1. Limpiar los filtros actuales (limpia el diccionario)
+            filtros.TiposArchivoSinFormatear.Clear(); // Limpiar también el diccionario sin formatear
+
             foreach (var item in checkedListBoxTipoArchivo.CheckedItems)
             {
                 // 2. Agregar el tipo de archivo seleccionado al diccionario de filtros
                 // se guarda: < "documento" , true > por ejemplo
-                filtros.TiposArchivo[item.ToString()] = true;
+                string nombreFiltro = item.ToString();
+
+                // Guardamos en ambos para mantener consistencia
+                filtros.TiposArchivo[nombreFiltro] = true;
+                filtros.TiposArchivoSinFormatear[nombreFiltro] = true;
             }
+
+            filtros.FormatearTipoArchivo(); // Formatear los tipos de archivo para que estén en el formato correcto
 
             // Disparar el evento para notificar que los filtros han sido aplicados
             FiltrosAplicados?.Invoke(this, EventArgs.Empty);
