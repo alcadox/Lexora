@@ -45,11 +45,25 @@
             this.panelPrincipal = new System.Windows.Forms.Panel();
             this.botonAplicar = new System.Windows.Forms.Button();
             this.botonCerrar = new System.Windows.Forms.Button();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.labelTipoDeFecha = new System.Windows.Forms.Label();
+            this.checkedListBoxTiposfecha = new System.Windows.Forms.CheckedListBox();
+            this.monthCalendarFecha = new System.Windows.Forms.MonthCalendar();
+            this.buttonAceptarFecha = new System.Windows.Forms.Button();
+            this.buttonLimpiarFecha = new System.Windows.Forms.Button();
+            this.lblInfoFecha = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPageFiltroTipoArchivo.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.tabPageFiltroFecha.SuspendLayout();
             this.panelPrincipal.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.panel7.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -150,6 +164,9 @@
             // 
             // tabPageFiltroFecha
             // 
+            this.tabPageFiltroFecha.Controls.Add(this.panel7);
+            this.tabPageFiltroFecha.Controls.Add(this.panel5);
+            this.tabPageFiltroFecha.Controls.Add(this.panel4);
             this.tabPageFiltroFecha.Location = new System.Drawing.Point(4, 25);
             this.tabPageFiltroFecha.Name = "tabPageFiltroFecha";
             this.tabPageFiltroFecha.Size = new System.Drawing.Size(750, 371);
@@ -233,6 +250,107 @@
             this.botonCerrar.UseVisualStyleBackColor = true;
             this.botonCerrar.Click += new System.EventHandler(this.botonCerrar_Click);
             // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.lblInfoFecha);
+            this.panel4.Controls.Add(this.labelTipoDeFecha);
+            this.panel4.Controls.Add(this.panel6);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(750, 61);
+            this.panel4.TabIndex = 0;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.checkedListBoxTiposfecha);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel5.Location = new System.Drawing.Point(0, 61);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(346, 310);
+            this.panel5.TabIndex = 1;
+            // 
+            // panel6
+            // 
+            this.panel6.Location = new System.Drawing.Point(343, 87);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(404, 281);
+            this.panel6.TabIndex = 2;
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.buttonLimpiarFecha);
+            this.panel7.Controls.Add(this.buttonAceptarFecha);
+            this.panel7.Controls.Add(this.monthCalendarFecha);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel7.Location = new System.Drawing.Point(346, 61);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(404, 310);
+            this.panel7.TabIndex = 0;
+            this.panel7.Paint += new System.Windows.Forms.PaintEventHandler(this.panel7_Paint);
+            // 
+            // labelTipoDeFecha
+            // 
+            this.labelTipoDeFecha.AutoSize = true;
+            this.labelTipoDeFecha.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTipoDeFecha.Location = new System.Drawing.Point(3, 17);
+            this.labelTipoDeFecha.Name = "labelTipoDeFecha";
+            this.labelTipoDeFecha.Size = new System.Drawing.Size(227, 27);
+            this.labelTipoDeFecha.TabIndex = 3;
+            this.labelTipoDeFecha.Text = "Filtros por tipo de fecha:";
+            this.labelTipoDeFecha.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // checkedListBoxTiposfecha
+            // 
+            this.checkedListBoxTiposfecha.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.checkedListBoxTiposfecha.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkedListBoxTiposfecha.FormattingEnabled = true;
+            this.checkedListBoxTiposfecha.Items.AddRange(new object[] {
+            "Fec. de creación",
+            "Fec. de última edición",
+            "Fec. de último acceso",
+            "Antigüedad del archivo",
+            "Archivos creados",
+            "Archivos modificado sen los últimos __ días"});
+            this.checkedListBoxTiposfecha.Location = new System.Drawing.Point(8, 6);
+            this.checkedListBoxTiposfecha.Name = "checkedListBoxTiposfecha";
+            this.checkedListBoxTiposfecha.Size = new System.Drawing.Size(329, 288);
+            this.checkedListBoxTiposfecha.TabIndex = 3;
+            // 
+            // monthCalendarFecha
+            // 
+            this.monthCalendarFecha.Location = new System.Drawing.Point(80, 12);
+            this.monthCalendarFecha.MaxSelectionCount = 365;
+            this.monthCalendarFecha.Name = "monthCalendarFecha";
+            this.monthCalendarFecha.TabIndex = 0;
+            // 
+            // buttonAceptarFecha
+            // 
+            this.buttonAceptarFecha.Location = new System.Drawing.Point(284, 55);
+            this.buttonAceptarFecha.Name = "buttonAceptarFecha";
+            this.buttonAceptarFecha.Size = new System.Drawing.Size(75, 23);
+            this.buttonAceptarFecha.TabIndex = 1;
+            this.buttonAceptarFecha.Text = "Aceptar";
+            this.buttonAceptarFecha.UseVisualStyleBackColor = true;
+            // 
+            // buttonLimpiarFecha
+            // 
+            this.buttonLimpiarFecha.Location = new System.Drawing.Point(284, 84);
+            this.buttonLimpiarFecha.Name = "buttonLimpiarFecha";
+            this.buttonLimpiarFecha.Size = new System.Drawing.Size(75, 23);
+            this.buttonLimpiarFecha.TabIndex = 2;
+            this.buttonLimpiarFecha.Text = "Borrar";
+            this.buttonLimpiarFecha.UseVisualStyleBackColor = true;
+            // 
+            // lblInfoFecha
+            // 
+            this.lblInfoFecha.AutoSize = true;
+            this.lblInfoFecha.Location = new System.Drawing.Point(423, 28);
+            this.lblInfoFecha.Name = "lblInfoFecha";
+            this.lblInfoFecha.Size = new System.Drawing.Size(260, 16);
+            this.lblInfoFecha.TabIndex = 3;
+            this.lblInfoFecha.Text = "Selecciona un filtro de fecha a la izquierda.";
+            // 
             // MainFiltros
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -246,7 +364,12 @@
             this.panel3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.tabPageFiltroFecha.ResumeLayout(false);
             this.panelPrincipal.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel7.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -270,5 +393,15 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.CheckedListBox checkedListBoxTipoArchivo;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Label labelTipoDeFecha;
+        private System.Windows.Forms.CheckedListBox checkedListBoxTiposfecha;
+        private System.Windows.Forms.MonthCalendar monthCalendarFecha;
+        private System.Windows.Forms.Button buttonAceptarFecha;
+        private System.Windows.Forms.Button buttonLimpiarFecha;
+        private System.Windows.Forms.Label lblInfoFecha;
     }
 }

@@ -6,6 +6,7 @@ namespace Lexora.Pantallas.Menu.Filtros
 {
     public partial class MainFiltros : Form
     {
+        private string filtroFechaSeleccionado = null;
 
         public event EventHandler FiltrosAplicados; // evento para notificar que se aplicaron los filtros
 
@@ -73,5 +74,58 @@ namespace Lexora.Pantallas.Menu.Filtros
                 botonAplicar.Enabled = true; // Activar botón aplicar al cambiar cualquier ítem
             }
         }
+
+        private void panel7_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+        }
+
+        //=================FILTRO FECHA=====================
+
+        // Evento para manejar el cambio de selección en el CheckedListBox de tipos de fecha
+        private void checkedListBoxTiposfecha_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (checkedListBoxTiposfecha.SelectedItem == null) return;
+
+            filtroFechaSeleccionado = checkedListBoxTiposfecha.SelectedItem.ToString();
+            lblInfoFecha.Text = "Seleccionando fecha para: " + filtroFechaSeleccionado;
+        }
+
+        // Evento para manejar el clic en el botón "Aceptar" para guardar el filtro de fecha
+        private void btnAceptarFecha_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(filtroFechaSeleccionado))
+            {
+                MessageBox.Show("Selecciona primero un tipo de filtro de fecha.");
+                return;
+            }
+
+            DateTime desde = monthCalendarFecha.SelectionRange.Start.Date;
+            DateTime hasta = monthCalendarFecha.SelectionRange.End.Date;
+
+            // Aquí SOLO lo dejamos guardado “en memoria” por ahora:
+            // (Luego lo conectamos con ClaseFiltros)
+            MessageBox.Show($"Guardado para '{filtroFechaSeleccionado}': {desde:dd/MM/yyyy} - {hasta:dd/MM/yyyy}");
+
+            botonAplicar.Enabled = true; // ya hay cambios para aplicar
+        }
+
+        //BOTÓN LIMPIAR FECHA
+        private void btnLimpiarFecha_Click(object sender, EventArgs e)
+        {
+            filtroFechaSeleccionado = null;
+            lblInfoFecha.Text = "Selecciona un filtro de fecha a la izquierda.";
+            botonAplicar.Enabled = true;
+        }
+
+
+
+
+
+
     }
 }
