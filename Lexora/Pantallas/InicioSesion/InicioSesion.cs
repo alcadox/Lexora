@@ -1,18 +1,20 @@
-﻿using System;
+﻿using MailKit.Security;
+using MimeKit;
+using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
-using System.Security.Cryptography;
-using System.Text;
-using Npgsql;
-
+using MailKit.Net.Smtp;
+using Lexora.Pantallas.InicioSesion;
 
 
 
@@ -75,54 +77,115 @@ namespace Lexora
                 LoginUsuario(email, password);
             }
         }
+
         private void RegistrarUsuario(string email, string password)
         {
-            //Nombre: uso el propio email como nombre
-            string nombre = email;
+            // 1. Preparar los datos
+            string nombre = email; // Usar el email como nombre 
             string passwordHash = CalcularHashSHA256(password);
 
-            string connectionString = ConfigurationManager
-                .ConnectionStrings["conexionDBLexora"]
-                .ConnectionString;
+            // Generar Token
+            string token = Guid.NewGuid().ToString().Substring(0, 6).ToUpper();
 
+            // 2. Intentar enviar el correo primero (para no guardar nada si falla el envío)
             try
             {
-                using (var conn = new NpgsqlConnection(connectionString))
-                {
-                    conn.Open();
-
-                    string sql = @"INSERT INTO usuario (nombre, email, contrasena_hash, activo)
-                           VALUES (@nombre, @email, @hash, @activo);";
-
-                    using (var cmd = new NpgsqlCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@nombre", nombre);
-                        cmd.Parameters.AddWithValue("@email", email);
-                        cmd.Parameters.AddWithValue("@hash", passwordHash);
-                        cmd.Parameters.AddWithValue("@activo", true);
-
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-
-                MessageBox.Show("Usuario registrado correctamente en la base de datos.", "Éxito",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                //después de crear cuenta, volvemos al modo LOGIN
-                modoRegistro = false;
-                btnIniciarSesion.Text = "Iniciar sesión";
-                lblEmail.Text = "E-mail";
-                lblContrasena.Text = "Contraseña";
-            }
-            catch (PostgresException ex) when (ex.SqlState == "23505") // unique_violation
-            {
-                MessageBox.Show("Ya existe un usuario con ese e-mail.", "Aviso",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ComprobarCorreoElectronico(email, token);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar el usuario: " + ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No se pudo enviar el correo de verificación. Inténtalo de nuevo.\nError: " + ex.Message,
+                                "Error de envío", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Salimos, no abrimos el formulario ni guardamos en BD
+            }
+
+            // 3. Abrir cuadro de diálogo para verificar
+            // Pasamos el token al otro formulario para que compare
+            FormVerificacion formularioVerificar = new FormVerificacion(email, token);
+            var resultado = formularioVerificar.ShowDialog();
+
+            // 4. Si el usuario puso el código bien (DialogResult.OK) -> GUARDAMOS EN BD
+            if (resultado == DialogResult.OK)
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["conexionDBLexora"].ConnectionString;
+
+                try
+                {
+                    using (var conn = new NpgsqlConnection(connectionString))
+                    {
+                        conn.Open();
+
+                        // SQL: No insertamos 'id_usuario' (es SERIAL) ni 'fecha_registro' (es DEFAULT NOW)
+                        // Insertamos 'activo' como TRUE directamente porque ya pasó la verificación
+                        string sql = @"INSERT INTO usuario (nombre, email, contrasena_hash, activo)
+                               VALUES (@nombre, @email, @hash, @activo);";
+
+                        using (var cmd = new NpgsqlCommand(sql, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@nombre", nombre);
+                            cmd.Parameters.AddWithValue("@email", email);
+                            cmd.Parameters.AddWithValue("@hash", passwordHash);
+                            cmd.Parameters.AddWithValue("@activo", true); // <--- IMPORTANTE: True
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    MessageBox.Show("Cuenta verificada y creada con éxito. Ya puedes iniciar sesión.",
+                                    "Registro completado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Reseteamos la interfaz para volver al modo Login
+                    modoRegistro = false;
+                    btnIniciarSesion.Text = "Iniciar sesión";
+                    lblEmail.Text = "E-mail";
+                    lblContrasena.Text = "Contraseña";
+
+                    // Limpiamos los campos para que escriba sus datos de nuevo al loguearse
+                    emailUser.Text = "";
+                    pwUser.Text = "";
+                }
+                catch (PostgresException ex) when (ex.SqlState == "23505") // Código de error para UNIQUE VIOLATION
+                {
+                    MessageBox.Show("Ese correo electrónico ya está registrado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ocurrió un error al guardar en la base de datos: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // Si cerró la ventana o falló la validación
+                MessageBox.Show("Registro cancelado. La cuenta no se ha creado.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void ComprobarCorreoElectronico(string email, string token)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Lexora", "lexora.confirmacion@gmail.com"));
+            message.To.Add(new MailboxAddress("", email));
+            message.Subject = "Verifica tu cuenta de Lexora";
+
+            var bodyBuilder = new BodyBuilder(); 
+
+
+            bodyBuilder.HtmlBody = $@"
+            <div style='font-family: Arial; padding: 20px; border: 1px solid #ddd;'>
+                <h1>Bienvenido a Lexora</h1>
+                <p>Para completar tu registro, introduce el siguiente código en la aplicación:</p>
+                <h2 style='color: #2c3e50; letter-spacing: 5px;'>{token}</h2>
+                <p>Si no has solicitado este código, ignora este mensaje.</p>
+            </div>";
+
+            message.Body = bodyBuilder.ToMessageBody();
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                client.Authenticate("lexora.confirmacion@gmail.com", "edlq nuou lbkc gajd");
+                client.Send(message);
+                client.Disconnect(true);
             }
         }
 
@@ -194,8 +257,17 @@ namespace Lexora
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al validar el usuario: " + ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ex.Message.Contains("connect"))
+                {
+                    MessageBox.Show("No se ha podido conectar con la base de datos. " +
+                        "Comprueba tu conexión a Internet.", "Error de conexión",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Error al validar el usuario: " + ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
