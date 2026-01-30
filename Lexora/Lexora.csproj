@@ -115,6 +115,12 @@
     <Compile Include="Pantallas\InicioSesion\InicioSesion.Designer.cs">
       <DependentUpon>InicioSesion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pantallas\InicioSesion\RegistrarCuenta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pantallas\InicioSesion\RegistrarCuenta.Designer.cs">
+      <DependentUpon>RegistrarCuenta.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pantallas\Menu\Filtros\ClaseFiltros.cs" />
     <Compile Include="Pantallas\Menu\Filtros\MainFiltros.cs">
       <SubType>Form</SubType>
@@ -135,6 +141,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Pantallas\InicioSesion\InicioSesion.resx">
       <DependentUpon>InicioSesion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pantallas\InicioSesion\RegistrarCuenta.resx">
+      <DependentUpon>RegistrarCuenta.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pantallas\Menu\Filtros\MainFiltros.resx">
       <DependentUpon>MainFiltros.cs</DependentUpon>
