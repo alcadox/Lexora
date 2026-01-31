@@ -12,13 +12,17 @@ namespace Lexora.Pantallas.Menu.Filtros
         public Dictionary<string, bool> TiposArchivo { get; set; }
         // guarda el diccionario sin formatear
         public Dictionary<string, bool> TiposArchivoSinFormatear { get; set; }
-
+        public Dictionary<string, (DateTime? Desde, DateTime? Hasta)> Fechas { get; set; }
 
 
         public ClaseFiltros()
         {
             TiposArchivo = new Dictionary<string, bool>();
             TiposArchivoSinFormatear = new Dictionary<string, bool>();
+            
+            //filtros de tiempo
+            Fechas = new Dictionary<string, (DateTime? Desde, DateTime? Hasta)>();
+
         }
 
         public void FormatearTipoArchivo()

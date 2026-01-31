@@ -12,7 +12,7 @@ namespace Lexora.Pantallas.Menu.Filtros
         public event EventHandler FiltrosAplicados; // evento para notificar que se aplicaron los filtros
 
         ClaseFiltros filtros;
-
+        private bool bloqueandoChecksFecha = false;
         public MainFiltros(ClaseFiltros filtrosTraidos)
         {
             InitializeComponent();
@@ -37,6 +37,21 @@ namespace Lexora.Pantallas.Menu.Filtros
                 // Marcar el ítem si se encuentra
                 if (index >= 0) checkedListBoxTipoArchivo.SetItemChecked(index, true);
             }
+
+            // Inicializar el filtro de fecha
+            monthCalendarFecha.Enabled = false;
+            buttonAceptarFecha.Enabled = false;
+            buttonLimpiarFecha.Enabled = false;
+            lblInfoFecha.Text = "Selecciona un filtro de fecha a la izquierda.";
+
+
+            // Si ya hay fechas guardadas, avisamos (sin abrir el calendario)
+            if (filtros.Fechas != null && filtros.Fechas.Count > 0)
+            {
+                lblInfoFecha.Text = "Hay filtros de fecha guardados. Selecciona uno para ver/editar.";
+            }
+
+
         }
 
         // ========== GUARDAR FILTROS ==========
@@ -95,18 +110,39 @@ namespace Lexora.Pantallas.Menu.Filtros
 
         //=================FILTRO FECHA=====================
 
-        // Evento para manejar el cambio de selección en el CheckedListBox de tipos de fecha
+        //ANTERIOR MÉTODO DE SELECCIÓN DE FILTRO FECHA
         private void checkedListBoxTiposfecha_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Ya no se usa. El flujo correcto va por ItemCheck.
+
+            /*
             if (checkedListBoxTiposfecha.SelectedItem == null) return;
 
+            // 1) Guardamos cuál filtro estamos editando
             filtroFechaSeleccionado = checkedListBoxTiposfecha.SelectedItem.ToString();
-            lblInfoFecha.Text = "Seleccionando fecha para: " + filtroFechaSeleccionado;
+
+            // 2) Bloqueamos el checklist para que no cambien a otro mientras eligen fecha
+            checkedListBoxTiposfecha.Enabled = false;
+
+            // 3) Habilitamos calendario y botones
+            monthCalendarFecha.Enabled = true;
+            buttonAceptarFecha.Enabled = true;
+            buttonLimpiarFecha.Enabled = true;
+
+            lblInfoFecha.Text = "Selecciona rango para: " + filtroFechaSeleccionado;
+
+            // 4) Si ya había fecha guardada para ese filtro, la precargamos en el calendario
+            if (filtros.Fechas.TryGetValue(filtroFechaSeleccionado, out var rango) &&
+                rango.Desde.HasValue && rango.Hasta.HasValue)
+            {
+                monthCalendarFecha.SelectionRange = new SelectionRange(rango.Desde.Value, rango.Hasta.Value);
+            }*/
         }
 
-        // Evento para manejar el clic en el botón "Aceptar" para guardar el filtro de fecha
-        private void btnAceptarFecha_Click(object sender, EventArgs e)
+        //BOTÓN ACEPTAR FECHA
+        private void buttonAceptarFecha_Click(object sender, EventArgs e)
         {
+
             if (string.IsNullOrEmpty(filtroFechaSeleccionado))
             {
                 MessageBox.Show("Selecciona primero un tipo de filtro de fecha.");
@@ -116,24 +152,81 @@ namespace Lexora.Pantallas.Menu.Filtros
             DateTime desde = monthCalendarFecha.SelectionRange.Start.Date;
             DateTime hasta = monthCalendarFecha.SelectionRange.End.Date;
 
-            // Aquí SOLO lo dejamos guardado “en memoria” por ahora:
-            // (Luego lo conectamos con ClaseFiltros)
-            MessageBox.Show($"Guardado para '{filtroFechaSeleccionado}': {desde:dd/MM/yyyy} - {hasta:dd/MM/yyyy}");
+            // Guardar el rango para ESE filtro
+            filtros.Fechas[filtroFechaSeleccionado] = (desde, hasta);
 
-            botonAplicar.Enabled = true; // ya hay cambios para aplicar
+            // Desbloquear UI para poder elegir otro filtro
+            monthCalendarFecha.Enabled = false;
+            buttonAceptarFecha.Enabled = false;
+            buttonLimpiarFecha.Enabled = false;
+
+            checkedListBoxTiposfecha.Enabled = true;
+
+            // Info y habilitar aplicar
+            lblInfoFecha.Text = $"Guardado: {filtroFechaSeleccionado} ({desde:dd/MM/yyyy} - {hasta:dd/MM/yyyy})";
+            filtroFechaSeleccionado = null;
+
+            botonAplicar.Enabled = true; // MUY IMPORTANTE: si no, "Aplicar" se queda gris
         }
 
         //BOTÓN LIMPIAR FECHA
-        private void btnLimpiarFecha_Click(object sender, EventArgs e)
+        private void buttonLimpiarFecha_Click(object sender, EventArgs e)
         {
-            filtroFechaSeleccionado = null;
+            // Si estábamos editando un filtro, borramos su rango
+            if (!string.IsNullOrEmpty(filtroFechaSeleccionado))
+                filtros.Fechas.Remove(filtroFechaSeleccionado);
+
+            // Reset UI
+            monthCalendarFecha.Enabled = false;
+            buttonAceptarFecha.Enabled = false;
+            buttonLimpiarFecha.Enabled = false;
+
+            checkedListBoxTiposfecha.ClearSelected();
+            checkedListBoxTiposfecha.Enabled = true;
+
             lblInfoFecha.Text = "Selecciona un filtro de fecha a la izquierda.";
+            filtroFechaSeleccionado = null;
             botonAplicar.Enabled = true;
         }
 
+        private void checkedListBoxTiposfecha_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (bloqueandoChecksFecha) return;
 
+            BeginInvoke(new Action(() =>
+            {
+                if (e.NewValue != CheckState.Checked) return;
 
+                bloqueandoChecksFecha = true;
+                try
+                {
+                    for (int i = 0; i < checkedListBoxTiposfecha.Items.Count; i++)
+                    {
+                        if (i != e.Index)
+                            checkedListBoxTiposfecha.SetItemChecked(i, false);
+                    }
+                }
+                finally
+                {
+                    bloqueandoChecksFecha = false;
+                }
 
+                filtroFechaSeleccionado = checkedListBoxTiposfecha.Items[e.Index].ToString();
+                checkedListBoxTiposfecha.Enabled = false;
+
+                monthCalendarFecha.Enabled = true;
+                buttonAceptarFecha.Enabled = true;
+                buttonLimpiarFecha.Enabled = true;
+
+                lblInfoFecha.Text = "Selecciona rango para: " + filtroFechaSeleccionado;
+
+                if (filtros.Fechas.TryGetValue(filtroFechaSeleccionado, out var rango) &&
+                    rango.Desde.HasValue && rango.Hasta.HasValue)
+                {
+                    monthCalendarFecha.SelectionRange = new SelectionRange(rango.Desde.Value, rango.Hasta.Value);
+                }
+            }));
+        }
 
 
     }

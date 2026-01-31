@@ -139,6 +139,89 @@ namespace Lexora
         }
 
 
+
+
+
+
+
+
+
+
+        //========================= MÉTODO PARA CUMPLIR FILTROS DE FECHA =========================
+
+
+        private bool CumpleFiltrosFecha(FileInfo info)
+        {
+            // Si no hay filtros de fecha guardados, cumple siempre
+            if (filtros.Fechas == null || filtros.Fechas.Count == 0)
+                return true;
+
+            foreach (var kv in filtros.Fechas)
+            {
+                string nombreFiltro = kv.Key ?? "";
+                DateTime? desde = kv.Value.Desde?.Date;
+                DateTime? hasta = kv.Value.Hasta?.Date;
+
+                // Si por lo que sea está incompleto, lo ignoramos
+                if (!desde.HasValue || !hasta.HasValue)
+                    continue;
+
+                // Normalizamos para comparar sin tildes / mayúsculas
+                string key = nombreFiltro.ToLower()
+                    .Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u").Replace("ü", "u");
+
+                DateTime valorAComparar;
+
+                // Mapeo de filtro → propiedad real del archivo
+                if (key.Contains("creacion") || key.Contains("archivos creados"))
+                {
+                    valorAComparar = info.CreationTime.Date;
+                }
+                else if (key.Contains("fec. de ultima edicion") || key.Contains("modificado"))
+                {
+                    valorAComparar = info.LastWriteTime.Date;
+                }
+                else if (key.Contains("fec. de ultimo acceso") || key.Contains("ultimo acceso"))
+                {
+                    valorAComparar = info.LastAccessTime.Date;
+                }
+                else if (key.Contains("antiguedad"))
+                {
+                    // Por ahora lo tratamos como rango por FECHA DE CREACIÓN (lo más coherente con tu calendario)
+                    valorAComparar = info.CreationTime.Date;
+                }
+                else
+                {
+                    // Si llega un filtro desconocido, no filtramos por él
+                    continue;
+                }
+
+                // Regla: tiene que estar dentro del rango (AND entre filtros activos)
+                if (valorAComparar < desde.Value || valorAComparar > hasta.Value)
+                    return false;
+            }
+
+            return true;
+        }
+
+
+
+
+        //======================fin de filtros de fecha========================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         private void listViewArchivos_DoubleClick(object sender, EventArgs e)
         {
             if (listViewArchivos.SelectedItems.Count == 0)
@@ -263,8 +346,13 @@ namespace Lexora
                     FileInfo info = new FileInfo(archivo);
                     string ext = info.Extension.ToLower();
 
+
+                    //+ filtros de fecha
+                    bool cumpleTipo = !tieneFiltrosActivos || extensionesPermitidas.Contains(ext);
+                    bool cumpleFecha = CumpleFiltrosFecha(info);
+
                     // Si no hay filtros, mostramos todo. Si hay filtros, solo lo que coincida.
-                    if (!tieneFiltrosActivos || extensionesPermitidas.Contains(ext))
+                    if ((!tieneFiltrosActivos || extensionesPermitidas.Contains(ext)) && cumpleTipo && cumpleFecha)
                     {
                         ListViewItem item = new ListViewItem(info.Name);
                         item.SubItems.Add(info.Extension + " (Archivo)");
@@ -287,6 +375,5 @@ namespace Lexora
                 listViewArchivos.EndUpdate();
             }
         }
-
     }
 }
