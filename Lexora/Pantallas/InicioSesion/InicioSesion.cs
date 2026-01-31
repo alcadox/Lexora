@@ -1,19 +1,9 @@
-﻿using MailKit.Security;
-using MimeKit;
-using Npgsql;
+﻿using Npgsql;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MailKit.Net.Smtp;
 using Lexora.Pantallas.InicioSesion;
 
 
@@ -22,21 +12,21 @@ namespace Lexora
 {
     public partial class InicioSesion : Form
     {
-        //true = estamos creando cuenta; false = iniciando sesión
-        private bool modoRegistro = false;
+        private bool desdeMainForm = false;
 
-        //para que MainForm sepa si el login fue correcto y el nombre del usuario
-        public bool LoginCorrecto { get; private set; } = false;
-        public string NombreUsuario { get; private set; } = "";
+        //para que MainForm sepa el nombre del usuario
+        public string NombreUsuario { get; private set; }
+
+
         public InicioSesion()
         {
             InitializeComponent();
             
         }
-
-        private void label1_Click(object sender, EventArgs e)
+        public InicioSesion(bool desdeMainForm)
         {
-
+            InitializeComponent();
+            this.desdeMainForm = desdeMainForm;
         }
 
         private void lblPWolvidado_Click(object sender, EventArgs e)
@@ -47,6 +37,13 @@ namespace Lexora
         private void btnOmitir_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+
+            if (this.desdeMainForm)
+            {
+                this.Close();
+                return;
+            }
+
             MainForm mainForm = new MainForm();
             mainForm.Show();
             this.Hide();
@@ -66,127 +63,7 @@ namespace Lexora
                 return;
             }
 
-            if (modoRegistro)
-            {
-                //estamos en modo CREAR CUENTA
-                RegistrarUsuario(email, password);
-            }
-            else
-            {
-                //estamos en modo LOGIN
-                LoginUsuario(email, password);
-            }
-        }
-
-        private void RegistrarUsuario(string email, string password)
-        {
-            // 1. Preparar los datos
-            string nombre = email; // Usar el email como nombre 
-            string passwordHash = CalcularHashSHA256(password);
-
-            // Generar Token
-            string token = Guid.NewGuid().ToString().Substring(0, 6).ToUpper();
-
-            // 2. Intentar enviar el correo primero (para no guardar nada si falla el envío)
-            try
-            {
-                ComprobarCorreoElectronico(email, token);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("No se pudo enviar el correo de verificación. Inténtalo de nuevo.\nError: " + ex.Message,
-                                "Error de envío", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return; // Salimos, no abrimos el formulario ni guardamos en BD
-            }
-
-            // 3. Abrir cuadro de diálogo para verificar
-            // Pasamos el token al otro formulario para que compare
-            FormVerificacion formularioVerificar = new FormVerificacion(email, token);
-            var resultado = formularioVerificar.ShowDialog();
-
-            // 4. Si el usuario puso el código bien (DialogResult.OK) -> GUARDAMOS EN BD
-            if (resultado == DialogResult.OK)
-            {
-                string connectionString = ConfigurationManager.ConnectionStrings["conexionDBLexora"].ConnectionString;
-
-                try
-                {
-                    using (var conn = new NpgsqlConnection(connectionString))
-                    {
-                        conn.Open();
-
-                        // SQL: No insertamos 'id_usuario' (es SERIAL) ni 'fecha_registro' (es DEFAULT NOW)
-                        // Insertamos 'activo' como TRUE directamente porque ya pasó la verificación
-                        string sql = @"INSERT INTO usuario (nombre, email, contrasena_hash, activo)
-                               VALUES (@nombre, @email, @hash, @activo);";
-
-                        using (var cmd = new NpgsqlCommand(sql, conn))
-                        {
-                            cmd.Parameters.AddWithValue("@nombre", nombre);
-                            cmd.Parameters.AddWithValue("@email", email);
-                            cmd.Parameters.AddWithValue("@hash", passwordHash);
-                            cmd.Parameters.AddWithValue("@activo", true); // <--- IMPORTANTE: True
-
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-
-                    MessageBox.Show("Cuenta verificada y creada con éxito. Ya puedes iniciar sesión.",
-                                    "Registro completado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Reseteamos la interfaz para volver al modo Login
-                    modoRegistro = false;
-                    btnIniciarSesion.Text = "Iniciar sesión";
-                    lblEmail.Text = "E-mail";
-                    lblContrasena.Text = "Contraseña";
-
-                    // Limpiamos los campos para que escriba sus datos de nuevo al loguearse
-                    emailUser.Text = "";
-                    pwUser.Text = "";
-                }
-                catch (PostgresException ex) when (ex.SqlState == "23505") // Código de error para UNIQUE VIOLATION
-                {
-                    MessageBox.Show("Ese correo electrónico ya está registrado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Ocurrió un error al guardar en la base de datos: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            else
-            {
-                // Si cerró la ventana o falló la validación
-                MessageBox.Show("Registro cancelado. La cuenta no se ha creado.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void ComprobarCorreoElectronico(string email, string token)
-        {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Lexora", "lexora.confirmacion@gmail.com"));
-            message.To.Add(new MailboxAddress("", email));
-            message.Subject = "Verifica tu cuenta de Lexora";
-
-            var bodyBuilder = new BodyBuilder(); 
-
-
-            bodyBuilder.HtmlBody = $@"
-            <div style='font-family: Arial; padding: 20px; border: 1px solid #ddd;'>
-                <h1>Bienvenido a Lexora</h1>
-                <p>Para completar tu registro, introduce el siguiente código en la aplicación:</p>
-                <h2 style='color: #2c3e50; letter-spacing: 5px;'>{token}</h2>
-                <p>Si no has solicitado este código, ignora este mensaje.</p>
-            </div>";
-
-            message.Body = bodyBuilder.ToMessageBody();
-
-            using (var client = new SmtpClient())
-            {
-                client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-                client.Authenticate("lexora.confirmacion@gmail.com", "edlq nuou lbkc gajd");
-                client.Send(message);
-                client.Disconnect(true);
-            }
+            LoginUsuario(email, password);
         }
 
         private void LoginUsuario(string email, string password)
@@ -221,6 +98,7 @@ namespace Lexora
 
                             bool activo = reader.GetBoolean(reader.GetOrdinal("activo"));
                             string hashDb = reader.GetString(reader.GetOrdinal("contrasena_hash"));
+                            NombreUsuario = reader.GetString(reader.GetOrdinal("nombre"));
 
                             if (!activo)
                             {
@@ -236,21 +114,21 @@ namespace Lexora
                                 return;
                             }
 
+
+
                             //LOGIN CORRECTO
-                            LoginCorrecto = true;
-
-                            //nombre a mostrar: todo lo que hay antes de @
-                            string nombreMostrado;
-                            int pos = email.IndexOf('@');
-                            if (pos > 0)
-                                nombreMostrado = email.Substring(0, pos);
-                            else
-                                nombreMostrado = reader.GetString(reader.GetOrdinal("nombre"));
-
-                            NombreUsuario = nombreMostrado;
-
                             this.DialogResult = DialogResult.OK;
-                            this.Close();
+
+                            if (desdeMainForm) // si se abrió desde MainForm
+                            {
+                                this.Close();
+                            }
+                            else // si se abrió de forma independiente (al inicio)
+                            {
+                                MainForm mainForm = new MainForm(NombreUsuario);
+                                mainForm.Show();
+                            }
+                            this.Hide();
                         }
                     }
                 }
@@ -275,11 +153,20 @@ namespace Lexora
 
         private void lblCrearCuenta_Click(object sender, EventArgs e)
         {
+            // Abrir formulario de registro
+            RegistrarCuenta registrarCuentaForm = new RegistrarCuenta();
 
-            lblEmail.Text = "Nuevo E-mail:";
-            lblContrasena.Text = "Nueva Contraseña:";
-            modoRegistro = true;
-            btnIniciarSesion.Text = "Crear cuenta";
+            // Ocultar el formulario de inicio de sesión mientras se muestra el de registro
+            Hide();
+
+            // Mostrar el formulario de registro como un cuadro de diálogo modal
+            var result = registrarCuentaForm.ShowDialog();
+
+            // Después de cerrar el formulario de registro, mostrar nuevamente el formulario de inicio de sesión
+            if (result == DialogResult.OK || result == DialogResult.Cancel)
+            {
+                Show();
+            }
 
         }
         private string CalcularHashSHA256(string texto)

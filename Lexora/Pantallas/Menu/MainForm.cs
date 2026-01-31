@@ -13,17 +13,30 @@ namespace Lexora
 
         // instancia de la clase filtros
         ClaseFiltros filtros = new ClaseFiltros();
+        string nombreUsuario = "";
 
         public MainForm()
         {
             InitializeComponent();
             CargarVolumenPrincipal();
-               
+        }
+
+        public MainForm(string nombreUsuario)
+        {
+            InitializeComponent();
+            CargarVolumenPrincipal();
+            this.nombreUsuario = nombreUsuario;
         }
 
 
         private void CargarVolumenPrincipal()
         {
+
+            if (!string.IsNullOrEmpty(nombreUsuario))
+            {
+                btnSesion.Text = "Bienvenido, " + nombreUsuario;
+                btnSesion.Enabled = false;
+            }
             // Seleccionamos el volumen del sistema (donde está Windows)
             var drive = DriveInfo.GetDrives()
                                  .FirstOrDefault(d => d.IsReady && d.RootDirectory.FullName == Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)));
@@ -158,14 +171,23 @@ namespace Lexora
 
         private void btnSesion_Click(object sender, EventArgs e)
         {
-            using (InicioSesion ventanaLogin = new InicioSesion())
+            Hide();
+            using (InicioSesion ventanaLogin = new InicioSesion(true))
             {
                 var resultado = ventanaLogin.ShowDialog();
 
-                if (resultado == DialogResult.OK && ventanaLogin.LoginCorrecto)
+                if (resultado == DialogResult.OK)
                 {
-                    string nombre = ventanaLogin.NombreUsuario;
-                    btnSesion.Text = "Hola, " + nombre;
+                    if (!string.IsNullOrEmpty(ventanaLogin.NombreUsuario))
+                    {
+                        btnSesion.Text = "Bienvenido, " + ventanaLogin.NombreUsuario;
+                        btnSesion.Enabled = false;
+                    }
+                    Show();
+                }
+                else
+                {
+                    Show();
                 }
             }
         }

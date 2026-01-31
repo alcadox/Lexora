@@ -29,16 +29,16 @@
         private void InitializeComponent()
         {
             this.PanelPrincipal = new System.Windows.Forms.Panel();
+            this.textBoxVerificarContrasena = new System.Windows.Forms.TextBox();
+            this.labelVerificarContrasena = new System.Windows.Forms.Label();
+            this.textBoxNombreUsuario = new System.Windows.Forms.TextBox();
+            this.labeNombreUsuario = new System.Windows.Forms.Label();
             this.btnCrearCuenta = new System.Windows.Forms.Button();
             this.lblIniciarSesion = new System.Windows.Forms.Label();
             this.textBoxContrasena = new System.Windows.Forms.TextBox();
             this.textBoxemailUser = new System.Windows.Forms.TextBox();
             this.lblContrasena = new System.Windows.Forms.Label();
             this.lblEmail = new System.Windows.Forms.Label();
-            this.textBoxNombreUsuario = new System.Windows.Forms.TextBox();
-            this.labeNombreUsuario = new System.Windows.Forms.Label();
-            this.textBoxVerificarContrasena = new System.Windows.Forms.TextBox();
-            this.labelVerificarContrasena = new System.Windows.Forms.Label();
             this.PanelPrincipal.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,6 +63,44 @@
             this.PanelPrincipal.Size = new System.Drawing.Size(359, 459);
             this.PanelPrincipal.TabIndex = 1;
             // 
+            // textBoxVerificarContrasena
+            // 
+            this.textBoxVerificarContrasena.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxVerificarContrasena.Location = new System.Drawing.Point(65, 283);
+            this.textBoxVerificarContrasena.Name = "textBoxVerificarContrasena";
+            this.textBoxVerificarContrasena.Size = new System.Drawing.Size(220, 22);
+            this.textBoxVerificarContrasena.TabIndex = 12;
+            // 
+            // labelVerificarContrasena
+            // 
+            this.labelVerificarContrasena.AutoSize = true;
+            this.labelVerificarContrasena.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVerificarContrasena.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.labelVerificarContrasena.Location = new System.Drawing.Point(62, 256);
+            this.labelVerificarContrasena.Name = "labelVerificarContrasena";
+            this.labelVerificarContrasena.Size = new System.Drawing.Size(148, 16);
+            this.labelVerificarContrasena.TabIndex = 11;
+            this.labelVerificarContrasena.Text = "Verificar Contraseña";
+            // 
+            // textBoxNombreUsuario
+            // 
+            this.textBoxNombreUsuario.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxNombreUsuario.Location = new System.Drawing.Point(65, 73);
+            this.textBoxNombreUsuario.Name = "textBoxNombreUsuario";
+            this.textBoxNombreUsuario.Size = new System.Drawing.Size(220, 22);
+            this.textBoxNombreUsuario.TabIndex = 10;
+            // 
+            // labeNombreUsuario
+            // 
+            this.labeNombreUsuario.AutoSize = true;
+            this.labeNombreUsuario.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labeNombreUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
+            this.labeNombreUsuario.Location = new System.Drawing.Point(62, 51);
+            this.labeNombreUsuario.Name = "labeNombreUsuario";
+            this.labeNombreUsuario.Size = new System.Drawing.Size(142, 16);
+            this.labeNombreUsuario.TabIndex = 9;
+            this.labeNombreUsuario.Text = "Nombre de Usuario";
+            // 
             // btnCrearCuenta
             // 
             this.btnCrearCuenta.BackColor = System.Drawing.Color.DarkSlateBlue;
@@ -74,6 +112,7 @@
             this.btnCrearCuenta.TabIndex = 8;
             this.btnCrearCuenta.Text = "Crear Cuenta";
             this.btnCrearCuenta.UseVisualStyleBackColor = false;
+            this.btnCrearCuenta.Click += new System.EventHandler(this.btnCrearCuenta_Click);
             // 
             // lblIniciarSesion
             // 
@@ -124,44 +163,6 @@
             this.lblEmail.Size = new System.Drawing.Size(51, 16);
             this.lblEmail.TabIndex = 0;
             this.lblEmail.Text = "E-mail";
-            // 
-            // textBoxNombreUsuario
-            // 
-            this.textBoxNombreUsuario.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxNombreUsuario.Location = new System.Drawing.Point(65, 73);
-            this.textBoxNombreUsuario.Name = "textBoxNombreUsuario";
-            this.textBoxNombreUsuario.Size = new System.Drawing.Size(220, 22);
-            this.textBoxNombreUsuario.TabIndex = 10;
-            // 
-            // labeNombreUsuario
-            // 
-            this.labeNombreUsuario.AutoSize = true;
-            this.labeNombreUsuario.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labeNombreUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.labeNombreUsuario.Location = new System.Drawing.Point(62, 51);
-            this.labeNombreUsuario.Name = "labeNombreUsuario";
-            this.labeNombreUsuario.Size = new System.Drawing.Size(142, 16);
-            this.labeNombreUsuario.TabIndex = 9;
-            this.labeNombreUsuario.Text = "Nombre de Usuario";
-            // 
-            // textBoxVerificarContrasena
-            // 
-            this.textBoxVerificarContrasena.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxVerificarContrasena.Location = new System.Drawing.Point(65, 283);
-            this.textBoxVerificarContrasena.Name = "textBoxVerificarContrasena";
-            this.textBoxVerificarContrasena.Size = new System.Drawing.Size(220, 22);
-            this.textBoxVerificarContrasena.TabIndex = 12;
-            // 
-            // labelVerificarContrasena
-            // 
-            this.labelVerificarContrasena.AutoSize = true;
-            this.labelVerificarContrasena.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelVerificarContrasena.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(0)))), ((int)(((byte)(64)))));
-            this.labelVerificarContrasena.Location = new System.Drawing.Point(62, 256);
-            this.labelVerificarContrasena.Name = "labelVerificarContrasena";
-            this.labelVerificarContrasena.Size = new System.Drawing.Size(148, 16);
-            this.labelVerificarContrasena.TabIndex = 11;
-            this.labelVerificarContrasena.Text = "Verificar Contraseña";
             // 
             // RegistrarCuenta
             // 
