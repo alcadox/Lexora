@@ -54,7 +54,6 @@ namespace Lexora.Pantallas.Menu.Filtros
 
         }
 
-        // ========== GUARDAR FILTROS ==========
         private void botonAplicar_Click(object sender, EventArgs e)
         {
             botonAplicar.Enabled = false; // Desactivar botón aplicar al guardar filtros
@@ -166,7 +165,7 @@ namespace Lexora.Pantallas.Menu.Filtros
             lblInfoFecha.Text = $"Guardado: {filtroFechaSeleccionado} ({desde:dd/MM/yyyy} - {hasta:dd/MM/yyyy})";
             filtroFechaSeleccionado = null;
 
-            botonAplicar.Enabled = true; // MUY IMPORTANTE: si no, "Aplicar" se queda gris
+            botonAplicar.Enabled = true; 
         }
 
         //BOTÓN LIMPIAR FECHA
@@ -189,29 +188,17 @@ namespace Lexora.Pantallas.Menu.Filtros
             botonAplicar.Enabled = true;
         }
 
+        //cuando marco o desmarco un ítem del checklist de tipos de fecha
         private void checkedListBoxTiposfecha_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (bloqueandoChecksFecha) return;
-
             BeginInvoke(new Action(() =>
             {
+                // Si lo están desmarcando, no abrimos el calendario
                 if (e.NewValue != CheckState.Checked) return;
 
-                bloqueandoChecksFecha = true;
-                try
-                {
-                    for (int i = 0; i < checkedListBoxTiposfecha.Items.Count; i++)
-                    {
-                        if (i != e.Index)
-                            checkedListBoxTiposfecha.SetItemChecked(i, false);
-                    }
-                }
-                finally
-                {
-                    bloqueandoChecksFecha = false;
-                }
-
                 filtroFechaSeleccionado = checkedListBoxTiposfecha.Items[e.Index].ToString();
+
+                // Bloqueamos mientras editas ESTE filtro
                 checkedListBoxTiposfecha.Enabled = false;
 
                 monthCalendarFecha.Enabled = true;
@@ -220,6 +207,7 @@ namespace Lexora.Pantallas.Menu.Filtros
 
                 lblInfoFecha.Text = "Selecciona rango para: " + filtroFechaSeleccionado;
 
+                // Precargar rango si ya existe
                 if (filtros.Fechas.TryGetValue(filtroFechaSeleccionado, out var rango) &&
                     rango.Desde.HasValue && rango.Hasta.HasValue)
                 {
@@ -227,6 +215,17 @@ namespace Lexora.Pantallas.Menu.Filtros
                 }
             }));
         }
+
+
+
+
+
+
+
+
+
+
+
 
 
     }
