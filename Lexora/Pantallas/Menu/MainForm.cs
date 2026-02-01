@@ -149,6 +149,29 @@ namespace Lexora
 
         //========================= MÉTODO PARA CUMPLIR FILTROS DE FECHA =========================
 
+        private bool CarpetaTieneArchivosQueCumplen(string rutaCarpeta, HashSet<string> extensionesPermitidas, bool tieneFiltrosTipo)
+        {
+            try
+            {
+                foreach (var archivo in Directory.GetFiles(rutaCarpeta))
+                {
+                    FileInfo info = new FileInfo(archivo);
+                    string ext = info.Extension.ToLower();
+
+                    bool cumpleTipo = !tieneFiltrosTipo || extensionesPermitidas.Contains(ext);
+                    bool cumpleFecha = CumpleFiltrosFecha(info);
+
+                    if (cumpleTipo && cumpleFecha)
+                        return true;
+                }
+            }
+            catch
+            {
+                //por si no ay permisos o falla algo pero no se rompe 
+            }
+
+            return false;
+        }
 
         private bool CumpleFiltrosFecha(FileInfo info)
         {
@@ -203,6 +226,16 @@ namespace Lexora
 
             return true;
         }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -324,6 +357,14 @@ namespace Lexora
 
                 bool tieneFiltrosActivos = extensionesPermitidas.Count > 0;
 
+
+                //si hay filtros de fecha activos
+                bool tieneFiltrosFechaActivos = filtros.Fechas != null && filtros.Fechas.Any(f => f.Value.Desde.HasValue && f.Value.Hasta.HasValue);
+                bool hayAlgúnFiltroActivo = tieneFiltrosActivos || tieneFiltrosFechaActivos;
+
+
+
+
                 // 3. Cargar CARPETAS
                 foreach (var carpeta in Directory.GetDirectories(ruta))
                 {
@@ -332,6 +373,15 @@ namespace Lexora
                     // Lógica especial: Si hay filtros de "Comprimidos" (ej. .zip), 
                     // las carpetas se siguen mostrando porque podrías querer navegar a buscar archivos dentro.
                     // Si quieres ocultar carpetas cuando hay filtros, podrías añadir un if(!tieneFiltrosActivos).
+
+
+                    //SI HAY FILTROS ACTIVOS, solo mostramos la carpeta si contiene archivos que cumplen
+
+                    if (hayAlgúnFiltroActivo)
+                    {
+                        if (!CarpetaTieneArchivosQueCumplen(carpeta, extensionesPermitidas, tieneFiltrosActivos))
+                            continue;
+                    }
 
                     ListViewItem item = new ListViewItem(info.Name);
                     item.SubItems.Add("Carpeta");
