@@ -41,12 +41,12 @@
             // 
             this.labelIntroducirCodigo.AutoSize = true;
             this.labelIntroducirCodigo.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelIntroducirCodigo.Location = new System.Drawing.Point(3, 9);
+            this.labelIntroducirCodigo.Location = new System.Drawing.Point(21, 9);
             this.labelIntroducirCodigo.Name = "labelIntroducirCodigo";
-            this.labelIntroducirCodigo.Size = new System.Drawing.Size(573, 20);
+            this.labelIntroducirCodigo.Size = new System.Drawing.Size(538, 20);
             this.labelIntroducirCodigo.TabIndex = 0;
-            this.labelIntroducirCodigo.Text = "Introduce el código que se te ha enviado a tu correo electrónico para crear tu cu" +
-    "enta. ";
+            this.labelIntroducirCodigo.Text = "Introduce el código que se te ha enviado a tu correo electrónico para verificarlo" +
+    ". ";
             // 
             // panel1
             // 
