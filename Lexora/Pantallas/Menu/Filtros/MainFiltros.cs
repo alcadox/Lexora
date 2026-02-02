@@ -28,24 +28,22 @@ namespace Lexora.Pantallas.Menu.Filtros
             // Recorrer el diccionario de TiposArchivoSinFormatear y marcar los ítems correspondientes en el CheckedListBox
             foreach (var item in filtros.TiposArchivoSinFormatear)
             {
-                // Si el valor es false, no marcar
-                if (!item.Value) continue;
-
-                // Buscar el índice del ítem en el CheckedListBox
-                int index = checkedListBoxTipoArchivo.Items.IndexOf(item.Key);
-
-                // Marcar el ítem si se encuentra
-                if (index >= 0) checkedListBoxTipoArchivo.SetItemChecked(index, true);
+              
+                if (!item.Value) continue;  // Si el valor es false, no marcar
+                
+                int index = checkedListBoxTipoArchivo.Items.IndexOf(item.Key); // Buscar el índice del ítem en el CheckedListBo
+                
+                if (index >= 0) checkedListBoxTipoArchivo.SetItemChecked(index, true); // Marcar el ítem si se encuentra
             }
 
-            // Inicializar el filtro de fecha
+            //inicializo elfiltro de fecha
             monthCalendarFecha.Enabled = false;
             buttonAceptarFecha.Enabled = false;
             buttonLimpiarFecha.Enabled = false;
             lblInfoFecha.Text = "Selecciona un filtro de fecha a la izquierda.";
 
 
-            // Si ya hay fechas guardadas, avisamos (sin abrir el calendario)
+            // Si ya hay fechas guardadas, avisamos
             if (filtros.Fechas != null && filtros.Fechas.Count > 0)
             {
                 lblInfoFecha.Text = "Hay filtros de fecha guardados. Selecciona uno para ver/editar.";
@@ -91,7 +89,6 @@ namespace Lexora.Pantallas.Menu.Filtros
 
         private void checkedListBoxTipoArchivo_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-
             if (botonAplicar.Enabled == false)
             {
                 botonAplicar.Enabled = true; // Activar botón aplicar al cambiar cualquier ítem
@@ -100,7 +97,6 @@ namespace Lexora.Pantallas.Menu.Filtros
 
         private void panel7_Paint(object sender, PaintEventArgs e)
         {
-
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -112,8 +108,7 @@ namespace Lexora.Pantallas.Menu.Filtros
         //ANTERIOR MÉTODO DE SELECCIÓN DE FILTRO FECHA
         private void checkedListBoxTiposfecha_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Ya no se usa. El flujo correcto va por ItemCheck.
-
+            // Ya no se usa pq el flujo correcto va por ItemCheck
             /*
             if (checkedListBoxTiposfecha.SelectedItem == null) return;
 
@@ -151,7 +146,7 @@ namespace Lexora.Pantallas.Menu.Filtros
             DateTime desde = monthCalendarFecha.SelectionRange.Start.Date;
             DateTime hasta = monthCalendarFecha.SelectionRange.End.Date;
 
-            // Guardar el rango para ESE filtro
+            // Guardar el rango de fechas
             filtros.Fechas[filtroFechaSeleccionado] = (desde, hasta);
 
             // Desbloquear UI para poder elegir otro filtro
@@ -216,17 +211,9 @@ namespace Lexora.Pantallas.Menu.Filtros
             }));
         }
 
+        private void label1_Click_1(object sender, EventArgs e)
+        {
 
-
-
-
-
-
-
-
-
-
-
-
+        }
     }
 }

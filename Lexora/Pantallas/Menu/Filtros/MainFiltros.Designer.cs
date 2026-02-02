@@ -55,6 +55,10 @@
             this.panelPrincipal = new System.Windows.Forms.Panel();
             this.botonAplicar = new System.Windows.Forms.Button();
             this.botonCerrar = new System.Windows.Forms.Button();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.labelTituloFiltroSeguridad = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPageFiltroTipoArchivo.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -63,7 +67,9 @@
             this.panel7.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.tabPageFiltroSeguridad.SuspendLayout();
             this.panelPrincipal.SuspendLayout();
+            this.panel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -241,6 +247,8 @@
             // 
             // panel4
             // 
+            this.panel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.panel4.Controls.Add(this.lblInfoFecha);
             this.panel4.Controls.Add(this.labelTipoDeFecha);
             this.panel4.Controls.Add(this.panel6);
@@ -306,6 +314,9 @@
             // 
             // tabPageFiltroSeguridad
             // 
+            this.tabPageFiltroSeguridad.Controls.Add(this.panel10);
+            this.tabPageFiltroSeguridad.Controls.Add(this.panel9);
+            this.tabPageFiltroSeguridad.Controls.Add(this.panel8);
             this.tabPageFiltroSeguridad.Location = new System.Drawing.Point(4, 25);
             this.tabPageFiltroSeguridad.Name = "tabPageFiltroSeguridad";
             this.tabPageFiltroSeguridad.Size = new System.Drawing.Size(750, 371);
@@ -353,6 +364,42 @@
             this.botonCerrar.UseVisualStyleBackColor = true;
             this.botonCerrar.Click += new System.EventHandler(this.botonCerrar_Click);
             // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.labelTituloFiltroSeguridad);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel8.Location = new System.Drawing.Point(0, 0);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(750, 62);
+            this.panel8.TabIndex = 0;
+            // 
+            // panel9
+            // 
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel9.Location = new System.Drawing.Point(0, 62);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(363, 309);
+            this.panel9.TabIndex = 1;
+            // 
+            // panel10
+            // 
+            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel10.Location = new System.Drawing.Point(363, 62);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(387, 309);
+            this.panel10.TabIndex = 2;
+            // 
+            // labelTituloFiltroSeguridad
+            // 
+            this.labelTituloFiltroSeguridad.AutoSize = true;
+            this.labelTituloFiltroSeguridad.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTituloFiltroSeguridad.Location = new System.Drawing.Point(3, 15);
+            this.labelTituloFiltroSeguridad.Name = "labelTituloFiltroSeguridad";
+            this.labelTituloFiltroSeguridad.Size = new System.Drawing.Size(304, 27);
+            this.labelTituloFiltroSeguridad.TabIndex = 1;
+            this.labelTituloFiltroSeguridad.Text = "Filtros por Seguridad del archivo:";
+            this.labelTituloFiltroSeguridad.Click += new System.EventHandler(this.label1_Click_1);
+            // 
             // MainFiltros
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -371,7 +418,10 @@
             this.panel5.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            this.tabPageFiltroSeguridad.ResumeLayout(false);
             this.panelPrincipal.ResumeLayout(false);
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -405,5 +455,9 @@
         private System.Windows.Forms.Button buttonAceptarFecha;
         private System.Windows.Forms.Button buttonLimpiarFecha;
         private System.Windows.Forms.Label lblInfoFecha;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Label labelTituloFiltroSeguridad;
     }
 }
