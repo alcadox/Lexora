@@ -164,7 +164,7 @@
             this.listViewArchivos.FullRowSelect = true;
             this.listViewArchivos.GridLines = true;
             this.listViewArchivos.HideSelection = false;
-            this.listViewArchivos.Location = new System.Drawing.Point(21, 6);
+            this.listViewArchivos.Location = new System.Drawing.Point(21, 25);
             this.listViewArchivos.Name = "listViewArchivos";
             this.listViewArchivos.Size = new System.Drawing.Size(942, 572);
             this.listViewArchivos.TabIndex = 0;
