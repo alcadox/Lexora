@@ -188,21 +188,25 @@ namespace Lexora.Pantallas.Menu.Filtros
         {
             BeginInvoke(new Action(() =>
             {
-                // Si lo están desmarcando, no abrimos el calendario
-                if (e.NewValue != CheckState.Checked) return;
+                string nombre = checkedListBoxTiposfecha.Items[e.Index].ToString();
 
-                filtroFechaSeleccionado = checkedListBoxTiposfecha.Items[e.Index].ToString();
-
-                // Bloqueamos mientras editas ESTE filtro
+                //CORRECTION DEL MÉTODO: si se desmarca se borra de la calse filtros 
+                if (e.NewValue == CheckState.Unchecked)
+                {
+                    filtros.Fechas.Remove(nombre);
+                    lblInfoFecha.Text = $"Quitado: {nombre}";
+                    botonAplicar.Enabled = true;
+                    return;
+                }
+                // Si marca -> abrir calendario (tu código actual)
+                filtroFechaSeleccionado = nombre;
                 checkedListBoxTiposfecha.Enabled = false;
-
                 monthCalendarFecha.Enabled = true;
                 buttonAceptarFecha.Enabled = true;
                 buttonLimpiarFecha.Enabled = true;
 
                 lblInfoFecha.Text = "Selecciona rango para: " + filtroFechaSeleccionado;
 
-                // Precargar rango si ya existe
                 if (filtros.Fechas.TryGetValue(filtroFechaSeleccionado, out var rango) &&
                     rango.Desde.HasValue && rango.Hasta.HasValue)
                 {

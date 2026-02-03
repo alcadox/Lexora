@@ -139,14 +139,6 @@ namespace Lexora
         }
 
 
-
-
-
-
-
-
-
-
         //========================= MÉTODO PARA CUMPLIR FILTROS DE FECHA =========================
 
         private bool CarpetaTieneArchivosQueCumplen(string rutaCarpeta, HashSet<string> extensionesPermitidas, bool tieneFiltrosTipo)
@@ -190,8 +182,12 @@ namespace Lexora
                     continue;
 
                 // Normalizamos para comparar sin tildes / mayúsculas
-                string key = nombreFiltro.ToLower()
-                    .Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u").Replace("ü", "u");
+                string key = (nombreFiltro ?? "")
+                        .ToLower()
+                        .Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u").Replace("ü", "u")
+                        .Replace(".", "") 
+                        .Replace("  ", " ")
+                        .Trim();
 
                 DateTime valorAComparar;
 
@@ -200,11 +196,11 @@ namespace Lexora
                 {
                     valorAComparar = info.CreationTime.Date;
                 }
-                else if (key.Contains("fec. de ultima edicion") || key.Contains("modificado"))
+                else if (key.Contains("fec de ultima edicion") || key.Contains("modificado"))
                 {
                     valorAComparar = info.LastWriteTime.Date;
                 }
-                else if (key.Contains("fec. de ultimo acceso") || key.Contains("ultimo acceso"))
+                else if (key.Contains("fec de ultimo acceso") || key.Contains("ultimo acceso"))
                 {
                     valorAComparar = info.LastAccessTime.Date;
                 }
@@ -227,30 +223,62 @@ namespace Lexora
             return true;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         //======================fin de filtros de fecha========================
+        // ===================== CUMPLE FILTROS FECHA PARA CARPETAS =====================
+        private bool CumpleFiltrosFechaCarpeta(DirectoryInfo info)
+        {
+            // Si no hay filtros de fecha guardados, cumple siempre
+            if (filtros.Fechas == null || filtros.Fechas.Count == 0)
+                return true;
 
+            foreach (var kv in filtros.Fechas)
+            {
+                string nombreFiltro = kv.Key ?? "";
+                DateTime? desde = kv.Value.Desde?.Date;
+                DateTime? hasta = kv.Value.Hasta?.Date;
 
+                // Si está incompleto, lo ignoramos
+                if (!desde.HasValue || !hasta.HasValue)
+                    continue;
 
+                string key = (nombreFiltro ?? "")
+                    .ToLower()
+                    .Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u").Replace("ü", "u")
+                    .Replace(".", "")
+                    .Replace("  ", " ")
+                    .Trim();
 
+                DateTime valorAComparar;
 
+                // Mapeo igual que en archivos, pero usando DirectoryInfo
+                if (key.Contains("creacion") || key.Contains("archivos creados"))
+                {
+                    valorAComparar = info.CreationTime.Date;
+                }
+                else if (key.Contains("fec de ultima edicion") || key.Contains("modificado"))
+                {
+                    valorAComparar = info.LastWriteTime.Date;
+                }
+                else if (key.Contains("fec de ultimo acceso") || key.Contains("ultimo acceso"))
+                {
+                    valorAComparar = info.LastAccessTime.Date;
+                }
+                else if (key.Contains("antiguedad"))
+                {
+                    valorAComparar = info.CreationTime.Date;
+                }
+                else
+                {
+                    continue;
+                }
 
+                // AND entre filtros activos
+                if (valorAComparar < desde.Value || valorAComparar > hasta.Value)
+                    return false;
+            }
 
-
-
-
+            return true;
+        }
 
 
 
@@ -338,6 +366,13 @@ namespace Lexora
                 listViewArchivos.BeginUpdate(); // Optimización visual: evita parpadeo
                 listViewArchivos.Items.Clear();
 
+                // ===== DEBUG FECHAS (TEMPORAL) =====
+                string debugFechas = string.Join("\n", filtros.Fechas.Select(f =>
+                    $"{f.Key} -> {f.Value.Desde:dd/MM/yyyy} - {f.Value.Hasta:dd/MM/yyyy}"
+                ));
+                MessageBox.Show(debugFechas == "" ? "No hay filtros de fecha" : debugFechas);
+                // ===== FIN DEBUG =====
+
                 // 1. Botón para volver atrás (Siempre visible)
                 if (Directory.GetParent(ruta) != null)
                 {
@@ -370,16 +405,17 @@ namespace Lexora
                 {
                     DirectoryInfo info = new DirectoryInfo(carpeta);
 
-                    // Lógica especial: Si hay filtros de "Comprimidos" (ej. .zip), 
-                    // las carpetas se siguen mostrando porque podrías querer navegar a buscar archivos dentro.
-                    // Si quieres ocultar carpetas cuando hay filtros, podrías añadir un if(!tieneFiltrosActivos).
+                    // NUEVO: la carpeta puede cumplir por SU fecha
+                    bool cumpleFechaCarpeta = CumpleFiltrosFechaCarpeta(info);
 
-
-                    //SI HAY FILTROS ACTIVOS, solo mostramos la carpeta si contiene archivos que cumplen
-
+                    // SI HAY FILTROS ACTIVOS:
+                    // - mostramos la carpeta si cumple por su propia fecha
+                    // - o si dentro hay archivos que cumplan (para poder navegar)
                     if (hayAlgúnFiltroActivo)
                     {
-                        if (!CarpetaTieneArchivosQueCumplen(carpeta, extensionesPermitidas, tieneFiltrosActivos))
+                        bool tieneArchivosCumplen = CarpetaTieneArchivosQueCumplen(carpeta, extensionesPermitidas, tieneFiltrosActivos);
+
+                        if (!cumpleFechaCarpeta && !tieneArchivosCumplen)
                             continue;
                     }
 
@@ -389,6 +425,7 @@ namespace Lexora
                     item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
                     listViewArchivos.Items.Add(item);
                 }
+
 
                 // 4. Cargar ARCHIVOS (Aquí aplicamos el filtro real)
                 foreach (var archivo in Directory.GetFiles(ruta))
