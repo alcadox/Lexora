@@ -219,5 +219,15 @@ namespace Lexora.Pantallas.Menu.Filtros
         {
 
         }
+
+        private void checkBoxFiltroCantPaginas_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonRestarPagina_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
