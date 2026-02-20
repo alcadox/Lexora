@@ -32,7 +32,7 @@ namespace Lexora.Pantallas.Menu.Filtros
 
             // recorrer el diccionario y transformarlo a un formato valido,
             // ya que se guarda estilo <Documentos (pdf, docx...) - true> y debe de ser < .docx - true>, <.pdf - true><.pptx - true> y así sucesivamente
-
+        
             var tiposFormateados = new Dictionary<string, bool>();
 
             // funciona de la siguiente manera: recorre el diccionario y si contiene "Documento" / "Imagenes" / "Audio"
@@ -174,5 +174,21 @@ namespace Lexora.Pantallas.Menu.Filtros
             TiposArchivo = tiposFormateados;
 
         }
+
+
+
+        //FILTROS POR METADATOS DOCUMENTOS
+        public string AutorDocumento { get; set; }
+        public string TituloDocumento { get; set; }
+        public string AplicacionGeneradora { get; set; }
+        public int? CantidadPaginas { get; set; }
+
+        public bool FiltrarAutor { get; set; }
+        public bool FiltrarTitulo { get; set; }
+        public bool FiltrarAplicacion { get; set; }
+        public bool FiltrarPaginas { get; set; }
+
+
+
     }
 }
