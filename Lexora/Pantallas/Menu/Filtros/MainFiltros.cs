@@ -36,6 +36,7 @@ namespace Lexora.Pantallas.Menu.Filtros
                 if (index >= 0) checkedListBoxTipoArchivo.SetItemChecked(index, true); // Marcar el ítem si se encuentra
             }
 
+        // BLOQUE DE FILTRO DE FECHA
             //inicializo elfiltro de fecha
             monthCalendarFecha.Enabled = false;
             buttonAceptarFecha.Enabled = false;
@@ -48,8 +49,33 @@ namespace Lexora.Pantallas.Menu.Filtros
             {
                 lblInfoFecha.Text = "Hay filtros de fecha guardados. Selecciona uno para ver/editar.";
             }
+        //
+
+        //BLOQUE para precargar los metadatos por documetnos:
+            checkBoxFiltroAutorDoc.Checked = filtros.FiltrarAutor;
+            textBoxAutorDoc.Text = filtros.AutorDocumento ?? "";
+
+            checkBoxFiltroAutorDoc.Checked = filtros.FiltrarTitulo;
+            textBoxTituloDoc.Text = filtros.TituloDocumento ?? "";
+
+            checkBoxFiltroAppQLoGenero.Checked = filtros.FiltrarAplicacion;
+            textBoxAppQGeneroDoc.Text = filtros.AplicacionGeneradora ?? "";
+
+            checkBoxFiltroCantPaginas.Checked = filtros.FiltrarPaginas;
+            textBoxNumPag.Text = filtros.CantidadPaginas?.ToString() ?? "0";
 
 
+
+            //en el caso de que no haya filtros de fecha guardados, se bloquean los checkboxes de fecha para que no confunda al usuario
+
+            // ===== bloquear/desbloquear inputs según checkboxes (metadatos documentos) =====
+            textBoxAutorDoc.Enabled = checkBoxFiltroAutorDoc.Checked;
+            textBoxTituloDoc.Enabled = checkBoxFiltroTituloDoc.Checked;
+            textBoxAppQGeneroDoc.Enabled = checkBoxFiltroAppQLoGenero.Checked;
+
+            textBoxNumPag.Enabled = checkBoxFiltroCantPaginas.Checked;
+            buttonSumarPagina.Enabled = checkBoxFiltroCantPaginas.Checked;
+            buttonRestarPagina.Enabled = checkBoxFiltroCantPaginas.Checked;
         }
 
         private void botonAplicar_Click(object sender, EventArgs e)
@@ -80,6 +106,92 @@ namespace Lexora.Pantallas.Menu.Filtros
 
             // Disparar el evento para notificar que los filtros han sido aplicados
             FiltrosAplicados?.Invoke(this, EventArgs.Empty);
+            
+
+
+
+            // ======== GUARDAR LOS METADATOS DOCUMENTOS ==========
+            filtros.FiltrarAutor = checkBoxFiltroAutorDoc.Checked;
+            filtros.AutorDocumento = (textBoxAutorDoc.Text ?? "").Trim();
+
+            filtros.FiltrarTitulo = checkBoxFiltroTituloDoc.Checked;
+            filtros.TituloDocumento = (textBoxTituloDoc.Text ?? "").Trim();
+
+            filtros.FiltrarAplicacion = checkBoxFiltroAppQLoGenero.Checked;
+            filtros.AplicacionGeneradora = (textBoxAppQGeneroDoc.Text ?? "").Trim();
+
+            filtros.FiltrarPaginas = checkBoxFiltroCantPaginas.Checked;
+
+            // parse seguro de páginas para que ni no es número, sea null
+            if(filtros.FiltrarPaginas && int.TryParse(textBoxNumPag.Text, out int n) && n >= 0)
+            {
+                filtros.CantidadPaginas = n;
+            }
+            else
+            {
+                filtros.CantidadPaginas = null;
+            }
+        }
+
+
+
+
+
+
+        //Para que los textfields estén desactivados hasta que se active su checkbox correspondiente,
+
+        private void textBoxAutorDoc_TextChanged(object sender, EventArgs e){ botonAplicar.Enabled = true;}
+
+        private void textBoxTituloDoc_TextChanged(object sender, EventArgs e){ botonAplicar.Enabled = true; }
+        private void textBoxAppQGeneroDoc_TextChanged(object sender, EventArgs e){botonAplicar.Enabled = true;}
+
+
+     //Para que los textfields estén desactivados hasta que se active su checkbox correspondiente,
+
+        //autor
+        private void checkBoxFiltroAutorDoc_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxAutorDoc.Enabled = checkBoxFiltroAutorDoc.Checked;
+
+            // opcional: si lo desmarcas, vacías el texto para evitar confusiones
+            if (!checkBoxFiltroAutorDoc.Checked)
+                textBoxAutorDoc.Text = "";
+
+            botonAplicar.Enabled = true;
+        }
+        //título
+        private void checkBoxFiltroTituloDoc_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxTituloDoc.Enabled = checkBoxFiltroTituloDoc.Checked;
+
+            if (!checkBoxFiltroTituloDoc.Checked)
+                textBoxTituloDoc.Text = "";
+
+            botonAplicar.Enabled = true;
+        }
+        //app que lo generó
+        private void checkBoxFiltroAppQLoGenero_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxAppQGeneroDoc.Enabled = checkBoxFiltroAppQLoGenero.Checked;
+
+            if (!checkBoxFiltroAppQLoGenero.Checked)
+                textBoxAppQGeneroDoc.Text = "";
+
+            botonAplicar.Enabled = true;
+        }
+        //cantidad de páginas
+        private void checkBoxFiltroCantPaginas_CheckedChanged(object sender, EventArgs e)
+        {
+            bool activo = checkBoxFiltroCantPaginas.Checked;
+
+            textBoxNumPag.Enabled = activo;
+            buttonSumarPagina.Enabled = activo;
+            buttonRestarPagina.Enabled = activo;
+
+            if (!activo)
+                textBoxNumPag.Text = "0"; // o "" si prefieres
+
+            botonAplicar.Enabled = true;
         }
 
         private void botonCerrar_Click(object sender, EventArgs e)
@@ -220,14 +332,15 @@ namespace Lexora.Pantallas.Menu.Filtros
 
         }
 
-        private void checkBoxFiltroCantPaginas_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void buttonRestarPagina_Click(object sender, EventArgs e)
         {
 
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
