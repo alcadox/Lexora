@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+//usings para los metadatos
+using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+
+
 
 namespace Lexora
 {
@@ -366,13 +371,6 @@ namespace Lexora
                 listViewArchivos.BeginUpdate(); // Optimización visual: evita parpadeo
                 listViewArchivos.Items.Clear();
 
-                // ===== DEBUG FECHAS (TEMPORAL) =====
-                string debugFechas = string.Join("\n", filtros.Fechas.Select(f =>
-                    $"{f.Key} -> {f.Value.Desde:dd/MM/yyyy} - {f.Value.Hasta:dd/MM/yyyy}"
-                ));
-                MessageBox.Show(debugFechas == "" ? "No hay filtros de fecha" : debugFechas);
-                // ===== FIN DEBUG =====
-
                 // 1. Botón para volver atrás (Siempre visible)
                 if (Directory.GetParent(ruta) != null)
                 {
@@ -462,5 +460,91 @@ namespace Lexora
                 listViewArchivos.EndUpdate();
             }
         }
+
+        private bool CumpleFiltrosMetadatosDocumento(string rutaArchivo)
+        {
+            try
+            {
+                bool hayFiltrosMeta =
+                    filtros.FiltrarAutor ||
+                    filtros.FiltrarTitulo ||
+                    filtros.FiltrarAplicacion ||
+                    filtros.FiltrarPaginas;
+
+                if (!hayFiltrosMeta)
+                    return true;
+
+                string ext = Path.GetExtension(rutaArchivo).ToLower();
+
+                bool soportaMetadatosDocumento =
+                    ext == ".pdf" || ext == ".docx" || ext == ".doc" || ext == ".pptx" || ext == ".ppt" ||
+                    ext == ".xlsx" || ext == ".xls" || ext == ".rtf" || ext == ".odt" || ext == ".ods" || ext == ".odp";
+
+                // si pide autor/titulo/paginas y no es documento, no puede cumplir
+                bool pideCamposSoloDocumento = filtros.FiltrarAutor || filtros.FiltrarTitulo || filtros.FiltrarPaginas;
+                if (pideCamposSoloDocumento && !soportaMetadatosDocumento)
+                    return false;
+
+                using (var shellFile = ShellFile.FromFilePath(rutaArchivo))
+                {
+                    string autor = "";
+                    var autores = shellFile.Properties.System.Author.Value;
+                    if (autores != null && autores.Length > 0) autor = string.Join(" ", autores);
+
+                    string titulo = shellFile.Properties.System.Title.Value ?? "";
+
+                    string app1 = shellFile.Properties.System.ApplicationName.Value ?? "";
+                    string app2 = shellFile.Properties.System.SoftwareUsed.Value ?? "";
+                    string app = (app1 + " " + app2).Trim();
+
+                    int? paginas = shellFile.Properties.System.Document.PageCount.Value;
+
+                    string filtroAutor = (filtros.AutorDocumento ?? "").Trim();
+                    string filtroTitulo = (filtros.TituloDocumento ?? "").Trim();
+                    string filtroApp = (filtros.AplicacionGeneradora ?? "").Trim();
+                    int? filtroPag = filtros.CantidadPaginas;
+
+                    if (filtros.FiltrarAutor)
+                    {
+                        if (string.IsNullOrWhiteSpace(filtroAutor)) return false;
+                        if (string.IsNullOrWhiteSpace(autor) || autor.IndexOf(filtroAutor, StringComparison.OrdinalIgnoreCase) < 0)
+                            return false;
+                    }
+
+                    if (filtros.FiltrarTitulo)
+                    {
+                        if (string.IsNullOrWhiteSpace(filtroTitulo)) return false;
+                        if (string.IsNullOrWhiteSpace(titulo) || titulo.IndexOf(filtroTitulo, StringComparison.OrdinalIgnoreCase) < 0)
+                            return false;
+                    }
+
+                    if (filtros.FiltrarAplicacion)
+                    {
+                        if (string.IsNullOrWhiteSpace(filtroApp)) return false;
+                        if (string.IsNullOrWhiteSpace(app) || app.IndexOf(filtroApp, StringComparison.OrdinalIgnoreCase) < 0)
+                            return false;
+                    }
+
+                    if (filtros.FiltrarPaginas)
+                    {
+                        if (!filtroPag.HasValue) return false;
+                        if (!paginas.HasValue) return false;
+                        if (paginas.Value != filtroPag.Value)
+                            return false;
+                    }
+
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+
+
+
     }
 }

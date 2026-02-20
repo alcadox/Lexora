@@ -176,7 +176,6 @@ namespace Lexora.Pantallas.Menu.Filtros
         }
 
 
-
         //FILTROS POR METADATOS DOCUMENTOS
         public string AutorDocumento { get; set; }
         public string TituloDocumento { get; set; }
@@ -187,8 +186,6 @@ namespace Lexora.Pantallas.Menu.Filtros
         public bool FiltrarTitulo { get; set; }
         public bool FiltrarAplicacion { get; set; }
         public bool FiltrarPaginas { get; set; }
-
-
 
     }
 }

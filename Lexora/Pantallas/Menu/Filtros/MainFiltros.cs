@@ -327,20 +327,26 @@ namespace Lexora.Pantallas.Menu.Filtros
             }));
         }
 
-        private void label1_Click_1(object sender, EventArgs e)
-        {
+        
 
+        private void buttonSumarPagina_Click(object sender, EventArgs e)
+        {
+            if (!int.TryParse(textBoxNumPag.Text, out int n)) n = 0;
+            n++;
+            textBoxNumPag.Text = n.ToString();
+            botonAplicar.Enabled = true;
         }
 
         private void buttonRestarPagina_Click(object sender, EventArgs e)
         {
-
+            if (!int.TryParse(textBoxNumPag.Text, out int n)) n = 0;
+            if (n > 0) n--;
+            textBoxNumPag.Text = n.ToString();
+            botonAplicar.Enabled = true;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+        private void textBox1_TextChanged(object sender, EventArgs e){}
+        private void label1_Click_1(object sender, EventArgs e) {}
 
     }
 }
