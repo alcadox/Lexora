@@ -133,6 +133,16 @@ namespace Lexora.Pantallas.Menu.Filtros
             buttonRestarPagina.Enabled = checkBoxFiltroCantPaginas.Checked;
 
             ActualizarEstadoMetadatosUI();
+
+            // Precargar checklist seguridad
+            foreach (var kv in filtros.Seguridad)
+            {
+                if (!kv.Value) continue;
+
+                int idx = checkedListBoxSeguridad.Items.IndexOf(kv.Key);
+                if (idx >= 0) checkedListBoxSeguridad.SetItemChecked(idx, true);
+            }
+
         }
 
         private void botonAplicar_Click(object sender, EventArgs e)
@@ -159,13 +169,26 @@ namespace Lexora.Pantallas.Menu.Filtros
                 filtros.TiposArchivoSinFormatear[nombreFiltro] = true;
             }
 
+
+
+
+
+            // ====== SEGURIDAD ======
+            filtros.Seguridad.Clear();
+            foreach (var item in checkedListBoxSeguridad.CheckedItems)
+            {
+                string nombre = item.ToString();
+                filtros.Seguridad[nombre] = true;
+            }
+
+
+
+
+
+
             filtros.FormatearTipoArchivo(); // Formatear los tipos de archivo para que estén en el formato correcto
 
-            // Disparar el evento para notificar que los filtros han sido aplicados
-            FiltrosAplicados?.Invoke(this, EventArgs.Empty);
-            
-
-
+           
 
             // ======== GUARDAR LOS METADATOS DOCUMENTOS ==========
             filtros.FiltrarAutor = checkBoxFiltroAutorDoc.Checked;
@@ -188,6 +211,24 @@ namespace Lexora.Pantallas.Menu.Filtros
             {
                 filtros.CantidadPaginas = null;
             }
+
+            // ====== SEGURIDAD ======
+            filtros.Seguridad.Clear();
+
+            foreach (var item in checkedListBoxSeguridad.CheckedItems)
+            {
+                string nombre = item.ToString();
+                filtros.Seguridad[nombre] = true;
+            }
+
+
+
+            // Disparar el evento para notificar que los filtros han sido aplicados
+            FiltrosAplicados?.Invoke(this, EventArgs.Empty);
+
+
+
+
         }
 
 
@@ -386,6 +427,13 @@ namespace Lexora.Pantallas.Menu.Filtros
             textBoxNumPag.Text = n.ToString();
             botonAplicar.Enabled = true;
         }
+
+        private void checkedListBoxSeguridad_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            botonAplicar.Enabled = true;
+        }
+
+
 
         private void textBox1_TextChanged(object sender, EventArgs e){}
         private void label1_Click_1(object sender, EventArgs e) {}

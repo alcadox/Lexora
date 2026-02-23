@@ -106,8 +106,9 @@ namespace Lexora
                 bool tieneFiltrosFechaActivos = filtros.Fechas != null && filtros.Fechas.Any(f => f.Value.Desde.HasValue && f.Value.Hasta.HasValue);
                 bool tieneFiltrosMetadatosActivos =
                 filtros.FiltrarAutor || filtros.FiltrarTitulo || filtros.FiltrarAplicacion || filtros.FiltrarPaginas;
+                bool tieneFiltrosSeguridadActivos = filtros.Seguridad != null && filtros.Seguridad.Any(kv => kv.Value);
 
-                bool hayAlgúnFiltroActivo = tieneFiltrosActivos || tieneFiltrosFechaActivos || tieneFiltrosMetadatosActivos;
+                bool hayAlgúnFiltroActivo = tieneFiltrosActivos || tieneFiltrosFechaActivos || tieneFiltrosMetadatosActivos || tieneFiltrosSeguridadActivos;
 
 
 
@@ -144,14 +145,13 @@ namespace Lexora
                     FileInfo info = new FileInfo(archivo);
                     string ext = info.Extension.ToLower();
 
+                    bool cumpleSeguridad = CumpleFiltrosSeguridad(info);
 
-                    //+ filtros de fecha Y metadatos documentos
                     bool cumpleTipo = !tieneFiltrosActivos || extensionesPermitidas.Contains(ext);
                     bool cumpleFecha = CumpleFiltrosFecha(info);
                     bool cumpleMetadatos = CumpleFiltrosMetadatosDocumento(archivo);
 
-                    // si cumple todo, se muestra
-                    if (cumpleTipo && cumpleFecha && cumpleMetadatos)
+                    if (cumpleTipo && cumpleFecha && cumpleMetadatos && cumpleSeguridad)
                     {
                         ListViewItem item = new ListViewItem(info.Name);
                         item.SubItems.Add(info.Extension + " (Archivo)");
@@ -159,14 +159,6 @@ namespace Lexora
                         item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
                         listViewArchivos.Items.Add(item);
                     }
-
-
-
-
-
-
-
-
                 }
             }
             catch (UnauthorizedAccessException)
@@ -272,8 +264,9 @@ namespace Lexora
                     bool cumpleTipo = !tieneFiltrosTipo || extensionesPermitidas.Contains(ext);
                     bool cumpleFecha = CumpleFiltrosFecha(info);
                     bool cumpleMetadatos = CumpleFiltrosMetadatosDocumento(archivo);
+                    bool cumpleSeguridad = CumpleFiltrosSeguridad(info);
 
-                    if (cumpleTipo && cumpleFecha && cumpleMetadatos)
+                    if (cumpleTipo && cumpleFecha && cumpleMetadatos && cumpleSeguridad)
                         return true;
                 }
             }
@@ -399,8 +392,72 @@ namespace Lexora
             return true;
         }
         //========= FIN CUMPLE FILTROS FECHA PARA CARPETAS ============
+        // ===================== CUMPLE FILTROS DE SEGURIDAD =====================
+        private bool CumpleFiltrosSeguridad(FileInfo info)
+        {
+            // Si no hay diccionario o no hay nada marcado => no filtrar
+            if (filtros.Seguridad == null || filtros.Seguridad.Count == 0)
+                return true;
 
+            // Si NO hay ninguna entrada true => no filtrar
+            if (!filtros.Seguridad.Values.Any(v => v))
+                return true;
 
+            var attr = info.Attributes;
+
+            // AND entre filtros activos:
+            if (SeguridadActiva("Archivos bloqueados por el sistema (solo lectura)"))
+            {
+                if (!attr.HasFlag(FileAttributes.ReadOnly))
+                    return false;
+            }
+
+            if (SeguridadActiva("Archivos ocultos"))
+            {
+                if (!attr.HasFlag(FileAttributes.Hidden))
+                    return false;
+            }
+
+            if (SeguridadActiva("Archivos cifrados"))
+            {
+                if (!attr.HasFlag(FileAttributes.Encrypted))
+                    return false;
+            }
+
+            if (SeguridadActiva("Archivos protegidos por contraseña"))
+            {
+                // Si solo lo soportas para PDF:
+                if (info.Extension.ToLowerInvariant() != ".pdf")
+                    return false;
+
+                if (!PdfTienePassword(info.FullName))
+                    return false;
+            }
+
+            return true;
+        }
+        //===================== FIN CUMPLE FILTROS DE SEGURIDAD =====================
+        private bool PdfTienePassword(string rutaPdf)
+        {
+            try
+            {
+                using (var reader = new iText.Kernel.Pdf.PdfReader(rutaPdf))
+                using (var pdf = new iText.Kernel.Pdf.PdfDocument(reader))
+                {
+                    return false; // se abrió => no requiere password
+                }
+            }
+            catch (Exception ex)
+            {
+                // iText lanza excepciones distintas según versión.
+                // Esto cubre la mayoría de casos cuando está encriptado/requiere password.
+                string msg = (ex.Message ?? "").ToLowerInvariant();
+                if (msg.Contains("password") || msg.Contains("encrypted") || msg.Contains("encryption"))
+                    return true;
+
+                return false;
+            }
+        }
 
 
         private void listViewArchivos_DoubleClick(object sender, EventArgs e)
@@ -613,6 +670,17 @@ namespace Lexora
                 // permisos/archivos raros => no cumple
                 return false;
             }
+        }
+        private bool SeguridadActiva(string nombre)
+        {
+            if (filtros.Seguridad == null) return false;
+            return filtros.Seguridad.TryGetValue(nombre, out bool act) && act;
+        }
+        // Cerrar completamente la aplicación
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            Application.Exit();
         }
     }
 }

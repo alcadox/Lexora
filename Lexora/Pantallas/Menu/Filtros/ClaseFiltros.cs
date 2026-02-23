@@ -187,5 +187,10 @@ namespace Lexora.Pantallas.Menu.Filtros
         public bool FiltrarAplicacion { get; set; }
         public bool FiltrarPaginas { get; set; }
 
+        // ===== FILTROS DE SEGURIDAD =====
+        public Dictionary<string, bool> Seguridad { get; set; } = new Dictionary<string, bool>();
+
+
+
     }
 }

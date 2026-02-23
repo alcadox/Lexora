@@ -555,6 +555,7 @@
             this.checkedListBoxSeguridad.Name = "checkedListBoxSeguridad";
             this.checkedListBoxSeguridad.Size = new System.Drawing.Size(406, 298);
             this.checkedListBoxSeguridad.TabIndex = 3;
+            this.checkedListBoxSeguridad.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxSeguridad_ItemCheck);
             // 
             // panel8
             // 
