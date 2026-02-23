@@ -17,7 +17,48 @@ namespace Lexora.Pantallas.Menu.Filtros
         {
             InitializeComponent();
             filtros = filtrosTraidos;
+
+            // ===== ENGANCHE FORZADO DE EVENTOS (para que no dependa del Designer) =====
+            checkBoxFiltroAutorDoc.CheckedChanged += checkBoxFiltroAutorDoc_CheckedChanged;
+            checkBoxFiltroTituloDoc.CheckedChanged += checkBoxFiltroTituloDoc_CheckedChanged;
+            checkBoxFiltroAppQLoGenero.CheckedChanged += checkBoxFiltroAppQLoGenero_CheckedChanged;
+            checkBoxFiltroCantPaginas.CheckedChanged += checkBoxFiltroCantPaginas_CheckedChanged;
+
+            textBoxAutorDoc.TextChanged += textBoxAutorDoc_TextChanged;
+            textBoxTituloDoc.TextChanged += textBoxTituloDoc_TextChanged;
+            textBoxAppQGeneroDoc.TextChanged += textBoxAppQGeneroDoc_TextChanged;
+            textBoxNumPag.TextChanged += textBoxNumPag_TextChanged; // crea este método si no existe
+
+            buttonSumarPagina.Click += buttonSumarPagina_Click;
+            buttonRestarPagina.Click += buttonRestarPagina_Click;
+
+            // ================================================================
+
             cargarFiltros();
+            ActualizarEstadoMetadatosUI(); // <- IMPORTANTÍSIMO para que arranque bien
+        }
+
+        private void ActualizarEstadoMetadatosUI()
+        {
+            // autor
+            textBoxAutorDoc.Enabled = checkBoxFiltroAutorDoc.Checked;
+
+            // título
+            textBoxTituloDoc.Enabled = checkBoxFiltroTituloDoc.Checked;
+
+            // app
+            textBoxAppQGeneroDoc.Enabled = checkBoxFiltroAppQLoGenero.Checked;
+
+            // páginas
+            bool activoPag = checkBoxFiltroCantPaginas.Checked;
+            textBoxNumPag.Enabled = activoPag;
+            buttonSumarPagina.Enabled = activoPag;
+            buttonRestarPagina.Enabled = activoPag;
+        }
+
+        private void textBoxNumPag_TextChanged(object sender, EventArgs e)
+        {
+            botonAplicar.Enabled = true;
         }
 
         // ========== CARGAR FILTROS ==========
@@ -49,20 +90,34 @@ namespace Lexora.Pantallas.Menu.Filtros
             {
                 lblInfoFecha.Text = "Hay filtros de fecha guardados. Selecciona uno para ver/editar.";
             }
-        //
+            //
 
         //BLOQUE para precargar los metadatos por documetnos:
+         // ===== precargar filtros metadatos documentos =====
+
+            // autor
             checkBoxFiltroAutorDoc.Checked = filtros.FiltrarAutor;
             textBoxAutorDoc.Text = filtros.AutorDocumento ?? "";
+            textBoxAutorDoc.Enabled = checkBoxFiltroAutorDoc.Checked;
 
-            checkBoxFiltroAutorDoc.Checked = filtros.FiltrarTitulo;
+            // título
+            checkBoxFiltroTituloDoc.Checked = filtros.FiltrarTitulo;
             textBoxTituloDoc.Text = filtros.TituloDocumento ?? "";
+            textBoxTituloDoc.Enabled = checkBoxFiltroTituloDoc.Checked;
 
+            // app que lo generó
             checkBoxFiltroAppQLoGenero.Checked = filtros.FiltrarAplicacion;
             textBoxAppQGeneroDoc.Text = filtros.AplicacionGeneradora ?? "";
+            textBoxAppQGeneroDoc.Enabled = checkBoxFiltroAppQLoGenero.Checked;
 
+            // cantidad de páginas (+ y -)
             checkBoxFiltroCantPaginas.Checked = filtros.FiltrarPaginas;
             textBoxNumPag.Text = filtros.CantidadPaginas?.ToString() ?? "0";
+
+            bool activoPag = checkBoxFiltroCantPaginas.Checked;
+            textBoxNumPag.Enabled = activoPag;
+            buttonSumarPagina.Enabled = activoPag;
+            buttonRestarPagina.Enabled = activoPag;
 
 
 
@@ -76,6 +131,8 @@ namespace Lexora.Pantallas.Menu.Filtros
             textBoxNumPag.Enabled = checkBoxFiltroCantPaginas.Checked;
             buttonSumarPagina.Enabled = checkBoxFiltroCantPaginas.Checked;
             buttonRestarPagina.Enabled = checkBoxFiltroCantPaginas.Checked;
+
+            ActualizarEstadoMetadatosUI();
         }
 
         private void botonAplicar_Click(object sender, EventArgs e)
@@ -146,56 +203,42 @@ namespace Lexora.Pantallas.Menu.Filtros
         private void textBoxAppQGeneroDoc_TextChanged(object sender, EventArgs e){botonAplicar.Enabled = true;}
 
 
-     //Para que los textfields estén desactivados hasta que se active su checkbox correspondiente,
+        //Para que los textfields estén desactivados hasta que se active su checkbox correspondiente,
 
         //autor
         private void checkBoxFiltroAutorDoc_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxAutorDoc.Enabled = checkBoxFiltroAutorDoc.Checked;
-
-            // opcional: si lo desmarcas, vacías el texto para evitar confusiones
-            if (!checkBoxFiltroAutorDoc.Checked)
-                textBoxAutorDoc.Text = "";
-
+            if (!checkBoxFiltroAutorDoc.Checked) textBoxAutorDoc.Text = "";
+            ActualizarEstadoMetadatosUI();
             botonAplicar.Enabled = true;
         }
         //título
         private void checkBoxFiltroTituloDoc_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxTituloDoc.Enabled = checkBoxFiltroTituloDoc.Checked;
-
-            if (!checkBoxFiltroTituloDoc.Checked)
-                textBoxTituloDoc.Text = "";
-
+            if (!checkBoxFiltroTituloDoc.Checked) textBoxTituloDoc.Text = "";
+            ActualizarEstadoMetadatosUI();
             botonAplicar.Enabled = true;
         }
         //app que lo generó
         private void checkBoxFiltroAppQLoGenero_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxAppQGeneroDoc.Enabled = checkBoxFiltroAppQLoGenero.Checked;
-
-            if (!checkBoxFiltroAppQLoGenero.Checked)
-                textBoxAppQGeneroDoc.Text = "";
-
+            if (!checkBoxFiltroAppQLoGenero.Checked) textBoxAppQGeneroDoc.Text = "";
+            ActualizarEstadoMetadatosUI();
             botonAplicar.Enabled = true;
         }
         //cantidad de páginas
         private void checkBoxFiltroCantPaginas_CheckedChanged(object sender, EventArgs e)
         {
-            bool activo = checkBoxFiltroCantPaginas.Checked;
-
-            textBoxNumPag.Enabled = activo;
-            buttonSumarPagina.Enabled = activo;
-            buttonRestarPagina.Enabled = activo;
-
-            if (!activo)
-                textBoxNumPag.Text = "0"; // o "" si prefieres
-
+            if (!checkBoxFiltroCantPaginas.Checked) textBoxNumPag.Text = "0";
+            ActualizarEstadoMetadatosUI();
             botonAplicar.Enabled = true;
         }
 
         private void botonCerrar_Click(object sender, EventArgs e)
         {
+            // si hay cambios pendientes, aplicarlos
+            if (botonAplicar.Enabled)
+                botonAplicar.PerformClick();
             Close();
         }
 
@@ -326,7 +369,6 @@ namespace Lexora.Pantallas.Menu.Filtros
                 }
             }));
         }
-
         
 
         private void buttonSumarPagina_Click(object sender, EventArgs e)
