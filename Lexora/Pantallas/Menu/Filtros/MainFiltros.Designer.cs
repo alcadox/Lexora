@@ -33,6 +33,11 @@
             this.botonCerrar = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageFiltroTipoArchivo = new System.Windows.Forms.TabPage();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.checkedListBoxTipoArchivo = new System.Windows.Forms.CheckedListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.lblTituloFiltroTipoArchivo = new System.Windows.Forms.Label();
             this.tabPageFiltroTamano = new System.Windows.Forms.TabPage();
             this.tabPageFiltroFecha = new System.Windows.Forms.TabPage();
             this.panel7 = new System.Windows.Forms.Panel();
@@ -63,7 +68,6 @@
             this.labeltitulotipoDeMeta = new System.Windows.Forms.Label();
             this.tabPageFiltroMetadatosImagenes = new System.Windows.Forms.TabPage();
             this.panelDerechoOpcionesMetadatosImagenes = new System.Windows.Forms.Panel();
-            this.panelLocalizacionGps = new System.Windows.Forms.Panel();
             this.panelModeloCamara = new System.Windows.Forms.Panel();
             this.panelFechaTomaImagen = new System.Windows.Forms.Panel();
             this.panelResolucionImagen = new System.Windows.Forms.Panel();
@@ -79,7 +83,6 @@
             this.panel14 = new System.Windows.Forms.Panel();
             this.checkedListBoxFiltrosMetadatosImagenes = new System.Windows.Forms.CheckedListBox();
             this.panelSuperiorMetadatosImagenes = new System.Windows.Forms.Panel();
-            this.labelTituloMetadatosImagenes = new System.Windows.Forms.Label();
             this.tabPageFiltroSeguridad = new System.Windows.Forms.TabPage();
             this.panel10 = new System.Windows.Forms.Panel();
             this.panel9 = new System.Windows.Forms.Panel();
@@ -87,14 +90,30 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.labelTituloFiltroSeguridad = new System.Windows.Forms.Label();
             this.tabPageFiltroEstructura = new System.Windows.Forms.TabPage();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.checkedListBoxTipoArchivo = new System.Windows.Forms.CheckedListBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.lblTituloFiltroTipoArchivo = new System.Windows.Forms.Label();
+            this.datePrincipioDeImagen = new System.Windows.Forms.DateTimePicker();
+            this.dateFinDeImagen = new System.Windows.Forms.DateTimePicker();
+            this.labelTituloMetadatosImagenes = new System.Windows.Forms.Label();
+            this.labelFechainicio = new System.Windows.Forms.Label();
+            this.labelFechaFin = new System.Windows.Forms.Label();
+            this.labelModeloCamara = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxModelosCamara = new System.Windows.Forms.ComboBox();
+            this.comboBoxModelosMoviles = new System.Windows.Forms.ComboBox();
+            this.panel15 = new System.Windows.Forms.Panel();
+            this.textBoxLongitud = new System.Windows.Forms.TextBox();
+            this.textBoxLatitud = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.labelLatitud = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.panelPrincipal.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPageFiltroTipoArchivo.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.tabPageFiltroFecha.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -105,14 +124,15 @@
             this.panel11.SuspendLayout();
             this.tabPageFiltroMetadatosImagenes.SuspendLayout();
             this.panelDerechoOpcionesMetadatosImagenes.SuspendLayout();
+            this.panelModeloCamara.SuspendLayout();
+            this.panelFechaTomaImagen.SuspendLayout();
             this.panelResolucionImagen.SuspendLayout();
             this.panel14.SuspendLayout();
             this.panelSuperiorMetadatosImagenes.SuspendLayout();
             this.tabPageFiltroSeguridad.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel8.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.panel15.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelPrincipal
@@ -175,6 +195,63 @@
             this.tabPageFiltroTipoArchivo.TabIndex = 0;
             this.tabPageFiltroTipoArchivo.Text = "Tipo";
             this.tabPageFiltroTipoArchivo.UseVisualStyleBackColor = true;
+            // 
+            // panel3
+            // 
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.checkedListBoxTipoArchivo);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel3.Location = new System.Drawing.Point(3, 55);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(373, 313);
+            this.panel3.TabIndex = 7;
+            // 
+            // checkedListBoxTipoArchivo
+            // 
+            this.checkedListBoxTipoArchivo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.checkedListBoxTipoArchivo.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkedListBoxTipoArchivo.FormattingEnabled = true;
+            this.checkedListBoxTipoArchivo.Items.AddRange(new object[] {
+            "Documentos (pdf, docx, txt...)",
+            "Imágenes (png, jpg, svg...)",
+            "Vídeos (mp4, avi...)",
+            "Audio (mp3, wav...)",
+            "Comprimidos (zip, rar, 7z...)",
+            "Instaladores (exe, msi...)",
+            "Código (java, js, py...)",
+            "Cifrados"});
+            this.checkedListBoxTipoArchivo.Location = new System.Drawing.Point(8, 12);
+            this.checkedListBoxTipoArchivo.Name = "checkedListBoxTipoArchivo";
+            this.checkedListBoxTipoArchivo.Size = new System.Drawing.Size(358, 288);
+            this.checkedListBoxTipoArchivo.TabIndex = 2;
+            // 
+            // panel2
+            // 
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel2.Location = new System.Drawing.Point(375, 55);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(372, 313);
+            this.panel2.TabIndex = 6;
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.lblTituloFiltroTipoArchivo);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(744, 52);
+            this.panel1.TabIndex = 5;
+            // 
+            // lblTituloFiltroTipoArchivo
+            // 
+            this.lblTituloFiltroTipoArchivo.AutoSize = true;
+            this.lblTituloFiltroTipoArchivo.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloFiltroTipoArchivo.Location = new System.Drawing.Point(3, 11);
+            this.lblTituloFiltroTipoArchivo.Name = "lblTituloFiltroTipoArchivo";
+            this.lblTituloFiltroTipoArchivo.Size = new System.Drawing.Size(245, 27);
+            this.lblTituloFiltroTipoArchivo.TabIndex = 0;
+            this.lblTituloFiltroTipoArchivo.Text = "Filtros por tipo de archivo:";
             // 
             // tabPageFiltroTamano
             // 
@@ -486,7 +563,7 @@
             // panelDerechoOpcionesMetadatosImagenes
             // 
             this.panelDerechoOpcionesMetadatosImagenes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelDerechoOpcionesMetadatosImagenes.Controls.Add(this.panelLocalizacionGps);
+            this.panelDerechoOpcionesMetadatosImagenes.Controls.Add(this.panel15);
             this.panelDerechoOpcionesMetadatosImagenes.Controls.Add(this.panelModeloCamara);
             this.panelDerechoOpcionesMetadatosImagenes.Controls.Add(this.panelFechaTomaImagen);
             this.panelDerechoOpcionesMetadatosImagenes.Controls.Add(this.panelResolucionImagen);
@@ -496,17 +573,13 @@
             this.panelDerechoOpcionesMetadatosImagenes.Size = new System.Drawing.Size(449, 319);
             this.panelDerechoOpcionesMetadatosImagenes.TabIndex = 9;
             // 
-            // panelLocalizacionGps
-            // 
-            this.panelLocalizacionGps.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelLocalizacionGps.Location = new System.Drawing.Point(6, 243);
-            this.panelLocalizacionGps.Name = "panelLocalizacionGps";
-            this.panelLocalizacionGps.Size = new System.Drawing.Size(440, 73);
-            this.panelLocalizacionGps.TabIndex = 3;
-            // 
             // panelModeloCamara
             // 
             this.panelModeloCamara.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelModeloCamara.Controls.Add(this.comboBoxModelosMoviles);
+            this.panelModeloCamara.Controls.Add(this.comboBoxModelosCamara);
+            this.panelModeloCamara.Controls.Add(this.label1);
+            this.panelModeloCamara.Controls.Add(this.labelModeloCamara);
             this.panelModeloCamara.Location = new System.Drawing.Point(6, 164);
             this.panelModeloCamara.Name = "panelModeloCamara";
             this.panelModeloCamara.Size = new System.Drawing.Size(440, 73);
@@ -515,6 +588,10 @@
             // panelFechaTomaImagen
             // 
             this.panelFechaTomaImagen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelFechaTomaImagen.Controls.Add(this.labelFechaFin);
+            this.panelFechaTomaImagen.Controls.Add(this.labelFechainicio);
+            this.panelFechaTomaImagen.Controls.Add(this.dateFinDeImagen);
+            this.panelFechaTomaImagen.Controls.Add(this.datePrincipioDeImagen);
             this.panelFechaTomaImagen.Location = new System.Drawing.Point(6, 85);
             this.panelFechaTomaImagen.Name = "panelFechaTomaImagen";
             this.panelFechaTomaImagen.Size = new System.Drawing.Size(440, 73);
@@ -662,16 +739,6 @@
             this.panelSuperiorMetadatosImagenes.Size = new System.Drawing.Size(750, 52);
             this.panelSuperiorMetadatosImagenes.TabIndex = 7;
             // 
-            // labelTituloMetadatosImagenes
-            // 
-            this.labelTituloMetadatosImagenes.AutoSize = true;
-            this.labelTituloMetadatosImagenes.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTituloMetadatosImagenes.Location = new System.Drawing.Point(3, 11);
-            this.labelTituloMetadatosImagenes.Name = "labelTituloMetadatosImagenes";
-            this.labelTituloMetadatosImagenes.Size = new System.Drawing.Size(330, 27);
-            this.labelTituloMetadatosImagenes.TabIndex = 0;
-            this.labelTituloMetadatosImagenes.Text = "Filtros de metadatos para Imágenes:";
-            // 
             // tabPageFiltroSeguridad
             // 
             this.tabPageFiltroSeguridad.Controls.Add(this.panel10);
@@ -745,62 +812,198 @@
             this.tabPageFiltroEstructura.Text = "Estructura";
             this.tabPageFiltroEstructura.UseVisualStyleBackColor = true;
             // 
-            // panel3
+            // datePrincipioDeImagen
             // 
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3.Controls.Add(this.checkedListBoxTipoArchivo);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel3.Location = new System.Drawing.Point(3, 55);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(373, 313);
-            this.panel3.TabIndex = 7;
+            this.datePrincipioDeImagen.Font = new System.Drawing.Font("Segoe UI Variable Small", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.datePrincipioDeImagen.Location = new System.Drawing.Point(150, 8);
+            this.datePrincipioDeImagen.Name = "datePrincipioDeImagen";
+            this.datePrincipioDeImagen.Size = new System.Drawing.Size(266, 25);
+            this.datePrincipioDeImagen.TabIndex = 0;
+            this.datePrincipioDeImagen.Value = new System.DateTime(2026, 2, 24, 0, 0, 0, 0);
             // 
-            // checkedListBoxTipoArchivo
+            // dateFinDeImagen
             // 
-            this.checkedListBoxTipoArchivo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.checkedListBoxTipoArchivo.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkedListBoxTipoArchivo.FormattingEnabled = true;
-            this.checkedListBoxTipoArchivo.Items.AddRange(new object[] {
-            "Documentos (pdf, docx, txt...)",
-            "Imágenes (png, jpg, svg...)",
-            "Vídeos (mp4, avi...)",
-            "Audio (mp3, wav...)",
-            "Comprimidos (zip, rar, 7z...)",
-            "Instaladores (exe, msi...)",
-            "Código (java, js, py...)",
-            "Cifrados"});
-            this.checkedListBoxTipoArchivo.Location = new System.Drawing.Point(8, 12);
-            this.checkedListBoxTipoArchivo.Name = "checkedListBoxTipoArchivo";
-            this.checkedListBoxTipoArchivo.Size = new System.Drawing.Size(358, 288);
-            this.checkedListBoxTipoArchivo.TabIndex = 2;
+            this.dateFinDeImagen.Font = new System.Drawing.Font("Segoe UI Variable Small", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dateFinDeImagen.Location = new System.Drawing.Point(133, 40);
+            this.dateFinDeImagen.Name = "dateFinDeImagen";
+            this.dateFinDeImagen.Size = new System.Drawing.Size(283, 25);
+            this.dateFinDeImagen.TabIndex = 1;
+            this.dateFinDeImagen.Value = new System.DateTime(2026, 2, 24, 0, 0, 0, 0);
             // 
-            // panel2
+            // labelTituloMetadatosImagenes
             // 
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(375, 55);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(372, 313);
-            this.panel2.TabIndex = 6;
+            this.labelTituloMetadatosImagenes.AutoSize = true;
+            this.labelTituloMetadatosImagenes.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTituloMetadatosImagenes.Location = new System.Drawing.Point(3, 11);
+            this.labelTituloMetadatosImagenes.Name = "labelTituloMetadatosImagenes";
+            this.labelTituloMetadatosImagenes.Size = new System.Drawing.Size(330, 27);
+            this.labelTituloMetadatosImagenes.TabIndex = 0;
+            this.labelTituloMetadatosImagenes.Text = "Filtros de metadatos para Imágenes:";
             // 
-            // panel1
+            // labelFechainicio
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.lblTituloFiltroTipoArchivo);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(744, 52);
-            this.panel1.TabIndex = 5;
+            this.labelFechainicio.AutoSize = true;
+            this.labelFechainicio.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFechainicio.Location = new System.Drawing.Point(30, 10);
+            this.labelFechainicio.Name = "labelFechainicio";
+            this.labelFechainicio.Size = new System.Drawing.Size(114, 21);
+            this.labelFechainicio.TabIndex = 1;
+            this.labelFechainicio.Text = "Fecha Inicio ->";
             // 
-            // lblTituloFiltroTipoArchivo
+            // labelFechaFin
             // 
-            this.lblTituloFiltroTipoArchivo.AutoSize = true;
-            this.lblTituloFiltroTipoArchivo.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTituloFiltroTipoArchivo.Location = new System.Drawing.Point(3, 11);
-            this.lblTituloFiltroTipoArchivo.Name = "lblTituloFiltroTipoArchivo";
-            this.lblTituloFiltroTipoArchivo.Size = new System.Drawing.Size(245, 27);
-            this.lblTituloFiltroTipoArchivo.TabIndex = 0;
-            this.lblTituloFiltroTipoArchivo.Text = "Filtros por tipo de archivo:";
+            this.labelFechaFin.AutoSize = true;
+            this.labelFechaFin.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFechaFin.Location = new System.Drawing.Point(30, 42);
+            this.labelFechaFin.Name = "labelFechaFin";
+            this.labelFechaFin.Size = new System.Drawing.Size(97, 21);
+            this.labelFechaFin.TabIndex = 2;
+            this.labelFechaFin.Text = "Fecha Fin ->";
+            // 
+            // labelModeloCamara
+            // 
+            this.labelModeloCamara.AutoSize = true;
+            this.labelModeloCamara.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelModeloCamara.Location = new System.Drawing.Point(65, 7);
+            this.labelModeloCamara.Name = "labelModeloCamara";
+            this.labelModeloCamara.Size = new System.Drawing.Size(107, 16);
+            this.labelModeloCamara.TabIndex = 14;
+            this.labelModeloCamara.Text = "Modelo de Cámara";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(266, 7);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(97, 16);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Modelo de Móvil";
+            // 
+            // comboBoxModelosCamara
+            // 
+            this.comboBoxModelosCamara.Font = new System.Drawing.Font("Segoe UI Variable Display", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxModelosCamara.FormattingEnabled = true;
+            this.comboBoxModelosCamara.Location = new System.Drawing.Point(56, 30);
+            this.comboBoxModelosCamara.Name = "comboBoxModelosCamara";
+            this.comboBoxModelosCamara.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxModelosCamara.TabIndex = 16;
+            // 
+            // comboBoxModelosMoviles
+            // 
+            this.comboBoxModelosMoviles.Font = new System.Drawing.Font("Segoe UI Variable Display", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxModelosMoviles.FormattingEnabled = true;
+            this.comboBoxModelosMoviles.Location = new System.Drawing.Point(255, 30);
+            this.comboBoxModelosMoviles.Name = "comboBoxModelosMoviles";
+            this.comboBoxModelosMoviles.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxModelosMoviles.TabIndex = 17;
+            // 
+            // panel15
+            // 
+            this.panel15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel15.Controls.Add(this.textBoxLongitud);
+            this.panel15.Controls.Add(this.textBoxLatitud);
+            this.panel15.Controls.Add(this.label3);
+            this.panel15.Controls.Add(this.labelLatitud);
+            this.panel15.Controls.Add(this.button1);
+            this.panel15.Controls.Add(this.button2);
+            this.panel15.Controls.Add(this.label5);
+            this.panel15.Controls.Add(this.button3);
+            this.panel15.Controls.Add(this.button4);
+            this.panel15.Location = new System.Drawing.Point(6, 243);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(440, 73);
+            this.panel15.TabIndex = 14;
+            // 
+            // textBoxLongitud
+            // 
+            this.textBoxLongitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxLongitud.Location = new System.Drawing.Point(285, 28);
+            this.textBoxLongitud.Name = "textBoxLongitud";
+            this.textBoxLongitud.Size = new System.Drawing.Size(54, 27);
+            this.textBoxLongitud.TabIndex = 13;
+            this.textBoxLongitud.Text = "0";
+            this.textBoxLongitud.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBoxLatitud
+            // 
+            this.textBoxLatitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxLatitud.Location = new System.Drawing.Point(81, 28);
+            this.textBoxLatitud.Name = "textBoxLatitud";
+            this.textBoxLatitud.Size = new System.Drawing.Size(54, 27);
+            this.textBoxLatitud.TabIndex = 0;
+            this.textBoxLatitud.Text = "0";
+            this.textBoxLatitud.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(284, 3);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(55, 16);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Longitud";
+            // 
+            // labelLatitud
+            // 
+            this.labelLatitud.AutoSize = true;
+            this.labelLatitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelLatitud.Location = new System.Drawing.Point(89, 3);
+            this.labelLatitud.Name = "labelLatitud";
+            this.labelLatitud.Size = new System.Drawing.Size(44, 16);
+            this.labelLatitud.TabIndex = 11;
+            this.labelLatitud.Text = "Latitud";
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(343, 25);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(24, 30);
+            this.button1.TabIndex = 10;
+            this.button1.Text = ">";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(255, 25);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(24, 30);
+            this.button2.TabIndex = 9;
+            this.button2.Text = "<";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI Variable Text Semibold", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(198, 24);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(22, 27);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "x";
+            // 
+            // button3
+            // 
+            this.button3.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Location = new System.Drawing.Point(139, 25);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(24, 30);
+            this.button3.TabIndex = 3;
+            this.button3.Text = ">";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.Location = new System.Drawing.Point(51, 25);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(24, 30);
+            this.button4.TabIndex = 2;
+            this.button4.Text = "<";
+            this.button4.UseVisualStyleBackColor = true;
             // 
             // MainFiltros
             // 
@@ -813,6 +1016,9 @@
             this.panelPrincipal.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tabPageFiltroTipoArchivo.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.tabPageFiltroFecha.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
@@ -827,6 +1033,10 @@
             this.panel11.PerformLayout();
             this.tabPageFiltroMetadatosImagenes.ResumeLayout(false);
             this.panelDerechoOpcionesMetadatosImagenes.ResumeLayout(false);
+            this.panelModeloCamara.ResumeLayout(false);
+            this.panelModeloCamara.PerformLayout();
+            this.panelFechaTomaImagen.ResumeLayout(false);
+            this.panelFechaTomaImagen.PerformLayout();
             this.panelResolucionImagen.ResumeLayout(false);
             this.panelResolucionImagen.PerformLayout();
             this.panel14.ResumeLayout(false);
@@ -836,9 +1046,8 @@
             this.panel9.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.panel15.ResumeLayout(false);
+            this.panel15.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -886,7 +1095,6 @@
         private System.Windows.Forms.Button buttonSumarPagina;
         private System.Windows.Forms.TextBox textBoxNumPag;
         private System.Windows.Forms.Panel panelDerechoOpcionesMetadatosImagenes;
-        private System.Windows.Forms.Panel panelLocalizacionGps;
         private System.Windows.Forms.Panel panelModeloCamara;
         private System.Windows.Forms.Panel panelFechaTomaImagen;
         private System.Windows.Forms.Panel panelResolucionImagen;
@@ -902,11 +1110,29 @@
         private System.Windows.Forms.Panel panel14;
         private System.Windows.Forms.CheckedListBox checkedListBoxFiltrosMetadatosImagenes;
         private System.Windows.Forms.Panel panelSuperiorMetadatosImagenes;
-        private System.Windows.Forms.Label labelTituloMetadatosImagenes;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.CheckedListBox checkedListBoxTipoArchivo;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblTituloFiltroTipoArchivo;
+        private System.Windows.Forms.DateTimePicker datePrincipioDeImagen;
+        private System.Windows.Forms.Label labelFechaFin;
+        private System.Windows.Forms.Label labelFechainicio;
+        private System.Windows.Forms.DateTimePicker dateFinDeImagen;
+        private System.Windows.Forms.Label labelTituloMetadatosImagenes;
+        private System.Windows.Forms.ComboBox comboBoxModelosMoviles;
+        private System.Windows.Forms.ComboBox comboBoxModelosCamara;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelModeloCamara;
+        private System.Windows.Forms.Panel panel15;
+        private System.Windows.Forms.TextBox textBoxLongitud;
+        private System.Windows.Forms.TextBox textBoxLatitud;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelLatitud;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
     }
 }
