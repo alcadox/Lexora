@@ -74,6 +74,24 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.labelTituloFiltroSeguridad = new System.Windows.Forms.Label();
             this.tabPageFiltroEstructura = new System.Windows.Forms.TabPage();
+            this.panelDerechoOpcionesMetadatosImagenes = new System.Windows.Forms.Panel();
+            this.panelLocalizacionGps = new System.Windows.Forms.Panel();
+            this.panelModeloCamara = new System.Windows.Forms.Panel();
+            this.panelFechaTomaImagen = new System.Windows.Forms.Panel();
+            this.panelResolucionImagen = new System.Windows.Forms.Panel();
+            this.textBoxResolucionImagenAltura = new System.Windows.Forms.TextBox();
+            this.textBoxResolucionImagenAnchura = new System.Windows.Forms.TextBox();
+            this.labelPixelDerecho = new System.Windows.Forms.Label();
+            this.labelPixelIzquierdo = new System.Windows.Forms.Label();
+            this.buttonDerechaPixelesMetadatosImagenesAlto = new System.Windows.Forms.Button();
+            this.buttonIzquierdaPixelesMetadatosImagenesAlto = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.buttonDerechaPixelesMetadatosImagenesAncho = new System.Windows.Forms.Button();
+            this.buttonIzquierdaPixelesMetadatosImagenesAncho = new System.Windows.Forms.Button();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.checkedListBoxFiltrosMetadatosImagenes = new System.Windows.Forms.CheckedListBox();
+            this.panelSuperiorMetadatosImagenes = new System.Windows.Forms.Panel();
+            this.labelTituloMetadatosImagenes = new System.Windows.Forms.Label();
             this.panelPrincipal.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPageFiltroTipoArchivo.SuspendLayout();
@@ -87,9 +105,14 @@
             this.panel13.SuspendLayout();
             this.panel12.SuspendLayout();
             this.panel11.SuspendLayout();
+            this.tabPageFiltroMetadatosImagenes.SuspendLayout();
             this.tabPageFiltroSeguridad.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel8.SuspendLayout();
+            this.panelDerechoOpcionesMetadatosImagenes.SuspendLayout();
+            this.panelResolucionImagen.SuspendLayout();
+            this.panel14.SuspendLayout();
+            this.panelSuperiorMetadatosImagenes.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelPrincipal
@@ -506,6 +529,9 @@
             // 
             // tabPageFiltroMetadatosImagenes
             // 
+            this.tabPageFiltroMetadatosImagenes.Controls.Add(this.panelDerechoOpcionesMetadatosImagenes);
+            this.tabPageFiltroMetadatosImagenes.Controls.Add(this.panel14);
+            this.tabPageFiltroMetadatosImagenes.Controls.Add(this.panelSuperiorMetadatosImagenes);
             this.tabPageFiltroMetadatosImagenes.Location = new System.Drawing.Point(4, 25);
             this.tabPageFiltroMetadatosImagenes.Name = "tabPageFiltroMetadatosImagenes";
             this.tabPageFiltroMetadatosImagenes.Size = new System.Drawing.Size(750, 371);
@@ -586,6 +612,195 @@
             this.tabPageFiltroEstructura.Text = "Estructura";
             this.tabPageFiltroEstructura.UseVisualStyleBackColor = true;
             // 
+            // panelDerechoOpcionesMetadatosImagenes
+            // 
+            this.panelDerechoOpcionesMetadatosImagenes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelDerechoOpcionesMetadatosImagenes.Controls.Add(this.panelLocalizacionGps);
+            this.panelDerechoOpcionesMetadatosImagenes.Controls.Add(this.panelModeloCamara);
+            this.panelDerechoOpcionesMetadatosImagenes.Controls.Add(this.panelFechaTomaImagen);
+            this.panelDerechoOpcionesMetadatosImagenes.Controls.Add(this.panelResolucionImagen);
+            this.panelDerechoOpcionesMetadatosImagenes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelDerechoOpcionesMetadatosImagenes.Location = new System.Drawing.Point(301, 52);
+            this.panelDerechoOpcionesMetadatosImagenes.Name = "panelDerechoOpcionesMetadatosImagenes";
+            this.panelDerechoOpcionesMetadatosImagenes.Size = new System.Drawing.Size(449, 319);
+            this.panelDerechoOpcionesMetadatosImagenes.TabIndex = 9;
+            // 
+            // panelLocalizacionGps
+            // 
+            this.panelLocalizacionGps.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelLocalizacionGps.Location = new System.Drawing.Point(6, 243);
+            this.panelLocalizacionGps.Name = "panelLocalizacionGps";
+            this.panelLocalizacionGps.Size = new System.Drawing.Size(440, 73);
+            this.panelLocalizacionGps.TabIndex = 3;
+            // 
+            // panelModeloCamara
+            // 
+            this.panelModeloCamara.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelModeloCamara.Location = new System.Drawing.Point(6, 164);
+            this.panelModeloCamara.Name = "panelModeloCamara";
+            this.panelModeloCamara.Size = new System.Drawing.Size(440, 73);
+            this.panelModeloCamara.TabIndex = 2;
+            // 
+            // panelFechaTomaImagen
+            // 
+            this.panelFechaTomaImagen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelFechaTomaImagen.Location = new System.Drawing.Point(6, 85);
+            this.panelFechaTomaImagen.Name = "panelFechaTomaImagen";
+            this.panelFechaTomaImagen.Size = new System.Drawing.Size(440, 73);
+            this.panelFechaTomaImagen.TabIndex = 1;
+            // 
+            // panelResolucionImagen
+            // 
+            this.panelResolucionImagen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelResolucionImagen.Controls.Add(this.textBoxResolucionImagenAltura);
+            this.panelResolucionImagen.Controls.Add(this.textBoxResolucionImagenAnchura);
+            this.panelResolucionImagen.Controls.Add(this.labelPixelDerecho);
+            this.panelResolucionImagen.Controls.Add(this.labelPixelIzquierdo);
+            this.panelResolucionImagen.Controls.Add(this.buttonDerechaPixelesMetadatosImagenesAlto);
+            this.panelResolucionImagen.Controls.Add(this.buttonIzquierdaPixelesMetadatosImagenesAlto);
+            this.panelResolucionImagen.Controls.Add(this.label2);
+            this.panelResolucionImagen.Controls.Add(this.buttonDerechaPixelesMetadatosImagenesAncho);
+            this.panelResolucionImagen.Controls.Add(this.buttonIzquierdaPixelesMetadatosImagenesAncho);
+            this.panelResolucionImagen.Location = new System.Drawing.Point(6, 6);
+            this.panelResolucionImagen.Name = "panelResolucionImagen";
+            this.panelResolucionImagen.Size = new System.Drawing.Size(440, 73);
+            this.panelResolucionImagen.TabIndex = 0;
+            // 
+            // textBoxResolucionImagenAltura
+            // 
+            this.textBoxResolucionImagenAltura.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResolucionImagenAltura.Location = new System.Drawing.Point(285, 28);
+            this.textBoxResolucionImagenAltura.Name = "textBoxResolucionImagenAltura";
+            this.textBoxResolucionImagenAltura.Size = new System.Drawing.Size(54, 27);
+            this.textBoxResolucionImagenAltura.TabIndex = 13;
+            this.textBoxResolucionImagenAltura.Text = "0";
+            this.textBoxResolucionImagenAltura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBoxResolucionImagenAnchura
+            // 
+            this.textBoxResolucionImagenAnchura.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxResolucionImagenAnchura.Location = new System.Drawing.Point(81, 28);
+            this.textBoxResolucionImagenAnchura.Name = "textBoxResolucionImagenAnchura";
+            this.textBoxResolucionImagenAnchura.Size = new System.Drawing.Size(54, 27);
+            this.textBoxResolucionImagenAnchura.TabIndex = 0;
+            this.textBoxResolucionImagenAnchura.Text = "0";
+            this.textBoxResolucionImagenAnchura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // labelPixelDerecho
+            // 
+            this.labelPixelDerecho.AutoSize = true;
+            this.labelPixelDerecho.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPixelDerecho.Location = new System.Drawing.Point(302, 3);
+            this.labelPixelDerecho.Name = "labelPixelDerecho";
+            this.labelPixelDerecho.Size = new System.Drawing.Size(22, 16);
+            this.labelPixelDerecho.TabIndex = 12;
+            this.labelPixelDerecho.Text = "px.";
+            // 
+            // labelPixelIzquierdo
+            // 
+            this.labelPixelIzquierdo.AutoSize = true;
+            this.labelPixelIzquierdo.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPixelIzquierdo.Location = new System.Drawing.Point(99, 3);
+            this.labelPixelIzquierdo.Name = "labelPixelIzquierdo";
+            this.labelPixelIzquierdo.Size = new System.Drawing.Size(22, 16);
+            this.labelPixelIzquierdo.TabIndex = 11;
+            this.labelPixelIzquierdo.Text = "px.";
+            // 
+            // buttonDerechaPixelesMetadatosImagenesAlto
+            // 
+            this.buttonDerechaPixelesMetadatosImagenesAlto.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonDerechaPixelesMetadatosImagenesAlto.Location = new System.Drawing.Point(343, 25);
+            this.buttonDerechaPixelesMetadatosImagenesAlto.Name = "buttonDerechaPixelesMetadatosImagenesAlto";
+            this.buttonDerechaPixelesMetadatosImagenesAlto.Size = new System.Drawing.Size(24, 30);
+            this.buttonDerechaPixelesMetadatosImagenesAlto.TabIndex = 10;
+            this.buttonDerechaPixelesMetadatosImagenesAlto.Text = ">";
+            this.buttonDerechaPixelesMetadatosImagenesAlto.UseVisualStyleBackColor = true;
+            // 
+            // buttonIzquierdaPixelesMetadatosImagenesAlto
+            // 
+            this.buttonIzquierdaPixelesMetadatosImagenesAlto.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonIzquierdaPixelesMetadatosImagenesAlto.Location = new System.Drawing.Point(255, 25);
+            this.buttonIzquierdaPixelesMetadatosImagenesAlto.Name = "buttonIzquierdaPixelesMetadatosImagenesAlto";
+            this.buttonIzquierdaPixelesMetadatosImagenesAlto.Size = new System.Drawing.Size(24, 30);
+            this.buttonIzquierdaPixelesMetadatosImagenesAlto.TabIndex = 9;
+            this.buttonIzquierdaPixelesMetadatosImagenesAlto.Text = "<";
+            this.buttonIzquierdaPixelesMetadatosImagenesAlto.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI Variable Text Semibold", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(198, 24);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(22, 27);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "x";
+            // 
+            // buttonDerechaPixelesMetadatosImagenesAncho
+            // 
+            this.buttonDerechaPixelesMetadatosImagenesAncho.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonDerechaPixelesMetadatosImagenesAncho.Location = new System.Drawing.Point(139, 25);
+            this.buttonDerechaPixelesMetadatosImagenesAncho.Name = "buttonDerechaPixelesMetadatosImagenesAncho";
+            this.buttonDerechaPixelesMetadatosImagenesAncho.Size = new System.Drawing.Size(24, 30);
+            this.buttonDerechaPixelesMetadatosImagenesAncho.TabIndex = 3;
+            this.buttonDerechaPixelesMetadatosImagenesAncho.Text = ">";
+            this.buttonDerechaPixelesMetadatosImagenesAncho.UseVisualStyleBackColor = true;
+            // 
+            // buttonIzquierdaPixelesMetadatosImagenesAncho
+            // 
+            this.buttonIzquierdaPixelesMetadatosImagenesAncho.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonIzquierdaPixelesMetadatosImagenesAncho.Location = new System.Drawing.Point(51, 25);
+            this.buttonIzquierdaPixelesMetadatosImagenesAncho.Name = "buttonIzquierdaPixelesMetadatosImagenesAncho";
+            this.buttonIzquierdaPixelesMetadatosImagenesAncho.Size = new System.Drawing.Size(24, 30);
+            this.buttonIzquierdaPixelesMetadatosImagenesAncho.TabIndex = 2;
+            this.buttonIzquierdaPixelesMetadatosImagenesAncho.Text = "<";
+            this.buttonIzquierdaPixelesMetadatosImagenesAncho.UseVisualStyleBackColor = true;
+            // 
+            // panel14
+            // 
+            this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel14.Controls.Add(this.checkedListBoxFiltrosMetadatosImagenes);
+            this.panel14.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel14.Location = new System.Drawing.Point(0, 52);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(301, 319);
+            this.panel14.TabIndex = 8;
+            // 
+            // checkedListBoxFiltrosMetadatosImagenes
+            // 
+            this.checkedListBoxFiltrosMetadatosImagenes.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.checkedListBoxFiltrosMetadatosImagenes.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkedListBoxFiltrosMetadatosImagenes.FormattingEnabled = true;
+            this.checkedListBoxFiltrosMetadatosImagenes.Items.AddRange(new object[] {
+            "Resolución de la imagen",
+            "EXIF (fecha de toma de la imagen)",
+            "Modelo de cámara / móvil",
+            "Localización GPS"});
+            this.checkedListBoxFiltrosMetadatosImagenes.Location = new System.Drawing.Point(8, 14);
+            this.checkedListBoxFiltrosMetadatosImagenes.Name = "checkedListBoxFiltrosMetadatosImagenes";
+            this.checkedListBoxFiltrosMetadatosImagenes.Size = new System.Drawing.Size(281, 96);
+            this.checkedListBoxFiltrosMetadatosImagenes.TabIndex = 2;
+            // 
+            // panelSuperiorMetadatosImagenes
+            // 
+            this.panelSuperiorMetadatosImagenes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelSuperiorMetadatosImagenes.Controls.Add(this.labelTituloMetadatosImagenes);
+            this.panelSuperiorMetadatosImagenes.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelSuperiorMetadatosImagenes.Location = new System.Drawing.Point(0, 0);
+            this.panelSuperiorMetadatosImagenes.Name = "panelSuperiorMetadatosImagenes";
+            this.panelSuperiorMetadatosImagenes.Size = new System.Drawing.Size(750, 52);
+            this.panelSuperiorMetadatosImagenes.TabIndex = 7;
+            // 
+            // labelTituloMetadatosImagenes
+            // 
+            this.labelTituloMetadatosImagenes.AutoSize = true;
+            this.labelTituloMetadatosImagenes.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTituloMetadatosImagenes.Location = new System.Drawing.Point(3, 11);
+            this.labelTituloMetadatosImagenes.Name = "labelTituloMetadatosImagenes";
+            this.labelTituloMetadatosImagenes.Size = new System.Drawing.Size(330, 27);
+            this.labelTituloMetadatosImagenes.TabIndex = 0;
+            this.labelTituloMetadatosImagenes.Text = "Filtros de metadatos para Imágenes:";
+            // 
             // MainFiltros
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -612,10 +827,17 @@
             this.panel12.PerformLayout();
             this.panel11.ResumeLayout(false);
             this.panel11.PerformLayout();
+            this.tabPageFiltroMetadatosImagenes.ResumeLayout(false);
             this.tabPageFiltroSeguridad.ResumeLayout(false);
             this.panel9.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
+            this.panelDerechoOpcionesMetadatosImagenes.ResumeLayout(false);
+            this.panelResolucionImagen.ResumeLayout(false);
+            this.panelResolucionImagen.PerformLayout();
+            this.panel14.ResumeLayout(false);
+            this.panelSuperiorMetadatosImagenes.ResumeLayout(false);
+            this.panelSuperiorMetadatosImagenes.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -667,5 +889,23 @@
         private System.Windows.Forms.Button buttonRestarPagina;
         private System.Windows.Forms.Button buttonSumarPagina;
         private System.Windows.Forms.TextBox textBoxNumPag;
+        private System.Windows.Forms.Panel panelDerechoOpcionesMetadatosImagenes;
+        private System.Windows.Forms.Panel panelLocalizacionGps;
+        private System.Windows.Forms.Panel panelModeloCamara;
+        private System.Windows.Forms.Panel panelFechaTomaImagen;
+        private System.Windows.Forms.Panel panelResolucionImagen;
+        private System.Windows.Forms.TextBox textBoxResolucionImagenAltura;
+        private System.Windows.Forms.TextBox textBoxResolucionImagenAnchura;
+        private System.Windows.Forms.Label labelPixelDerecho;
+        private System.Windows.Forms.Label labelPixelIzquierdo;
+        private System.Windows.Forms.Button buttonDerechaPixelesMetadatosImagenesAlto;
+        private System.Windows.Forms.Button buttonIzquierdaPixelesMetadatosImagenesAlto;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button buttonDerechaPixelesMetadatosImagenesAncho;
+        private System.Windows.Forms.Button buttonIzquierdaPixelesMetadatosImagenesAncho;
+        private System.Windows.Forms.Panel panel14;
+        private System.Windows.Forms.CheckedListBox checkedListBoxFiltrosMetadatosImagenes;
+        private System.Windows.Forms.Panel panelSuperiorMetadatosImagenes;
+        private System.Windows.Forms.Label labelTituloMetadatosImagenes;
     }
 }
