@@ -33,11 +33,6 @@
             this.botonCerrar = new System.Windows.Forms.Button();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageFiltroTipoArchivo = new System.Windows.Forms.TabPage();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.checkedListBoxTipoArchivo = new System.Windows.Forms.CheckedListBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.lblTituloFiltroTipoArchivo = new System.Windows.Forms.Label();
             this.tabPageFiltroTamano = new System.Windows.Forms.TabPage();
             this.tabPageFiltroFecha = new System.Windows.Forms.TabPage();
             this.panel7 = new System.Windows.Forms.Panel();
@@ -67,13 +62,6 @@
             this.panel11 = new System.Windows.Forms.Panel();
             this.labeltitulotipoDeMeta = new System.Windows.Forms.Label();
             this.tabPageFiltroMetadatosImagenes = new System.Windows.Forms.TabPage();
-            this.tabPageFiltroSeguridad = new System.Windows.Forms.TabPage();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.checkedListBoxSeguridad = new System.Windows.Forms.CheckedListBox();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.labelTituloFiltroSeguridad = new System.Windows.Forms.Label();
-            this.tabPageFiltroEstructura = new System.Windows.Forms.TabPage();
             this.panelDerechoOpcionesMetadatosImagenes = new System.Windows.Forms.Panel();
             this.panelLocalizacionGps = new System.Windows.Forms.Panel();
             this.panelModeloCamara = new System.Windows.Forms.Panel();
@@ -92,11 +80,21 @@
             this.checkedListBoxFiltrosMetadatosImagenes = new System.Windows.Forms.CheckedListBox();
             this.panelSuperiorMetadatosImagenes = new System.Windows.Forms.Panel();
             this.labelTituloMetadatosImagenes = new System.Windows.Forms.Label();
+            this.tabPageFiltroSeguridad = new System.Windows.Forms.TabPage();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.checkedListBoxSeguridad = new System.Windows.Forms.CheckedListBox();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.labelTituloFiltroSeguridad = new System.Windows.Forms.Label();
+            this.tabPageFiltroEstructura = new System.Windows.Forms.TabPage();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.checkedListBoxTipoArchivo = new System.Windows.Forms.CheckedListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.lblTituloFiltroTipoArchivo = new System.Windows.Forms.Label();
             this.panelPrincipal.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPageFiltroTipoArchivo.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.tabPageFiltroFecha.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -106,13 +104,15 @@
             this.panel12.SuspendLayout();
             this.panel11.SuspendLayout();
             this.tabPageFiltroMetadatosImagenes.SuspendLayout();
-            this.tabPageFiltroSeguridad.SuspendLayout();
-            this.panel9.SuspendLayout();
-            this.panel8.SuspendLayout();
             this.panelDerechoOpcionesMetadatosImagenes.SuspendLayout();
             this.panelResolucionImagen.SuspendLayout();
             this.panel14.SuspendLayout();
             this.panelSuperiorMetadatosImagenes.SuspendLayout();
+            this.tabPageFiltroSeguridad.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.panel8.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelPrincipal
@@ -175,62 +175,6 @@
             this.tabPageFiltroTipoArchivo.TabIndex = 0;
             this.tabPageFiltroTipoArchivo.Text = "Tipo";
             this.tabPageFiltroTipoArchivo.UseVisualStyleBackColor = true;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.checkedListBoxTipoArchivo);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel3.Location = new System.Drawing.Point(3, 55);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(373, 313);
-            this.panel3.TabIndex = 4;
-            // 
-            // checkedListBoxTipoArchivo
-            // 
-            this.checkedListBoxTipoArchivo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.checkedListBoxTipoArchivo.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkedListBoxTipoArchivo.FormattingEnabled = true;
-            this.checkedListBoxTipoArchivo.Items.AddRange(new object[] {
-            "Documentos (pdf, docx, txt...)",
-            "Imágenes (png, jpg, svg...)",
-            "Vídeos (mp4, avi...)",
-            "Audio (mp3, wav...)",
-            "Comprimidos (zip, rar, 7z...)",
-            "Instaladores (exe, msi...)",
-            "Código (java, js, py...)",
-            "Cifrados"});
-            this.checkedListBoxTipoArchivo.Location = new System.Drawing.Point(8, 12);
-            this.checkedListBoxTipoArchivo.Name = "checkedListBoxTipoArchivo";
-            this.checkedListBoxTipoArchivo.Size = new System.Drawing.Size(358, 288);
-            this.checkedListBoxTipoArchivo.TabIndex = 2;
-            this.checkedListBoxTipoArchivo.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxTipoArchivo_ItemCheck);
-            // 
-            // panel2
-            // 
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(375, 55);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(372, 313);
-            this.panel2.TabIndex = 3;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.lblTituloFiltroTipoArchivo);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(744, 52);
-            this.panel1.TabIndex = 2;
-            // 
-            // lblTituloFiltroTipoArchivo
-            // 
-            this.lblTituloFiltroTipoArchivo.AutoSize = true;
-            this.lblTituloFiltroTipoArchivo.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTituloFiltroTipoArchivo.Location = new System.Drawing.Point(3, 11);
-            this.lblTituloFiltroTipoArchivo.Name = "lblTituloFiltroTipoArchivo";
-            this.lblTituloFiltroTipoArchivo.Size = new System.Drawing.Size(245, 27);
-            this.lblTituloFiltroTipoArchivo.TabIndex = 0;
-            this.lblTituloFiltroTipoArchivo.Text = "Filtros por tipo de archivo:";
             // 
             // tabPageFiltroTamano
             // 
@@ -539,79 +483,6 @@
             this.tabPageFiltroMetadatosImagenes.Text = "Metadatos Imágenes";
             this.tabPageFiltroMetadatosImagenes.UseVisualStyleBackColor = true;
             // 
-            // tabPageFiltroSeguridad
-            // 
-            this.tabPageFiltroSeguridad.Controls.Add(this.panel10);
-            this.tabPageFiltroSeguridad.Controls.Add(this.panel9);
-            this.tabPageFiltroSeguridad.Controls.Add(this.panel8);
-            this.tabPageFiltroSeguridad.Location = new System.Drawing.Point(4, 25);
-            this.tabPageFiltroSeguridad.Name = "tabPageFiltroSeguridad";
-            this.tabPageFiltroSeguridad.Size = new System.Drawing.Size(750, 371);
-            this.tabPageFiltroSeguridad.TabIndex = 4;
-            this.tabPageFiltroSeguridad.Text = "Seguridad";
-            this.tabPageFiltroSeguridad.UseVisualStyleBackColor = true;
-            // 
-            // panel10
-            // 
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel10.Location = new System.Drawing.Point(406, 62);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(344, 309);
-            this.panel10.TabIndex = 2;
-            // 
-            // panel9
-            // 
-            this.panel9.Controls.Add(this.checkedListBoxSeguridad);
-            this.panel9.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel9.Location = new System.Drawing.Point(0, 62);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(406, 309);
-            this.panel9.TabIndex = 1;
-            // 
-            // checkedListBoxSeguridad
-            // 
-            this.checkedListBoxSeguridad.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkedListBoxSeguridad.FormattingEnabled = true;
-            this.checkedListBoxSeguridad.Items.AddRange(new object[] {
-            "Archivos protegidos por contraseña",
-            "Archivos cifrados",
-            "Archivos bloqueados por el sistema (solo lectura)",
-            "Archivos ocultos"});
-            this.checkedListBoxSeguridad.Location = new System.Drawing.Point(0, 3);
-            this.checkedListBoxSeguridad.Name = "checkedListBoxSeguridad";
-            this.checkedListBoxSeguridad.Size = new System.Drawing.Size(406, 298);
-            this.checkedListBoxSeguridad.TabIndex = 3;
-            this.checkedListBoxSeguridad.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxSeguridad_ItemCheck);
-            // 
-            // panel8
-            // 
-            this.panel8.Controls.Add(this.labelTituloFiltroSeguridad);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel8.Location = new System.Drawing.Point(0, 0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(750, 62);
-            this.panel8.TabIndex = 0;
-            // 
-            // labelTituloFiltroSeguridad
-            // 
-            this.labelTituloFiltroSeguridad.AutoSize = true;
-            this.labelTituloFiltroSeguridad.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTituloFiltroSeguridad.Location = new System.Drawing.Point(3, 15);
-            this.labelTituloFiltroSeguridad.Name = "labelTituloFiltroSeguridad";
-            this.labelTituloFiltroSeguridad.Size = new System.Drawing.Size(304, 27);
-            this.labelTituloFiltroSeguridad.TabIndex = 1;
-            this.labelTituloFiltroSeguridad.Text = "Filtros por Seguridad del archivo:";
-            this.labelTituloFiltroSeguridad.Click += new System.EventHandler(this.label1_Click_1);
-            // 
-            // tabPageFiltroEstructura
-            // 
-            this.tabPageFiltroEstructura.Location = new System.Drawing.Point(4, 25);
-            this.tabPageFiltroEstructura.Name = "tabPageFiltroEstructura";
-            this.tabPageFiltroEstructura.Size = new System.Drawing.Size(750, 371);
-            this.tabPageFiltroEstructura.TabIndex = 7;
-            this.tabPageFiltroEstructura.Text = "Estructura";
-            this.tabPageFiltroEstructura.UseVisualStyleBackColor = true;
-            // 
             // panelDerechoOpcionesMetadatosImagenes
             // 
             this.panelDerechoOpcionesMetadatosImagenes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -801,6 +672,136 @@
             this.labelTituloMetadatosImagenes.TabIndex = 0;
             this.labelTituloMetadatosImagenes.Text = "Filtros de metadatos para Imágenes:";
             // 
+            // tabPageFiltroSeguridad
+            // 
+            this.tabPageFiltroSeguridad.Controls.Add(this.panel10);
+            this.tabPageFiltroSeguridad.Controls.Add(this.panel9);
+            this.tabPageFiltroSeguridad.Controls.Add(this.panel8);
+            this.tabPageFiltroSeguridad.Location = new System.Drawing.Point(4, 25);
+            this.tabPageFiltroSeguridad.Name = "tabPageFiltroSeguridad";
+            this.tabPageFiltroSeguridad.Size = new System.Drawing.Size(750, 371);
+            this.tabPageFiltroSeguridad.TabIndex = 4;
+            this.tabPageFiltroSeguridad.Text = "Seguridad";
+            this.tabPageFiltroSeguridad.UseVisualStyleBackColor = true;
+            // 
+            // panel10
+            // 
+            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel10.Location = new System.Drawing.Point(406, 62);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(344, 309);
+            this.panel10.TabIndex = 2;
+            // 
+            // panel9
+            // 
+            this.panel9.Controls.Add(this.checkedListBoxSeguridad);
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel9.Location = new System.Drawing.Point(0, 62);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(406, 309);
+            this.panel9.TabIndex = 1;
+            // 
+            // checkedListBoxSeguridad
+            // 
+            this.checkedListBoxSeguridad.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkedListBoxSeguridad.FormattingEnabled = true;
+            this.checkedListBoxSeguridad.Items.AddRange(new object[] {
+            "Archivos protegidos por contraseña",
+            "Archivos cifrados",
+            "Archivos bloqueados por el sistema (solo lectura)",
+            "Archivos ocultos"});
+            this.checkedListBoxSeguridad.Location = new System.Drawing.Point(0, 3);
+            this.checkedListBoxSeguridad.Name = "checkedListBoxSeguridad";
+            this.checkedListBoxSeguridad.Size = new System.Drawing.Size(406, 298);
+            this.checkedListBoxSeguridad.TabIndex = 3;
+            this.checkedListBoxSeguridad.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxSeguridad_ItemCheck);
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.labelTituloFiltroSeguridad);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel8.Location = new System.Drawing.Point(0, 0);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(750, 62);
+            this.panel8.TabIndex = 0;
+            // 
+            // labelTituloFiltroSeguridad
+            // 
+            this.labelTituloFiltroSeguridad.AutoSize = true;
+            this.labelTituloFiltroSeguridad.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTituloFiltroSeguridad.Location = new System.Drawing.Point(3, 15);
+            this.labelTituloFiltroSeguridad.Name = "labelTituloFiltroSeguridad";
+            this.labelTituloFiltroSeguridad.Size = new System.Drawing.Size(304, 27);
+            this.labelTituloFiltroSeguridad.TabIndex = 1;
+            this.labelTituloFiltroSeguridad.Text = "Filtros por Seguridad del archivo:";
+            this.labelTituloFiltroSeguridad.Click += new System.EventHandler(this.label1_Click_1);
+            // 
+            // tabPageFiltroEstructura
+            // 
+            this.tabPageFiltroEstructura.Location = new System.Drawing.Point(4, 25);
+            this.tabPageFiltroEstructura.Name = "tabPageFiltroEstructura";
+            this.tabPageFiltroEstructura.Size = new System.Drawing.Size(750, 371);
+            this.tabPageFiltroEstructura.TabIndex = 7;
+            this.tabPageFiltroEstructura.Text = "Estructura";
+            this.tabPageFiltroEstructura.UseVisualStyleBackColor = true;
+            // 
+            // panel3
+            // 
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.Controls.Add(this.checkedListBoxTipoArchivo);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel3.Location = new System.Drawing.Point(3, 55);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(373, 313);
+            this.panel3.TabIndex = 7;
+            // 
+            // checkedListBoxTipoArchivo
+            // 
+            this.checkedListBoxTipoArchivo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.checkedListBoxTipoArchivo.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkedListBoxTipoArchivo.FormattingEnabled = true;
+            this.checkedListBoxTipoArchivo.Items.AddRange(new object[] {
+            "Documentos (pdf, docx, txt...)",
+            "Imágenes (png, jpg, svg...)",
+            "Vídeos (mp4, avi...)",
+            "Audio (mp3, wav...)",
+            "Comprimidos (zip, rar, 7z...)",
+            "Instaladores (exe, msi...)",
+            "Código (java, js, py...)",
+            "Cifrados"});
+            this.checkedListBoxTipoArchivo.Location = new System.Drawing.Point(8, 12);
+            this.checkedListBoxTipoArchivo.Name = "checkedListBoxTipoArchivo";
+            this.checkedListBoxTipoArchivo.Size = new System.Drawing.Size(358, 288);
+            this.checkedListBoxTipoArchivo.TabIndex = 2;
+            // 
+            // panel2
+            // 
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel2.Location = new System.Drawing.Point(375, 55);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(372, 313);
+            this.panel2.TabIndex = 6;
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.lblTituloFiltroTipoArchivo);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(744, 52);
+            this.panel1.TabIndex = 5;
+            // 
+            // lblTituloFiltroTipoArchivo
+            // 
+            this.lblTituloFiltroTipoArchivo.AutoSize = true;
+            this.lblTituloFiltroTipoArchivo.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloFiltroTipoArchivo.Location = new System.Drawing.Point(3, 11);
+            this.lblTituloFiltroTipoArchivo.Name = "lblTituloFiltroTipoArchivo";
+            this.lblTituloFiltroTipoArchivo.Size = new System.Drawing.Size(245, 27);
+            this.lblTituloFiltroTipoArchivo.TabIndex = 0;
+            this.lblTituloFiltroTipoArchivo.Text = "Filtros por tipo de archivo:";
+            // 
             // MainFiltros
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -812,9 +813,6 @@
             this.panelPrincipal.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tabPageFiltroTipoArchivo.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.tabPageFiltroFecha.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
@@ -828,16 +826,19 @@
             this.panel11.ResumeLayout(false);
             this.panel11.PerformLayout();
             this.tabPageFiltroMetadatosImagenes.ResumeLayout(false);
-            this.tabPageFiltroSeguridad.ResumeLayout(false);
-            this.panel9.ResumeLayout(false);
-            this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
             this.panelDerechoOpcionesMetadatosImagenes.ResumeLayout(false);
             this.panelResolucionImagen.ResumeLayout(false);
             this.panelResolucionImagen.PerformLayout();
             this.panel14.ResumeLayout(false);
             this.panelSuperiorMetadatosImagenes.ResumeLayout(false);
             this.panelSuperiorMetadatosImagenes.PerformLayout();
+            this.tabPageFiltroSeguridad.ResumeLayout(false);
+            this.panel9.ResumeLayout(false);
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -848,11 +849,6 @@
         private System.Windows.Forms.Button botonCerrar;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabPageFiltroTipoArchivo;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.CheckedListBox checkedListBoxTipoArchivo;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label lblTituloFiltroTipoArchivo;
         private System.Windows.Forms.TabPage tabPageFiltroTamano;
         private System.Windows.Forms.TabPage tabPageFiltroFecha;
         private System.Windows.Forms.Panel panel7;
@@ -907,5 +903,10 @@
         private System.Windows.Forms.CheckedListBox checkedListBoxFiltrosMetadatosImagenes;
         private System.Windows.Forms.Panel panelSuperiorMetadatosImagenes;
         private System.Windows.Forms.Label labelTituloMetadatosImagenes;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.CheckedListBox checkedListBoxTipoArchivo;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label lblTituloFiltroTipoArchivo;
     }
 }
