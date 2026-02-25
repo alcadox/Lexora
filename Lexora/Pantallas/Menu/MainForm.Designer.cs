@@ -43,6 +43,7 @@
             this.columnaTipo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnaTamaño = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnaCreacion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.label1 = new System.Windows.Forms.Label();
             this.panelTop.SuspendLayout();
             this.panelBuscador.SuspendLayout();
             this.panelIzquierdo.SuspendLayout();
@@ -63,6 +64,7 @@
             // panelBuscador
             // 
             this.panelBuscador.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(211)))), ((int)(((byte)(197)))), ((int)(((byte)(255)))));
+            this.panelBuscador.Controls.Add(this.label1);
             this.panelBuscador.Controls.Add(this.txtBoxBuscador);
             this.panelBuscador.Controls.Add(this.btnIA);
             this.panelBuscador.Controls.Add(this.btnFiltros);
@@ -74,18 +76,19 @@
             // txtBoxBuscador
             // 
             this.txtBoxBuscador.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBoxBuscador.Location = new System.Drawing.Point(50, 7);
+            this.txtBoxBuscador.Location = new System.Drawing.Point(74, 7);
             this.txtBoxBuscador.Name = "txtBoxBuscador";
-            this.txtBoxBuscador.Size = new System.Drawing.Size(779, 22);
+            this.txtBoxBuscador.Size = new System.Drawing.Size(715, 22);
             this.txtBoxBuscador.TabIndex = 2;
+            this.txtBoxBuscador.TextChanged += new System.EventHandler(this.txtBoxBuscador_TextChanged);
             // 
             // btnIA
             // 
             this.btnIA.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(181)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.btnIA.ForeColor = System.Drawing.Color.White;
-            this.btnIA.Location = new System.Drawing.Point(5, 6);
+            this.btnIA.Location = new System.Drawing.Point(795, 4);
             this.btnIA.Name = "btnIA";
-            this.btnIA.Size = new System.Drawing.Size(39, 23);
+            this.btnIA.Size = new System.Drawing.Size(39, 28);
             this.btnIA.TabIndex = 1;
             this.btnIA.Text = "IA";
             this.btnIA.UseVisualStyleBackColor = false;
@@ -121,7 +124,7 @@
             this.panelIzquierdo.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelIzquierdo.Location = new System.Drawing.Point(0, 71);
             this.panelIzquierdo.Name = "panelIzquierdo";
-            this.panelIzquierdo.Size = new System.Drawing.Size(188, 590);
+            this.panelIzquierdo.Size = new System.Drawing.Size(188, 604);
             this.panelIzquierdo.TabIndex = 1;
             // 
             // panelIzquierdoArchivos
@@ -151,7 +154,7 @@
             this.panelArchivos.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelArchivos.Location = new System.Drawing.Point(188, 71);
             this.panelArchivos.Name = "panelArchivos";
-            this.panelArchivos.Size = new System.Drawing.Size(996, 590);
+            this.panelArchivos.Size = new System.Drawing.Size(996, 604);
             this.panelArchivos.TabIndex = 2;
             // 
             // listViewArchivos
@@ -192,10 +195,20 @@
             this.columnaCreacion.Text = "Fecha de Creación";
             this.columnaCreacion.Width = 240;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Variable Small", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(67, 17);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Buscador:";
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1184, 661);
+            this.ClientSize = new System.Drawing.Size(1184, 675);
             this.Controls.Add(this.panelArchivos);
             this.Controls.Add(this.panelIzquierdo);
             this.Controls.Add(this.panelTop);
@@ -231,5 +244,6 @@
         private System.Windows.Forms.ColumnHeader columnaTipo;
         private System.Windows.Forms.ColumnHeader columnaTamaño;
         private System.Windows.Forms.ColumnHeader columnaCreacion;
+        private System.Windows.Forms.Label label1;
     }
 }

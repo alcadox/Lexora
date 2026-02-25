@@ -10,8 +10,6 @@ using System.Text;
 using System.Windows.Forms;
 using MailKit.Net.Smtp;
 
-
-
 namespace Lexora
 {
     public partial class InicioSesion : Form
@@ -34,7 +32,6 @@ namespace Lexora
         public InicioSesion()
         {
             InitializeComponent();
-                
         }
 
         // constructor sobrecargado para saber si se abrió desde MainForm
@@ -67,9 +64,7 @@ namespace Lexora
             {   // restaurar colores originales
                 lblEmail.ForeColor = colorOriginalLetrasLabels;
                 emailUser.BackColor = Color.White;
-
                 panelInformacion.Visible = false;
-
 
                 // comprobar si el e-mail existe en la base de datos
                 try
@@ -87,7 +82,7 @@ namespace Lexora
                         string sql = @"SELECT nombre, contrasena_hash, activo
                            FROM usuario
                            WHERE email = @email;";
-                        
+
                         using (var cmd = new NpgsqlCommand(sql, conn))
                         {
                             // añadir parámetro
@@ -97,8 +92,10 @@ namespace Lexora
                             {
                                 if (!reader.Read())
                                 {
-                                    MessageBox.Show("No existe ningún usuario con ese e-mail.", "Login",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                    panelInformacion.BackColor = colorPanelInformacionRojo;
+                                    panelInformacion.Visible = true;
+                                    panelInformacion.Size = new Size(364, 75);
+                                    labelTextoInformacion.Text = "No existe ningún usuario con ese e-mail.";
                                     return;
                                 }
 
@@ -109,8 +106,10 @@ namespace Lexora
 
                                 if (!activo)
                                 {
-                                    MessageBox.Show("El usuario está desactivado.", "Login",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                    panelInformacion.BackColor = colorPanelInformacionRojo;
+                                    panelInformacion.Visible = true;
+                                    panelInformacion.Size = new Size(364, 75);
+                                    labelTextoInformacion.Text = "El usuario está desactivado.";
                                     return;
                                 }
                                 string token = Guid.NewGuid().ToString().Substring(0, 7).ToUpper();
@@ -122,9 +121,11 @@ namespace Lexora
                                 }
                                 catch (Exception ex)
                                 {
-                                    MessageBox.Show("No se pudo enviar el correo de verificación. Inténtalo de nuevo.\nError: " + ex.Message,
-                                                    "Error de envío", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                    return; // Salimos
+                                    panelInformacion.BackColor = colorPanelInformacionRojo;
+                                    panelInformacion.Visible = true;
+                                    panelInformacion.Size = new Size(364, 97);
+                                    labelTextoInformacion.Text = "No se pudo enviar el correo de verificación: " + Environment.NewLine + ex.Message;
+                                    return;
                                 }
 
                                 // mostrar formulario para que el usuario introduzca el código recibido por e-mail
@@ -134,7 +135,6 @@ namespace Lexora
                                 // si el código es correcto, permitir cambiar la contraseña
                                 if (resultado == DialogResult.OK)
                                 {
-
                                     lblContrasena.Text = "Nueva Contraseña";
 
                                     // informar al usuario de que ya puede cambiar la contraseña
@@ -148,7 +148,6 @@ namespace Lexora
 
                                     // marcar que se va a cambiar la contraseña
                                     cambioContrasena = true;
-
                                 }
                             }
                         }
@@ -156,16 +155,17 @@ namespace Lexora
                 }
                 catch (Exception ex)
                 {
+                    panelInformacion.BackColor = colorPanelInformacionRojo;
+                    panelInformacion.Visible = true;
                     if (ex.Message.Contains("connect"))
                     {
-                        MessageBox.Show("No se ha podido conectar con la base de datos. " +
-                            "Comprueba tu conexión a Internet.", "Error de conexión",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        panelInformacion.Size = new Size(364, 100);
+                        labelTextoInformacion.Text = "No se ha podido conectar con la base de datos." + Environment.NewLine + Environment.NewLine + "Comprueba tu conexión a Internet.";
                     }
                     else
                     {
-                        MessageBox.Show("Error al validar el usuario: " + ex.Message, "Error",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        panelInformacion.Size = new Size(364, 75);
+                        labelTextoInformacion.Text = "Error al validar el usuario: " + ex.Message;
                     }
                 }
             }
@@ -179,7 +179,6 @@ namespace Lexora
             message.Subject = "Cambio de Contrasñea Lexora";
 
             var bodyBuilder = new BodyBuilder();
-
 
             bodyBuilder.HtmlBody = $@"
             <div style='font-family: Arial; padding: 20px; border: 1px solid #ddd;'>
@@ -202,16 +201,12 @@ namespace Lexora
 
         private void btnOmitir_Click(object sender, EventArgs e)
         {
-            // cerrar el formulario de inicio de sesión y volver a MainForm
             this.DialogResult = DialogResult.Cancel;
-
-            // si se abrió desde MainForm, simplemente cerrar
             if (this.desdeMainForm)
             {
                 this.Close();
                 return;
             }
-            // si se abrió de forma independiente, abrir MainForm
             MainForm mainForm = new MainForm();
             mainForm.Show();
             this.Hide();
@@ -219,31 +214,34 @@ namespace Lexora
 
         private void btnIniciarSesion_Click(object sender, EventArgs e)
         {
-            //1.Leo valores de los TextBox
             string email = emailUser.Text.Trim();
             string password = pwUser.Text;
 
-            //2.Validación básica
+            if (string.IsNullOrEmpty(email)) emailUser.BackColor = colorPanelInformacionRojo;
+            else emailUser.BackColor = Color.White;
+
+            if (string.IsNullOrEmpty(password)) pwUser.BackColor = colorPanelInformacionRojo;
+            else pwUser.BackColor = Color.White;
+
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Debes rellenar el e-mail y la contraseña.", "Campos obligatorios",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                panelInformacion.BackColor = colorPanelInformacionRojo;
+                panelInformacion.Visible = true;
+                panelInformacion.Size = new Size(364, 75);
+                labelTextoInformacion.Text = "Debes rellenar el e-mail y la contraseña.";
+                
+
                 return;
             }
 
-            // 3.Intentar iniciar sesión o cambiar la contraseña
             if (cambioContrasena) ActualizarContrasena(email, password);
             else LoginUsuario(email, password);
-                
         }
 
         private void ActualizarContrasena(string email, string nuevaContrasena)
         {
-            // actualizar la contraseña en la base de datos
             string nuevaContrasenaHash = CalcularHashSHA256(nuevaContrasena);
-            string connectionString = ConfigurationManager
-                .ConnectionStrings["conexionDBLexora"]
-                .ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["conexionDBLexora"].ConnectionString;
             try
             {
                 using (var conn = new NpgsqlConnection(connectionString))
@@ -258,26 +256,29 @@ namespace Lexora
                         cmd.Parameters.AddWithValue("@email", email);
                         int filasAfectadas = cmd.ExecuteNonQuery();
 
-                        // verificar si se actualizó alguna fila
                         if (filasAfectadas == 0)
                         {
-                            MessageBox.Show("No se pudo actualizar la contraseña. Inténtalo de nuevo.", "Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            panelInformacion.BackColor = colorPanelInformacionRojo;
+                            panelInformacion.Visible = true;
+                            panelInformacion.Size = new Size(364, 95);
+                            labelTextoInformacion.Text = "No se pudo actualizar la contraseña. " + Environment.NewLine +"Inténtalo de nuevo.";
                         }
                         else
                         {
-                            MessageBox.Show("Contraseña actualizada correctamente.", "Éxito",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            // Éxito: En este caso sí mantenemos un aviso positivo antes de redirigir
+                            panelInformacion.BackColor = Color.LightGreen;
+                            panelInformacion.Visible = true;
+                            panelInformacion.Size = new Size(364, 75);
+                            labelTextoInformacion.Text = "Contraseña actualizada correctamente.";
 
-                            // una vez cambiada la contraseña, iniciar sesión automáticamente
                             this.DialogResult = DialogResult.OK;
                             cambioContrasena = false;
 
-                            if (desdeMainForm) // si se abrió desde MainForm
+                            if (desdeMainForm)
                             {
                                 this.Close();
                             }
-                            else // si se abrió de forma independiente (al inicio)
+                            else
                             {
                                 MainForm mainForm = new MainForm(NombreUsuario);
                                 mainForm.Show();
@@ -289,39 +290,36 @@ namespace Lexora
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al actualizar la contraseña: " + ex.Message, "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                panelInformacion.BackColor = colorPanelInformacionRojo;
+                panelInformacion.Visible = true;
+                panelInformacion.Size = new Size(364, 97);
+                labelTextoInformacion.Text = "Error al actualizar la contraseña: " + Environment.NewLine + ex.Message;
             }
         }
 
         private void LoginUsuario(string email, string password)
         {
-            // validar el usuario en la base de datos
             string passwordHash = CalcularHashSHA256(password);
-            string connectionString = ConfigurationManager
-                .ConnectionStrings["conexionDBLexora"]
-                .ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["conexionDBLexora"].ConnectionString;
 
             try
             {
                 using (var conn = new NpgsqlConnection(connectionString))
                 {
                     conn.Open();
-
-                    string sql = @"SELECT nombre, contrasena_hash, activo
-                           FROM usuario
-                           WHERE email = @email;";
+                    string sql = @"SELECT nombre, contrasena_hash, activo FROM usuario WHERE email = @email;";
 
                     using (var cmd = new NpgsqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@email", email);
-
                         using (var reader = cmd.ExecuteReader())
                         {
                             if (!reader.Read())
                             {
-                                MessageBox.Show("No existe ningún usuario con ese e-mail.", "Login",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                panelInformacion.BackColor = colorPanelInformacionRojo;
+                                panelInformacion.Visible = true;
+                                panelInformacion.Size = new Size(364, 75);
+                                labelTextoInformacion.Text = "No existe ningún usuario con ese e-mail.";
                                 return;
                             }
 
@@ -331,28 +329,25 @@ namespace Lexora
 
                             if (!activo)
                             {
-                                MessageBox.Show("El usuario está desactivado.", "Login",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                panelInformacion.BackColor = colorPanelInformacionRojo;
+                                panelInformacion.Visible = true;
+                                panelInformacion.Size = new Size(364, 75);
+                                labelTextoInformacion.Text = "El usuario está desactivado.";
                                 return;
                             }
 
                             if (!string.Equals(hashDb, passwordHash, StringComparison.Ordinal))
                             {
-                                MessageBox.Show("Contraseña incorrecta.", "Login",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                panelInformacion.BackColor = colorPanelInformacionRojo;
+                                panelInformacion.Visible = true;
+                                panelInformacion.Size = new Size(364, 75);
+                                labelTextoInformacion.Text = "Contraseña incorrecta.";
                                 return;
                             }
 
-
-
-                            //LOGIN CORRECTO
                             this.DialogResult = DialogResult.OK;
-
-                            if (desdeMainForm) // si se abrió desde MainForm
-                            {
-                                this.Close();
-                            }
-                            else // si se abrió de forma independiente (al inicio)
+                            if (desdeMainForm) this.Close();
+                            else
                             {
                                 MainForm mainForm = new MainForm(NombreUsuario);
                                 mainForm.Show();
@@ -364,52 +359,40 @@ namespace Lexora
             }
             catch (Exception ex)
             {
+                panelInformacion.BackColor = colorPanelInformacionRojo;
+                panelInformacion.Visible = true;
                 if (ex.Message.Contains("connect"))
                 {
-                    MessageBox.Show("No se ha podido conectar con la base de datos. " +
-                        "Comprueba tu conexión a Internet.", "Error de conexión",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    panelInformacion.Size = new Size(364, 100);
+                    labelTextoInformacion.Text = "No se ha podido conectar con la base de datos." + Environment.NewLine + Environment.NewLine + "Comprueba tu conexión a Internet.";
                 }
                 else
                 {
-                    MessageBox.Show("Error al validar el usuario: " + ex.Message, "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    panelInformacion.Size = new Size(364, 96);
+                    labelTextoInformacion.Text = "Error al validar el usuario: " + Environment.NewLine + ex.Message;
                 }
             }
         }
 
-
         private void lblCrearCuenta_Click(object sender, EventArgs e)
         {
-            // Abrir formulario de registro
             RegistrarCuenta registrarCuentaForm = new RegistrarCuenta();
-
-            // Ocultar el formulario de inicio de sesión mientras se muestra el de registro
             Hide();
-
-            // Mostrar el formulario de registro como un cuadro de diálogo modal
             var result = registrarCuentaForm.ShowDialog();
-
-            // Después de cerrar el formulario de registro, mostrar nuevamente el formulario de inicio de sesión
             if (result == DialogResult.OK || result == DialogResult.Cancel)
             {
                 Show();
             }
-
         }
+
         private string CalcularHashSHA256(string texto)
         {
             using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(texto);
                 byte[] hash = sha256.ComputeHash(bytes);
-
                 StringBuilder sb = new StringBuilder();
-                foreach (byte b in hash)
-                {
-                    sb.Append(b.ToString("x2"));
-                }
-
+                foreach (byte b in hash) sb.Append(b.ToString("x2"));
                 return sb.ToString();
             }
         }

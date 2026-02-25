@@ -32,10 +32,65 @@ namespace Lexora.Pantallas.Menu.Filtros
             buttonSumarPagina.Click += buttonSumarPagina_Click;
             buttonRestarPagina.Click += buttonRestarPagina_Click;
 
+            // === Eventos para Metadatos de Imágenes ===
+            checkedListBoxFiltrosMetadatosImagenes.ItemCheck += CheckedListBoxFiltrosMetadatosImagenes_ItemCheck;
+
+            buttonIzquierdaPixelesMetadatosImagenesAncho.Click += (s, e) => ModificarValorNumerico(textBoxResolucionImagenAnchura, -100);
+            buttonDerechaPixelesMetadatosImagenesAncho.Click += (s, e) => ModificarValorNumerico(textBoxResolucionImagenAnchura, 100);
+
+            buttonIzquierdaPixelesMetadatosImagenesAlto.Click += (s, e) => ModificarValorNumerico(textBoxResolucionImagenAltura, -100);
+            buttonDerechaPixelesMetadatosImagenesAlto.Click += (s, e) => ModificarValorNumerico(textBoxResolucionImagenAltura, 100);
+
+            buttonDisminuirLatitud.Click += (s, e) => ModificarValorDecimal(textBoxLatitud, -0.1);
+            buttonAumentarLatitud.Click += (s, e) => ModificarValorDecimal(textBoxLatitud, 0.1);
+            buttonDisminuirLongitud.Click += (s, e) => ModificarValorDecimal(textBoxLongitud, -0.1);
+            buttonAumentarLongitud.Click += (s, e) => ModificarValorDecimal(textBoxLongitud, 0.1);
+
+            CargarValoresMetadatosImagenes();
+
             // ================================================================
 
             cargarFiltros();
             ActualizarEstadoMetadatosUI(); // <- IMPORTANTÍSIMO para que arranque bien
+            CargarSugerenciasModelos();
+        }
+
+        private void CargarSugerenciasModelos()
+        {
+            // --- TOP CÁMARAS (Más famosas y comunes) ---
+            string[] camaras = {
+                "Canon EOS R5", "Canon EOS 5D Mark IV", "Canon EOS 90D", "Canon PowerShot",
+                "Nikon Z7 II", "Nikon D850", "Nikon D3500", "Nikon Coolpix",
+                "Sony A7 III", "Sony A7R V", "Sony Alpha a6400", "Sony ZV-E10",
+                "Fujifilm X-T4", "Fujifilm X100V", "Panasonic Lumix GH6",
+                "Olympus OM-D", "Leica M11", "GoPro HERO12", "GoPro HERO11", "DJI Osmo Action"
+            };
+
+            // --- TOP MÓVILES (Los más usados que suelen aparecer en metadatos) ---
+            // Nota: En metadatos suelen salir como "iPhone 13 Pro" o "SM-G991B" (Samsung)
+            string[] moviles = {
+                "iPhone 15 Pro Max", "iPhone 15", "iPhone 14", "iPhone 13", "iPhone 12", "iPhone 11", "iPhone SE",
+                "Samsung Galaxy S24 Ultra", "Samsung Galaxy S23", "Samsung Galaxy S22", "Samsung Galaxy S21",
+                "Samsung Galaxy A54", "Samsung Galaxy A34", "Samsung Galaxy Z Fold5",
+                "Google Pixel 8 Pro", "Google Pixel 7", "Google Pixel 6a",
+                "Xiaomi 13 Ultra", "Xiaomi Redmi Note 12", "Xiaomi POCO F5",
+                "Huawei P50 Pro", "OPPO Reno10", "OnePlus 11", "Motorola Edge 40",
+                "Realme GT", "Sony Xperia 1 V"
+            };
+
+            // Configurar ComboBox Cámara
+            comboBoxModelosCamara.Items.Clear();
+            comboBoxModelosCamara.Items.AddRange(camaras);
+            comboBoxModelosCamara.DropDownStyle = ComboBoxStyle.DropDown; // PERMITE ESCRIBIR
+            comboBoxModelosCamara.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            comboBoxModelosCamara.AutoCompleteSource = AutoCompleteSource.ListItems;
+
+            // Configurar ComboBox Móvil
+            comboBoxModelosMoviles.Items.Clear();
+            comboBoxModelosMoviles.Items.AddRange(moviles);
+            comboBoxModelosMoviles.DropDownStyle = ComboBoxStyle.DropDown; // PERMITE ESCRIBIR
+            comboBoxModelosMoviles.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            comboBoxModelosMoviles.AutoCompleteSource = AutoCompleteSource.ListItems;
         }
 
         private void ActualizarEstadoMetadatosUI()
@@ -170,9 +225,6 @@ namespace Lexora.Pantallas.Menu.Filtros
             }
 
 
-
-
-
             // ====== SEGURIDAD ======
             filtros.Seguridad.Clear();
             foreach (var item in checkedListBoxSeguridad.CheckedItems)
@@ -180,10 +232,6 @@ namespace Lexora.Pantallas.Menu.Filtros
                 string nombre = item.ToString();
                 filtros.Seguridad[nombre] = true;
             }
-
-
-
-
 
 
             filtros.FormatearTipoArchivo(); // Formatear los tipos de archivo para que estén en el formato correcto
@@ -202,8 +250,37 @@ namespace Lexora.Pantallas.Menu.Filtros
 
             filtros.FiltrarPaginas = checkBoxFiltroCantPaginas.Checked;
 
+            // --- Guardar Filtros de Imágenes ---
+            filtros.FiltrarResolucion = checkedListBoxFiltrosMetadatosImagenes.GetItemChecked(0); // 0 = Resolución
+            if (filtros.FiltrarResolucion)
+            {
+                filtros.ResolucionAncho = int.TryParse(textBoxResolucionImagenAnchura.Text, out int ancho) ? ancho : (int?)null;
+                filtros.ResolucionAlto = int.TryParse(textBoxResolucionImagenAltura.Text, out int alto) ? alto : (int?)null;
+            }
+
+            filtros.FiltrarFechaImagen = checkedListBoxFiltrosMetadatosImagenes.GetItemChecked(1); // 1 = Fecha
+            if (filtros.FiltrarFechaImagen)
+            {
+                filtros.FechaImagenDesde = datePrincipioDeImagen.Value;
+                filtros.FechaImagenHasta = dateFinDeImagen.Value;
+            }
+
+            filtros.FiltrarModelo = checkedListBoxFiltrosMetadatosImagenes.GetItemChecked(2); // 2 = Modelo
+            if (filtros.FiltrarModelo)
+            {
+                filtros.ModeloCamara = comboBoxModelosCamara.Text;
+                filtros.ModeloMovil = comboBoxModelosMoviles.Text;
+            }
+
+            filtros.FiltrarGPS = checkedListBoxFiltrosMetadatosImagenes.GetItemChecked(3); // 3 = GPS
+            if (filtros.FiltrarGPS)
+            {
+                filtros.Latitud = double.TryParse(textBoxLatitud.Text, out double lat) ? lat : (double?)null;
+                filtros.Longitud = double.TryParse(textBoxLongitud.Text, out double lon) ? lon : (double?)null;
+            }
+
             // parse seguro de páginas para que ni no es número, sea null
-            if(filtros.FiltrarPaginas && int.TryParse(textBoxNumPag.Text, out int n) && n >= 0)
+            if (filtros.FiltrarPaginas && int.TryParse(textBoxNumPag.Text, out int n) && n >= 0)
             {
                 filtros.CantidadPaginas = n;
             }
@@ -222,19 +299,11 @@ namespace Lexora.Pantallas.Menu.Filtros
             }
 
 
-
             // Disparar el evento para notificar que los filtros han sido aplicados
             FiltrosAplicados?.Invoke(this, EventArgs.Empty);
 
 
-
-
         }
-
-
-
-
-
 
         //Para que los textfields estén desactivados hasta que se active su checkbox correspondiente,
 
@@ -438,5 +507,108 @@ namespace Lexora.Pantallas.Menu.Filtros
         private void textBox1_TextChanged(object sender, EventArgs e){}
         private void label1_Click_1(object sender, EventArgs e) {}
 
+        private void buttonIzquierdaPixelesMetadatosImagenesAncho_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonDerechaPixelesMetadatosImagenesAncho_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonIzquierdaPixelesMetadatosImagenesAlto_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonDerechaPixelesMetadatosImagenesAlto_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonDisminuirLatitud_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonAumentarLatitud_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonDisminuirLongitud_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonAumentarLongitud_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CargarValoresMetadatosImagenes()
+        {
+            // Bloqueamos todo por defecto
+            ActivarPanelResolucion(false);
+            ActivarPanelFecha(false);
+            ActivarPanelModelo(false);
+            ActivarPanelGPS(false);
+
+            // Cargamos si ya había filtros guardados (suponiendo el orden de los items en el CheckListBox)
+            // Nota: Verifica que los índices 0, 1, 2, 3 correspondan a Resolución, Fecha, Modelo, GPS en tu diseño.
+            if (filtros.FiltrarResolucion) { checkedListBoxFiltrosMetadatosImagenes.SetItemChecked(0, true); textBoxResolucionImagenAnchura.Text = filtros.ResolucionAncho?.ToString(); textBoxResolucionImagenAltura.Text = filtros.ResolucionAlto?.ToString(); }
+            if (filtros.FiltrarFechaImagen) { checkedListBoxFiltrosMetadatosImagenes.SetItemChecked(1, true); if (filtros.FechaImagenDesde.HasValue) datePrincipioDeImagen.Value = filtros.FechaImagenDesde.Value; if (filtros.FechaImagenHasta.HasValue) dateFinDeImagen.Value = filtros.FechaImagenHasta.Value; }
+            if (filtros.FiltrarModelo) { checkedListBoxFiltrosMetadatosImagenes.SetItemChecked(2, true); comboBoxModelosCamara.Text = filtros.ModeloCamara; comboBoxModelosMoviles.Text = filtros.ModeloMovil; }
+            if (filtros.FiltrarGPS) { checkedListBoxFiltrosMetadatosImagenes.SetItemChecked(3, true); textBoxLatitud.Text = filtros.Latitud?.ToString(); textBoxLongitud.Text = filtros.Longitud?.ToString(); }
+        }
+
+        private void CheckedListBoxFiltrosMetadatosImagenes_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            bool estaMarcado = e.NewValue == CheckState.Checked;
+            botonAplicar.Enabled = true;
+
+            // Dependiendo de qué checkbox se marque, activamos su panel
+            // Asumiendo: 0=Resolución, 1=Fecha, 2=Modelo, 3=GPS
+            if (e.Index == 0) ActivarPanelResolucion(estaMarcado);
+            else if (e.Index == 1) ActivarPanelFecha(estaMarcado);
+            else if (e.Index == 2) ActivarPanelModelo(estaMarcado);
+            else if (e.Index == 3) ActivarPanelGPS(estaMarcado);
+        }
+
+        // Métodos auxiliares para activar/desactivar y sumar/restar
+        private void ActivarPanelResolucion(bool activo) { textBoxResolucionImagenAnchura.Enabled = activo; textBoxResolucionImagenAltura.Enabled = activo; buttonIzquierdaPixelesMetadatosImagenesAncho.Enabled = activo; buttonDerechaPixelesMetadatosImagenesAncho.Enabled = activo; buttonIzquierdaPixelesMetadatosImagenesAlto.Enabled = activo; buttonDerechaPixelesMetadatosImagenesAlto.Enabled = activo; }
+        private void ActivarPanelFecha(bool activo) { datePrincipioDeImagen.Enabled = activo; dateFinDeImagen.Enabled = activo; }
+        private void ActivarPanelModelo(bool activo) { comboBoxModelosCamara.Enabled = activo; comboBoxModelosMoviles.Enabled = activo; }
+        private void ActivarPanelGPS(bool activo) { textBoxLatitud.Enabled = activo; textBoxLongitud.Enabled = activo; buttonDisminuirLatitud.Enabled = activo; buttonAumentarLatitud.Enabled = activo; buttonDisminuirLongitud.Enabled = activo; buttonAumentarLongitud.Enabled = activo; }
+
+        private void ModificarValorNumerico(TextBox tb, int cantidad)
+        {
+            if (!int.TryParse(tb.Text, out int val)) val = 0;
+            val += cantidad;
+            if (val < 0) val = 0;
+            tb.Text = val.ToString();
+            botonAplicar.Enabled = true;
+        }
+
+        private void ModificarValorDecimal(TextBox tb, double cantidad)
+        {
+            if (!double.TryParse(tb.Text, out double val)) val = 0;
+            val = Math.Round(val + cantidad, 4);
+            tb.Text = val.ToString();
+            botonAplicar.Enabled = true;
+        }
+
+        private void comboBoxModelosCamara_TextChanged(object sender, EventArgs e)
+        {
+            filtros.ModeloCamara = comboBoxModelosCamara.Text;
+            botonAplicar.Enabled = true;
+        }
+
+        private void comboBoxModelosMoviles_TextChanged(object sender, EventArgs e)
+        {
+            filtros.ModeloMovil = comboBoxModelosMoviles.Text;
+            botonAplicar.Enabled = true;
+        }
     }
 }

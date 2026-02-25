@@ -68,8 +68,26 @@
             this.labeltitulotipoDeMeta = new System.Windows.Forms.Label();
             this.tabPageFiltroMetadatosImagenes = new System.Windows.Forms.TabPage();
             this.panelDerechoOpcionesMetadatosImagenes = new System.Windows.Forms.Panel();
+            this.panel15 = new System.Windows.Forms.Panel();
+            this.textBoxLongitud = new System.Windows.Forms.TextBox();
+            this.textBoxLatitud = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.labelLatitud = new System.Windows.Forms.Label();
+            this.buttonAumentarLongitud = new System.Windows.Forms.Button();
+            this.buttonDisminuirLongitud = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.buttonAumentarLatitud = new System.Windows.Forms.Button();
+            this.buttonDisminuirLatitud = new System.Windows.Forms.Button();
             this.panelModeloCamara = new System.Windows.Forms.Panel();
+            this.comboBoxModelosMoviles = new System.Windows.Forms.ComboBox();
+            this.comboBoxModelosCamara = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelModeloCamara = new System.Windows.Forms.Label();
             this.panelFechaTomaImagen = new System.Windows.Forms.Panel();
+            this.labelFechaFin = new System.Windows.Forms.Label();
+            this.labelFechainicio = new System.Windows.Forms.Label();
+            this.dateFinDeImagen = new System.Windows.Forms.DateTimePicker();
+            this.datePrincipioDeImagen = new System.Windows.Forms.DateTimePicker();
             this.panelResolucionImagen = new System.Windows.Forms.Panel();
             this.textBoxResolucionImagenAltura = new System.Windows.Forms.TextBox();
             this.textBoxResolucionImagenAnchura = new System.Windows.Forms.TextBox();
@@ -83,6 +101,7 @@
             this.panel14 = new System.Windows.Forms.Panel();
             this.checkedListBoxFiltrosMetadatosImagenes = new System.Windows.Forms.CheckedListBox();
             this.panelSuperiorMetadatosImagenes = new System.Windows.Forms.Panel();
+            this.labelTituloMetadatosImagenes = new System.Windows.Forms.Label();
             this.tabPageFiltroSeguridad = new System.Windows.Forms.TabPage();
             this.panel10 = new System.Windows.Forms.Panel();
             this.panel9 = new System.Windows.Forms.Panel();
@@ -90,25 +109,6 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.labelTituloFiltroSeguridad = new System.Windows.Forms.Label();
             this.tabPageFiltroEstructura = new System.Windows.Forms.TabPage();
-            this.datePrincipioDeImagen = new System.Windows.Forms.DateTimePicker();
-            this.dateFinDeImagen = new System.Windows.Forms.DateTimePicker();
-            this.labelTituloMetadatosImagenes = new System.Windows.Forms.Label();
-            this.labelFechainicio = new System.Windows.Forms.Label();
-            this.labelFechaFin = new System.Windows.Forms.Label();
-            this.labelModeloCamara = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxModelosCamara = new System.Windows.Forms.ComboBox();
-            this.comboBoxModelosMoviles = new System.Windows.Forms.ComboBox();
-            this.panel15 = new System.Windows.Forms.Panel();
-            this.textBoxLongitud = new System.Windows.Forms.TextBox();
-            this.textBoxLatitud = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.labelLatitud = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.panelPrincipal.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPageFiltroTipoArchivo.SuspendLayout();
@@ -124,6 +124,7 @@
             this.panel11.SuspendLayout();
             this.tabPageFiltroMetadatosImagenes.SuspendLayout();
             this.panelDerechoOpcionesMetadatosImagenes.SuspendLayout();
+            this.panel15.SuspendLayout();
             this.panelModeloCamara.SuspendLayout();
             this.panelFechaTomaImagen.SuspendLayout();
             this.panelResolucionImagen.SuspendLayout();
@@ -132,7 +133,6 @@
             this.tabPageFiltroSeguridad.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel8.SuspendLayout();
-            this.panel15.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelPrincipal
@@ -573,6 +573,117 @@
             this.panelDerechoOpcionesMetadatosImagenes.Size = new System.Drawing.Size(449, 319);
             this.panelDerechoOpcionesMetadatosImagenes.TabIndex = 9;
             // 
+            // panel15
+            // 
+            this.panel15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel15.Controls.Add(this.textBoxLongitud);
+            this.panel15.Controls.Add(this.textBoxLatitud);
+            this.panel15.Controls.Add(this.label3);
+            this.panel15.Controls.Add(this.labelLatitud);
+            this.panel15.Controls.Add(this.buttonAumentarLongitud);
+            this.panel15.Controls.Add(this.buttonDisminuirLongitud);
+            this.panel15.Controls.Add(this.label5);
+            this.panel15.Controls.Add(this.buttonAumentarLatitud);
+            this.panel15.Controls.Add(this.buttonDisminuirLatitud);
+            this.panel15.Location = new System.Drawing.Point(6, 243);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(440, 73);
+            this.panel15.TabIndex = 14;
+            // 
+            // textBoxLongitud
+            // 
+            this.textBoxLongitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxLongitud.Location = new System.Drawing.Point(285, 28);
+            this.textBoxLongitud.Name = "textBoxLongitud";
+            this.textBoxLongitud.Size = new System.Drawing.Size(54, 27);
+            this.textBoxLongitud.TabIndex = 13;
+            this.textBoxLongitud.Text = "0";
+            this.textBoxLongitud.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBoxLatitud
+            // 
+            this.textBoxLatitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxLatitud.Location = new System.Drawing.Point(81, 28);
+            this.textBoxLatitud.Name = "textBoxLatitud";
+            this.textBoxLatitud.Size = new System.Drawing.Size(54, 27);
+            this.textBoxLatitud.TabIndex = 0;
+            this.textBoxLatitud.Text = "0";
+            this.textBoxLatitud.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(284, 3);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(55, 16);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Longitud";
+            // 
+            // labelLatitud
+            // 
+            this.labelLatitud.AutoSize = true;
+            this.labelLatitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelLatitud.Location = new System.Drawing.Point(89, 3);
+            this.labelLatitud.Name = "labelLatitud";
+            this.labelLatitud.Size = new System.Drawing.Size(44, 16);
+            this.labelLatitud.TabIndex = 11;
+            this.labelLatitud.Text = "Latitud";
+            // 
+            // buttonAumentarLongitud
+            // 
+            this.buttonAumentarLongitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonAumentarLongitud.Location = new System.Drawing.Point(343, 25);
+            this.buttonAumentarLongitud.Name = "buttonAumentarLongitud";
+            this.buttonAumentarLongitud.Size = new System.Drawing.Size(24, 30);
+            this.buttonAumentarLongitud.TabIndex = 10;
+            this.buttonAumentarLongitud.Text = ">";
+            this.buttonAumentarLongitud.UseVisualStyleBackColor = true;
+            this.buttonAumentarLongitud.Click += new System.EventHandler(this.buttonAumentarLongitud_Click);
+            // 
+            // buttonDisminuirLongitud
+            // 
+            this.buttonDisminuirLongitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonDisminuirLongitud.Location = new System.Drawing.Point(255, 25);
+            this.buttonDisminuirLongitud.Name = "buttonDisminuirLongitud";
+            this.buttonDisminuirLongitud.Size = new System.Drawing.Size(24, 30);
+            this.buttonDisminuirLongitud.TabIndex = 9;
+            this.buttonDisminuirLongitud.Text = "<";
+            this.buttonDisminuirLongitud.UseVisualStyleBackColor = true;
+            this.buttonDisminuirLongitud.Click += new System.EventHandler(this.buttonDisminuirLongitud_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI Variable Text Semibold", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(198, 24);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(22, 27);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "x";
+            // 
+            // buttonAumentarLatitud
+            // 
+            this.buttonAumentarLatitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonAumentarLatitud.Location = new System.Drawing.Point(139, 25);
+            this.buttonAumentarLatitud.Name = "buttonAumentarLatitud";
+            this.buttonAumentarLatitud.Size = new System.Drawing.Size(24, 30);
+            this.buttonAumentarLatitud.TabIndex = 3;
+            this.buttonAumentarLatitud.Text = ">";
+            this.buttonAumentarLatitud.UseVisualStyleBackColor = true;
+            this.buttonAumentarLatitud.Click += new System.EventHandler(this.buttonAumentarLatitud_Click);
+            // 
+            // buttonDisminuirLatitud
+            // 
+            this.buttonDisminuirLatitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonDisminuirLatitud.Location = new System.Drawing.Point(51, 25);
+            this.buttonDisminuirLatitud.Name = "buttonDisminuirLatitud";
+            this.buttonDisminuirLatitud.Size = new System.Drawing.Size(24, 30);
+            this.buttonDisminuirLatitud.TabIndex = 2;
+            this.buttonDisminuirLatitud.Text = "<";
+            this.buttonDisminuirLatitud.UseVisualStyleBackColor = true;
+            this.buttonDisminuirLatitud.Click += new System.EventHandler(this.buttonDisminuirLatitud_Click);
+            // 
             // panelModeloCamara
             // 
             this.panelModeloCamara.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -585,6 +696,46 @@
             this.panelModeloCamara.Size = new System.Drawing.Size(440, 73);
             this.panelModeloCamara.TabIndex = 2;
             // 
+            // comboBoxModelosMoviles
+            // 
+            this.comboBoxModelosMoviles.Font = new System.Drawing.Font("Segoe UI Variable Display", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxModelosMoviles.FormattingEnabled = true;
+            this.comboBoxModelosMoviles.Location = new System.Drawing.Point(255, 30);
+            this.comboBoxModelosMoviles.Name = "comboBoxModelosMoviles";
+            this.comboBoxModelosMoviles.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxModelosMoviles.TabIndex = 17;
+            this.comboBoxModelosMoviles.TextChanged += new System.EventHandler(this.comboBoxModelosMoviles_TextChanged);
+            // 
+            // comboBoxModelosCamara
+            // 
+            this.comboBoxModelosCamara.Font = new System.Drawing.Font("Segoe UI Variable Display", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comboBoxModelosCamara.FormattingEnabled = true;
+            this.comboBoxModelosCamara.Location = new System.Drawing.Point(56, 30);
+            this.comboBoxModelosCamara.Name = "comboBoxModelosCamara";
+            this.comboBoxModelosCamara.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxModelosCamara.TabIndex = 16;
+            this.comboBoxModelosCamara.TextChanged += new System.EventHandler(this.comboBoxModelosCamara_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(266, 7);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(97, 16);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "Modelo de Móvil";
+            // 
+            // labelModeloCamara
+            // 
+            this.labelModeloCamara.AutoSize = true;
+            this.labelModeloCamara.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelModeloCamara.Location = new System.Drawing.Point(65, 7);
+            this.labelModeloCamara.Name = "labelModeloCamara";
+            this.labelModeloCamara.Size = new System.Drawing.Size(107, 16);
+            this.labelModeloCamara.TabIndex = 14;
+            this.labelModeloCamara.Text = "Modelo de Cámara";
+            // 
             // panelFechaTomaImagen
             // 
             this.panelFechaTomaImagen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -596,6 +747,44 @@
             this.panelFechaTomaImagen.Name = "panelFechaTomaImagen";
             this.panelFechaTomaImagen.Size = new System.Drawing.Size(440, 73);
             this.panelFechaTomaImagen.TabIndex = 1;
+            // 
+            // labelFechaFin
+            // 
+            this.labelFechaFin.AutoSize = true;
+            this.labelFechaFin.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFechaFin.Location = new System.Drawing.Point(30, 42);
+            this.labelFechaFin.Name = "labelFechaFin";
+            this.labelFechaFin.Size = new System.Drawing.Size(97, 21);
+            this.labelFechaFin.TabIndex = 2;
+            this.labelFechaFin.Text = "Fecha Fin ->";
+            // 
+            // labelFechainicio
+            // 
+            this.labelFechainicio.AutoSize = true;
+            this.labelFechainicio.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelFechainicio.Location = new System.Drawing.Point(30, 10);
+            this.labelFechainicio.Name = "labelFechainicio";
+            this.labelFechainicio.Size = new System.Drawing.Size(114, 21);
+            this.labelFechainicio.TabIndex = 1;
+            this.labelFechainicio.Text = "Fecha Inicio ->";
+            // 
+            // dateFinDeImagen
+            // 
+            this.dateFinDeImagen.Font = new System.Drawing.Font("Segoe UI Variable Small", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dateFinDeImagen.Location = new System.Drawing.Point(133, 40);
+            this.dateFinDeImagen.Name = "dateFinDeImagen";
+            this.dateFinDeImagen.Size = new System.Drawing.Size(283, 25);
+            this.dateFinDeImagen.TabIndex = 1;
+            this.dateFinDeImagen.Value = new System.DateTime(2026, 2, 24, 0, 0, 0, 0);
+            // 
+            // datePrincipioDeImagen
+            // 
+            this.datePrincipioDeImagen.Font = new System.Drawing.Font("Segoe UI Variable Small", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.datePrincipioDeImagen.Location = new System.Drawing.Point(150, 8);
+            this.datePrincipioDeImagen.Name = "datePrincipioDeImagen";
+            this.datePrincipioDeImagen.Size = new System.Drawing.Size(266, 25);
+            this.datePrincipioDeImagen.TabIndex = 0;
+            this.datePrincipioDeImagen.Value = new System.DateTime(2026, 2, 24, 0, 0, 0, 0);
             // 
             // panelResolucionImagen
             // 
@@ -663,6 +852,7 @@
             this.buttonDerechaPixelesMetadatosImagenesAlto.TabIndex = 10;
             this.buttonDerechaPixelesMetadatosImagenesAlto.Text = ">";
             this.buttonDerechaPixelesMetadatosImagenesAlto.UseVisualStyleBackColor = true;
+            this.buttonDerechaPixelesMetadatosImagenesAlto.Click += new System.EventHandler(this.buttonDerechaPixelesMetadatosImagenesAlto_Click);
             // 
             // buttonIzquierdaPixelesMetadatosImagenesAlto
             // 
@@ -673,6 +863,7 @@
             this.buttonIzquierdaPixelesMetadatosImagenesAlto.TabIndex = 9;
             this.buttonIzquierdaPixelesMetadatosImagenesAlto.Text = "<";
             this.buttonIzquierdaPixelesMetadatosImagenesAlto.UseVisualStyleBackColor = true;
+            this.buttonIzquierdaPixelesMetadatosImagenesAlto.Click += new System.EventHandler(this.buttonIzquierdaPixelesMetadatosImagenesAlto_Click);
             // 
             // label2
             // 
@@ -693,6 +884,7 @@
             this.buttonDerechaPixelesMetadatosImagenesAncho.TabIndex = 3;
             this.buttonDerechaPixelesMetadatosImagenesAncho.Text = ">";
             this.buttonDerechaPixelesMetadatosImagenesAncho.UseVisualStyleBackColor = true;
+            this.buttonDerechaPixelesMetadatosImagenesAncho.Click += new System.EventHandler(this.buttonDerechaPixelesMetadatosImagenesAncho_Click);
             // 
             // buttonIzquierdaPixelesMetadatosImagenesAncho
             // 
@@ -703,6 +895,7 @@
             this.buttonIzquierdaPixelesMetadatosImagenesAncho.TabIndex = 2;
             this.buttonIzquierdaPixelesMetadatosImagenesAncho.Text = "<";
             this.buttonIzquierdaPixelesMetadatosImagenesAncho.UseVisualStyleBackColor = true;
+            this.buttonIzquierdaPixelesMetadatosImagenesAncho.Click += new System.EventHandler(this.buttonIzquierdaPixelesMetadatosImagenesAncho_Click);
             // 
             // panel14
             // 
@@ -738,6 +931,16 @@
             this.panelSuperiorMetadatosImagenes.Name = "panelSuperiorMetadatosImagenes";
             this.panelSuperiorMetadatosImagenes.Size = new System.Drawing.Size(750, 52);
             this.panelSuperiorMetadatosImagenes.TabIndex = 7;
+            // 
+            // labelTituloMetadatosImagenes
+            // 
+            this.labelTituloMetadatosImagenes.AutoSize = true;
+            this.labelTituloMetadatosImagenes.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTituloMetadatosImagenes.Location = new System.Drawing.Point(3, 11);
+            this.labelTituloMetadatosImagenes.Name = "labelTituloMetadatosImagenes";
+            this.labelTituloMetadatosImagenes.Size = new System.Drawing.Size(330, 27);
+            this.labelTituloMetadatosImagenes.TabIndex = 0;
+            this.labelTituloMetadatosImagenes.Text = "Filtros de metadatos para Imágenes:";
             // 
             // tabPageFiltroSeguridad
             // 
@@ -812,199 +1015,6 @@
             this.tabPageFiltroEstructura.Text = "Estructura";
             this.tabPageFiltroEstructura.UseVisualStyleBackColor = true;
             // 
-            // datePrincipioDeImagen
-            // 
-            this.datePrincipioDeImagen.Font = new System.Drawing.Font("Segoe UI Variable Small", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.datePrincipioDeImagen.Location = new System.Drawing.Point(150, 8);
-            this.datePrincipioDeImagen.Name = "datePrincipioDeImagen";
-            this.datePrincipioDeImagen.Size = new System.Drawing.Size(266, 25);
-            this.datePrincipioDeImagen.TabIndex = 0;
-            this.datePrincipioDeImagen.Value = new System.DateTime(2026, 2, 24, 0, 0, 0, 0);
-            // 
-            // dateFinDeImagen
-            // 
-            this.dateFinDeImagen.Font = new System.Drawing.Font("Segoe UI Variable Small", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateFinDeImagen.Location = new System.Drawing.Point(133, 40);
-            this.dateFinDeImagen.Name = "dateFinDeImagen";
-            this.dateFinDeImagen.Size = new System.Drawing.Size(283, 25);
-            this.dateFinDeImagen.TabIndex = 1;
-            this.dateFinDeImagen.Value = new System.DateTime(2026, 2, 24, 0, 0, 0, 0);
-            // 
-            // labelTituloMetadatosImagenes
-            // 
-            this.labelTituloMetadatosImagenes.AutoSize = true;
-            this.labelTituloMetadatosImagenes.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTituloMetadatosImagenes.Location = new System.Drawing.Point(3, 11);
-            this.labelTituloMetadatosImagenes.Name = "labelTituloMetadatosImagenes";
-            this.labelTituloMetadatosImagenes.Size = new System.Drawing.Size(330, 27);
-            this.labelTituloMetadatosImagenes.TabIndex = 0;
-            this.labelTituloMetadatosImagenes.Text = "Filtros de metadatos para Imágenes:";
-            // 
-            // labelFechainicio
-            // 
-            this.labelFechainicio.AutoSize = true;
-            this.labelFechainicio.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFechainicio.Location = new System.Drawing.Point(30, 10);
-            this.labelFechainicio.Name = "labelFechainicio";
-            this.labelFechainicio.Size = new System.Drawing.Size(114, 21);
-            this.labelFechainicio.TabIndex = 1;
-            this.labelFechainicio.Text = "Fecha Inicio ->";
-            // 
-            // labelFechaFin
-            // 
-            this.labelFechaFin.AutoSize = true;
-            this.labelFechaFin.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelFechaFin.Location = new System.Drawing.Point(30, 42);
-            this.labelFechaFin.Name = "labelFechaFin";
-            this.labelFechaFin.Size = new System.Drawing.Size(97, 21);
-            this.labelFechaFin.TabIndex = 2;
-            this.labelFechaFin.Text = "Fecha Fin ->";
-            // 
-            // labelModeloCamara
-            // 
-            this.labelModeloCamara.AutoSize = true;
-            this.labelModeloCamara.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelModeloCamara.Location = new System.Drawing.Point(65, 7);
-            this.labelModeloCamara.Name = "labelModeloCamara";
-            this.labelModeloCamara.Size = new System.Drawing.Size(107, 16);
-            this.labelModeloCamara.TabIndex = 14;
-            this.labelModeloCamara.Text = "Modelo de Cámara";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(266, 7);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(97, 16);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "Modelo de Móvil";
-            // 
-            // comboBoxModelosCamara
-            // 
-            this.comboBoxModelosCamara.Font = new System.Drawing.Font("Segoe UI Variable Display", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBoxModelosCamara.FormattingEnabled = true;
-            this.comboBoxModelosCamara.Location = new System.Drawing.Point(56, 30);
-            this.comboBoxModelosCamara.Name = "comboBoxModelosCamara";
-            this.comboBoxModelosCamara.Size = new System.Drawing.Size(121, 25);
-            this.comboBoxModelosCamara.TabIndex = 16;
-            // 
-            // comboBoxModelosMoviles
-            // 
-            this.comboBoxModelosMoviles.Font = new System.Drawing.Font("Segoe UI Variable Display", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBoxModelosMoviles.FormattingEnabled = true;
-            this.comboBoxModelosMoviles.Location = new System.Drawing.Point(255, 30);
-            this.comboBoxModelosMoviles.Name = "comboBoxModelosMoviles";
-            this.comboBoxModelosMoviles.Size = new System.Drawing.Size(121, 25);
-            this.comboBoxModelosMoviles.TabIndex = 17;
-            // 
-            // panel15
-            // 
-            this.panel15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel15.Controls.Add(this.textBoxLongitud);
-            this.panel15.Controls.Add(this.textBoxLatitud);
-            this.panel15.Controls.Add(this.label3);
-            this.panel15.Controls.Add(this.labelLatitud);
-            this.panel15.Controls.Add(this.button1);
-            this.panel15.Controls.Add(this.button2);
-            this.panel15.Controls.Add(this.label5);
-            this.panel15.Controls.Add(this.button3);
-            this.panel15.Controls.Add(this.button4);
-            this.panel15.Location = new System.Drawing.Point(6, 243);
-            this.panel15.Name = "panel15";
-            this.panel15.Size = new System.Drawing.Size(440, 73);
-            this.panel15.TabIndex = 14;
-            // 
-            // textBoxLongitud
-            // 
-            this.textBoxLongitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxLongitud.Location = new System.Drawing.Point(285, 28);
-            this.textBoxLongitud.Name = "textBoxLongitud";
-            this.textBoxLongitud.Size = new System.Drawing.Size(54, 27);
-            this.textBoxLongitud.TabIndex = 13;
-            this.textBoxLongitud.Text = "0";
-            this.textBoxLongitud.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // textBoxLatitud
-            // 
-            this.textBoxLatitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxLatitud.Location = new System.Drawing.Point(81, 28);
-            this.textBoxLatitud.Name = "textBoxLatitud";
-            this.textBoxLatitud.Size = new System.Drawing.Size(54, 27);
-            this.textBoxLatitud.TabIndex = 0;
-            this.textBoxLatitud.Text = "0";
-            this.textBoxLatitud.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(284, 3);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(55, 16);
-            this.label3.TabIndex = 12;
-            this.label3.Text = "Longitud";
-            // 
-            // labelLatitud
-            // 
-            this.labelLatitud.AutoSize = true;
-            this.labelLatitud.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLatitud.Location = new System.Drawing.Point(89, 3);
-            this.labelLatitud.Name = "labelLatitud";
-            this.labelLatitud.Size = new System.Drawing.Size(44, 16);
-            this.labelLatitud.TabIndex = 11;
-            this.labelLatitud.Text = "Latitud";
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(343, 25);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(24, 30);
-            this.button1.TabIndex = 10;
-            this.button1.Text = ">";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(255, 25);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(24, 30);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "<";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI Variable Text Semibold", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(198, 24);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(22, 27);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "x";
-            // 
-            // button3
-            // 
-            this.button3.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(139, 25);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(24, 30);
-            this.button3.TabIndex = 3;
-            this.button3.Text = ">";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Font = new System.Drawing.Font("Segoe UI Variable Display", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(51, 25);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(24, 30);
-            this.button4.TabIndex = 2;
-            this.button4.Text = "<";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
             // MainFiltros
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1033,6 +1043,8 @@
             this.panel11.PerformLayout();
             this.tabPageFiltroMetadatosImagenes.ResumeLayout(false);
             this.panelDerechoOpcionesMetadatosImagenes.ResumeLayout(false);
+            this.panel15.ResumeLayout(false);
+            this.panel15.PerformLayout();
             this.panelModeloCamara.ResumeLayout(false);
             this.panelModeloCamara.PerformLayout();
             this.panelFechaTomaImagen.ResumeLayout(false);
@@ -1046,8 +1058,6 @@
             this.panel9.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
-            this.panel15.ResumeLayout(false);
-            this.panel15.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1129,10 +1139,10 @@
         private System.Windows.Forms.TextBox textBoxLatitud;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label labelLatitud;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonAumentarLongitud;
+        private System.Windows.Forms.Button buttonDisminuirLongitud;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button buttonAumentarLatitud;
+        private System.Windows.Forms.Button buttonDisminuirLatitud;
     }
 }

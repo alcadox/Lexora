@@ -190,7 +190,22 @@ namespace Lexora.Pantallas.Menu.Filtros
         // ===== FILTROS DE SEGURIDAD =====
         public Dictionary<string, bool> Seguridad { get; set; } = new Dictionary<string, bool>();
 
+        // --- FILTROS POR METADATOS DE IMÁGENES ---
+        public bool FiltrarResolucion { get; set; }
+        public int? ResolucionAncho { get; set; }
+        public int? ResolucionAlto { get; set; }
 
+        public bool FiltrarFechaImagen { get; set; }
+        public DateTime? FechaImagenDesde { get; set; }
+        public DateTime? FechaImagenHasta { get; set; }
+
+        public bool FiltrarModelo { get; set; }
+        public string ModeloCamara { get; set; }
+        public string ModeloMovil { get; set; }
+
+        public bool FiltrarGPS { get; set; }
+        public double? Latitud { get; set; }
+        public double? Longitud { get; set; }
 
     }
 }

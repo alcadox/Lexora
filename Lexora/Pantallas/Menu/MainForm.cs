@@ -9,7 +9,6 @@ using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using iText.Kernel.Pdf; //INSTALAR PAQUETE itext7
 
-
 namespace Lexora
 {
     public partial class MainForm : Form
@@ -32,7 +31,6 @@ namespace Lexora
             CargarVolumenPrincipal();
             this.nombreUsuario = nombreUsuario;
         }
-
 
         private void CargarVolumenPrincipal()
         {
@@ -58,7 +56,6 @@ namespace Lexora
                 rutaActual = drive.RootDirectory.FullName;
             }
         }
-
         private void btnDiscoPrincipal_Click(object sender, EventArgs e)
         {
 
@@ -75,14 +72,18 @@ namespace Lexora
             // para que siempre que se navegue o se filtre, se respete la selección.
             CargarCarpetas(rutaActual);
         }
-        private void CargarCarpetas(string ruta)
+        private void CargarCarpetas(string ruta, string textoBusqueda = "")
         {
             try
             {
-                listViewArchivos.BeginUpdate(); // Optimización visual: evita parpadeo
+                listViewArchivos.BeginUpdate();
                 listViewArchivos.Items.Clear();
 
-                // 1. Botón para volver atrás (Siempre visible)
+                // 1. Normalizamos la búsqueda
+                string busqueda = (textoBusqueda ?? "").ToLower().Trim();
+
+                // 2. Botón para volver atrás 
+                // Solo lo mostramos si no es el directorio raíz
                 if (Directory.GetParent(ruta) != null)
                 {
                     ListViewItem volver = new ListViewItem("..");
@@ -92,41 +93,34 @@ namespace Lexora
                     listViewArchivos.Items.Add(volver);
                 }
 
-                // 2. Obtener las extensiones permitidas desde el diccionario ya formateado
-                // Usamos un HashSet para que la búsqueda sea O(1) en lugar de O(n)
+                // 3. Preparar filtros (HashSet para rendimiento O(1))
                 var extensionesPermitidas = new HashSet<string>(
                     filtros.TiposArchivo.Where(x => x.Value).Select(x => x.Key.ToLower()),
                     StringComparer.OrdinalIgnoreCase
                 );
 
                 bool tieneFiltrosActivos = extensionesPermitidas.Count > 0;
-
-
-                //si hay filtros de fecha activos
                 bool tieneFiltrosFechaActivos = filtros.Fechas != null && filtros.Fechas.Any(f => f.Value.Desde.HasValue && f.Value.Hasta.HasValue);
-                bool tieneFiltrosMetadatosActivos =
-                filtros.FiltrarAutor || filtros.FiltrarTitulo || filtros.FiltrarAplicacion || filtros.FiltrarPaginas;
+                bool tieneFiltrosMetadatosActivos = filtros.FiltrarAutor || filtros.FiltrarTitulo || filtros.FiltrarAplicacion || filtros.FiltrarPaginas;
                 bool tieneFiltrosSeguridadActivos = filtros.Seguridad != null && filtros.Seguridad.Any(kv => kv.Value);
+                bool tieneFiltrosMetadatosImagenesActivos = filtros.FiltrarResolucion || filtros.FiltrarFechaImagen || filtros.FiltrarModelo || filtros.FiltrarGPS;
 
-                bool hayAlgúnFiltroActivo = tieneFiltrosActivos || tieneFiltrosFechaActivos || tieneFiltrosMetadatosActivos || tieneFiltrosSeguridadActivos;
+                bool hayAlgúnFiltroActivo = tieneFiltrosActivos || tieneFiltrosFechaActivos || tieneFiltrosMetadatosActivos || tieneFiltrosSeguridadActivos || tieneFiltrosMetadatosImagenesActivos;
 
-
-
-                // 3. Cargar CARPETAS
+                // 4. Cargar CARPETAS
                 foreach (var carpeta in Directory.GetDirectories(ruta))
                 {
                     DirectoryInfo info = new DirectoryInfo(carpeta);
 
-                    // NUEVO: la carpeta puede cumplir por SU fecha
-                    bool cumpleFechaCarpeta = CumpleFiltrosFechaCarpeta(info);
+                    // FILTRO DE BÚSQUEDA POR NOMBRE
+                    if (!string.IsNullOrEmpty(busqueda) && !info.Name.ToLower().Contains(busqueda))
+                        continue;
 
-                    // SI HAY FILTROS ACTIVOS:
-                    // - mostramos la carpeta si cumple por su propia fecha
-                    // - o si dentro hay archivos que cumplan (para poder navegar)
+                    // FILTROS DE CONTENIDO/FECHA
+                    bool cumpleFechaCarpeta = CumpleFiltrosFechaCarpeta(info);
                     if (hayAlgúnFiltroActivo)
                     {
                         bool tieneArchivosCumplen = CarpetaTieneArchivosQueCumplen(carpeta, extensionesPermitidas, tieneFiltrosActivos);
-
                         if (!cumpleFechaCarpeta && !tieneArchivosCumplen)
                             continue;
                     }
@@ -138,20 +132,23 @@ namespace Lexora
                     listViewArchivos.Items.Add(item);
                 }
 
-
-                // 4. Cargar ARCHIVOS (Aquí aplicamos el filtro real)
+                // 5. Cargar ARCHIVOS
                 foreach (var archivo in Directory.GetFiles(ruta))
                 {
                     FileInfo info = new FileInfo(archivo);
-                    string ext = info.Extension.ToLower();
 
+                    // FILTRO DE BÚSQUEDA POR NOMBRE
+                    if (!string.IsNullOrEmpty(busqueda) && !info.Name.ToLower().Contains(busqueda))
+                        continue;
+
+                    // FILTROS TÉCNICOS (Tipo, Fecha, Metadatos...)
                     bool cumpleSeguridad = CumpleFiltrosSeguridad(info);
-
-                    bool cumpleTipo = !tieneFiltrosActivos || extensionesPermitidas.Contains(ext);
+                    bool cumpleTipo = !tieneFiltrosActivos || extensionesPermitidas.Contains(info.Extension.ToLower());
                     bool cumpleFecha = CumpleFiltrosFecha(info);
                     bool cumpleMetadatos = CumpleFiltrosMetadatosDocumento(archivo);
+                    bool cumpleMetadatosImagen = CumpleFiltrosMetadatosImagen(archivo);
 
-                    if (cumpleTipo && cumpleFecha && cumpleMetadatos && cumpleSeguridad)
+                    if (cumpleTipo && cumpleFecha && cumpleMetadatos && cumpleSeguridad && cumpleMetadatosImagen)
                     {
                         ListViewItem item = new ListViewItem(info.Name);
                         item.SubItems.Add(info.Extension + " (Archivo)");
@@ -161,70 +158,10 @@ namespace Lexora
                     }
                 }
             }
-            catch (UnauthorizedAccessException)
-            {
-                MessageBox.Show("No tienes permisos para acceder a esta carpeta.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error cargando: " + ex.Message);
-            }
-            finally
-            {
-                listViewArchivos.EndUpdate();
-            }
+            catch (UnauthorizedAccessException) { /* Manejar error de permisos */ }
+            catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
+            finally { listViewArchivos.EndUpdate(); }
         }
-
-        /* ANTERIOR MÉTODO SIN FILTROS, CONSERVADO POR SI SE NECESITA
-         
-        private void CargarCarpetas(string ruta)
-        {
-            try
-            {
-                listViewArchivos.Items.Clear();
-
-                // Botón para volver atrás
-                if (Directory.GetParent(ruta) != null)
-                {
-                    ListViewItem volver = new ListViewItem("..");
-                    volver.SubItems.Add("Carpeta");
-                    volver.SubItems.Add("");
-                    volver.SubItems.Add("");
-                    listViewArchivos.Items.Add(volver);
-                }
-
-                // Cargar carpetas
-                foreach (var carpeta in Directory.GetDirectories(ruta))
-                {
-                    DirectoryInfo info = new DirectoryInfo(carpeta);
-
-                    ListViewItem item = new ListViewItem(info.Name);
-                    item.SubItems.Add("Carpeta");  // TIPO
-                    item.SubItems.Add("");         // Tamaño vacío (carpetas no tienen tamaño directo)
-                    item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
-
-                    listViewArchivos.Items.Add(item);
-                }
-
-                // Cargar archivos
-                foreach (var archivo in Directory.GetFiles(ruta))
-                {
-                    FileInfo info = new FileInfo(archivo);
-
-                    ListViewItem item = new ListViewItem(info.Name);
-                    item.SubItems.Add(info.Extension + " (Archivo)");
-                    item.SubItems.Add(FormatearTamaño(info.Length));
-                    item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
-
-                    listViewArchivos.Items.Add(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error cargando: " + ex.Message);
-            }
-        }
-        */
 
         // Formatear tamaño de bytes a KB, MB, GB
         // funciona de la siguiente manera:
@@ -250,7 +187,6 @@ namespace Lexora
             return gb.ToString("0.0") + " GB";
         }
 
-
         //========================= MÉTODO PARA CUMPLIR FILTROS DE FECHA =========================
         private bool CarpetaTieneArchivosQueCumplen(string rutaCarpeta, HashSet<string> extensionesPermitidas, bool tieneFiltrosTipo)
         {
@@ -266,7 +202,11 @@ namespace Lexora
                     bool cumpleMetadatos = CumpleFiltrosMetadatosDocumento(archivo);
                     bool cumpleSeguridad = CumpleFiltrosSeguridad(info);
 
-                    if (cumpleTipo && cumpleFecha && cumpleMetadatos && cumpleSeguridad)
+                    // NUEVO: Verificamos imagen para las subcarpetas
+                    bool cumpleMetadatosImagen = CumpleFiltrosMetadatosImagen(archivo);
+
+                    // NUEVO: Añadido al IF
+                    if (cumpleTipo && cumpleFecha && cumpleMetadatos && cumpleSeguridad && cumpleMetadatosImagen)
                         return true;
                 }
             }
@@ -458,35 +398,26 @@ namespace Lexora
                 return false;
             }
         }
-
-
         private void listViewArchivos_DoubleClick(object sender, EventArgs e)
         {
-            if (listViewArchivos.SelectedItems.Count == 0)
-                return;
+            if (listViewArchivos.SelectedItems.Count == 0) return;
 
             string seleccion = listViewArchivos.SelectedItems[0].Text;
 
-            // Si pulsa ".." → subir
             if (seleccion == "..")
             {
                 rutaActual = Directory.GetParent(rutaActual).FullName;
+                txtBoxBuscador.Text = ""; // LIMPIAMOS AQUÍ
                 CargarCarpetas(rutaActual);
                 return;
             }
 
-            // Intentar entrar a una carpeta
             string nuevaRuta = Path.Combine(rutaActual, seleccion);
-
             if (Directory.Exists(nuevaRuta))
             {
                 rutaActual = nuevaRuta;
+                txtBoxBuscador.Text = ""; // LIMPIAMOS AQUÍ
                 CargarCarpetas(rutaActual);
-            }
-            else
-            {
-                // Si es archivo, puedes abrirlo o ignorar
-                MessageBox.Show("Es un archivo, no una carpeta.");
             }
         }
 
@@ -527,8 +458,6 @@ namespace Lexora
 
             ventanaFiltros.ShowDialog();
         }
-
-
 
         // necesitas: NuGet "itext7" y "Microsoft.WindowsAPICodePack-Shell"
         // usings:
@@ -671,6 +600,130 @@ namespace Lexora
                 return false;
             }
         }
+
+        // ===================== CUMPLE FILTROS DE METADATOS DE IMÁGENES =====================
+        private bool CumpleFiltrosMetadatosImagen(string rutaArchivo)
+        {
+            try
+            {
+                // 1) Si no hay filtros de imágenes activos, cumple siempre
+                bool hayFiltrosImg =
+                    filtros.FiltrarResolucion ||
+                    filtros.FiltrarFechaImagen ||
+                    filtros.FiltrarModelo ||
+                    filtros.FiltrarGPS;
+
+                if (!hayFiltrosImg)
+                    return true;
+
+                string ext = (Path.GetExtension(rutaArchivo) ?? "").ToLowerInvariant();
+
+                // 2) Extensiones soportadas como imagen
+                bool esImagen = ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".bmp" || ext == ".tiff" || ext == ".gif" || ext == ".webp";
+
+                if (hayFiltrosImg && !esImagen)
+                    return false;
+
+                // 3) Leer propiedades usando ShellFile
+                using (var shellFile = ShellFile.FromFilePath(rutaArchivo))
+                {
+                    if (filtros.FiltrarResolucion)
+                    {
+                        var anchoProp = shellFile.Properties.System.Image.HorizontalSize.Value;
+                        var altoProp = shellFile.Properties.System.Image.VerticalSize.Value;
+
+                        if (anchoProp == null || altoProp == null) return false;
+
+                        if (filtros.ResolucionAncho.HasValue && anchoProp.Value != (uint)filtros.ResolucionAncho.Value) return false;
+                        if (filtros.ResolucionAlto.HasValue && altoProp.Value != (uint)filtros.ResolucionAlto.Value) return false;
+                    }
+
+                    if (filtros.FiltrarFechaImagen)
+                    {
+                        // 1. Intentamos obtener la fecha de toma (EXIF)
+                        DateTime? fechaReferencia = shellFile.Properties.System.Photo.DateTaken.Value;
+
+                        // 2. Si no hay fecha de toma, probamos con la fecha de creación del archivo
+                        if (!fechaReferencia.HasValue)
+                        {
+                            fechaReferencia = shellFile.Properties.System.DateCreated.Value;
+                        }
+
+                        // 3. Si aún así no hay (muy raro), probamos con la de modificación
+                        if (!fechaReferencia.HasValue)
+                        {
+                            fechaReferencia = shellFile.Properties.System.DateModified.Value;
+                        }
+
+                        // Si después de todo no tenemos ninguna fecha, no puede pasar el filtro
+                        if (!fechaReferencia.HasValue) return false;
+
+                        DateTime fecha = fechaReferencia.Value.Date;
+
+                        // Comprobamos si está en el rango
+                        if (filtros.FechaImagenDesde.HasValue && fecha < filtros.FechaImagenDesde.Value.Date)
+                            return false;
+
+                        if (filtros.FechaImagenHasta.HasValue && fecha > filtros.FechaImagenHasta.Value.Date)
+                            return false;
+                    }
+
+                    if (filtros.FiltrarModelo)
+                    {
+                        string modeloReal = shellFile.Properties.System.Photo.CameraModel.Value ?? "";
+
+                        // 1. Si la imagen no tiene metadato de modelo, queda descartada (el filtro pide que tenga modelo)
+                        if (string.IsNullOrWhiteSpace(modeloReal)) return false;
+
+                        bool tieneTextoCamara = !string.IsNullOrWhiteSpace(filtros.ModeloCamara);
+                        bool tieneTextoMovil = !string.IsNullOrWhiteSpace(filtros.ModeloMovil);
+
+                        // 2. Si el usuario escribió algo en los cuadros de búsqueda
+                        if (tieneTextoCamara || tieneTextoMovil)
+                        {
+                            bool coincideCamara = false;
+                            bool coincideMovil = false;
+
+                            if (tieneTextoCamara)
+                                coincideCamara = modeloReal.IndexOf(filtros.ModeloCamara, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                            if (tieneTextoMovil)
+                                coincideMovil = modeloReal.IndexOf(filtros.ModeloMovil, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                            // Si no coincide con ninguna de las búsquedas del usuario, se oculta
+                            if (!coincideCamara && !coincideMovil) return false;
+                        }
+
+                        // 3. Si tieneTextoCamara y tieneTextoMovil son falsos (están vacíos), 
+                        // la imagen pasa el filtro simplemente por tener metadato (que es lo que ya hace el punto 1).
+                    }
+
+                    if (filtros.FiltrarGPS)
+                    {
+                        // Accedemos mediante el "Canonical Name" como string para saltarnos la falta de definición en la clase estática
+                        var propLat = shellFile.Properties.GetProperty("System.GPS.LatitudeDecimal");
+                        var propLon = shellFile.Properties.GetProperty("System.GPS.LongitudeDecimal");
+
+                        // Obtenemos los valores como object y los convertimos a double?
+                        double? latVal = propLat?.ValueAsObject as double?;
+                        double? lonVal = propLon?.ValueAsObject as double?;
+
+                        if (latVal == null || lonVal == null) return false;
+
+                        // Comparación con margen de error
+                        if (filtros.Latitud.HasValue && Math.Abs(latVal.Value - filtros.Latitud.Value) > 0.001) return false;
+                        if (filtros.Longitud.HasValue && Math.Abs(lonVal.Value - filtros.Longitud.Value) > 0.001) return false;
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        //===================== FIN CUMPLE FILTROS DE METADATOS DE IMÁGENES =====================
         private bool SeguridadActiva(string nombre)
         {
             if (filtros.Seguridad == null) return false;
@@ -681,6 +734,13 @@ namespace Lexora
         {
             base.OnFormClosing(e);
             Application.Exit();
+        }
+
+        private void txtBoxBuscador_TextChanged(object sender, EventArgs e)
+        {
+            // Llamamos a CargarCarpetas pasando el texto actual del buscador.
+            // Esto filtrará la vista actual basándose en el nombre y los filtros de ClaseFiltros.
+            CargarCarpetas(rutaActual, txtBoxBuscador.Text);
         }
     }
 }
