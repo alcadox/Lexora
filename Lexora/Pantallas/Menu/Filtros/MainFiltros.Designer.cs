@@ -39,6 +39,13 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblTituloFiltroTipoArchivo = new System.Windows.Forms.Label();
             this.tabPageFiltroTamano = new System.Windows.Forms.TabPage();
+            this.panel18 = new System.Windows.Forms.Panel();
+            this.panelTamano = new System.Windows.Forms.Panel();
+            this.numericTamanoMax = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.panel16 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
             this.tabPageFiltroFecha = new System.Windows.Forms.TabPage();
             this.panel7 = new System.Windows.Forms.Panel();
             this.buttonLimpiarFecha = new System.Windows.Forms.Button();
@@ -109,15 +116,33 @@
             this.panel8 = new System.Windows.Forms.Panel();
             this.labelTituloFiltroSeguridad = new System.Windows.Forms.Label();
             this.tabPageFiltroEstructura = new System.Windows.Forms.TabPage();
+            this.numericTamanoMin = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxUnidad = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.checkBoxFiltrarTamano = new System.Windows.Forms.CheckBox();
+            this.panel17 = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.panel19 = new System.Windows.Forms.Panel();
+            this.panel20 = new System.Windows.Forms.Panel();
+            this.checkboxFiltrarContenido = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBoxContenido = new System.Windows.Forms.TextBox();
+            this.checkboxIgnorarMayus = new System.Windows.Forms.CheckBox();
             this.panelPrincipal.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tabPageFiltroTipoArchivo.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.tabPageFiltroTamano.SuspendLayout();
+            this.panelTamano.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTamanoMax)).BeginInit();
+            this.panel16.SuspendLayout();
             this.tabPageFiltroFecha.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.tabPageFiltroContenido.SuspendLayout();
             this.tabPageFiltroMetadatosDocumentos.SuspendLayout();
             this.panel13.SuspendLayout();
             this.panel12.SuspendLayout();
@@ -133,6 +158,10 @@
             this.tabPageFiltroSeguridad.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTamanoMin)).BeginInit();
+            this.panel17.SuspendLayout();
+            this.panel19.SuspendLayout();
+            this.panel20.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelPrincipal
@@ -255,6 +284,9 @@
             // 
             // tabPageFiltroTamano
             // 
+            this.tabPageFiltroTamano.Controls.Add(this.panel18);
+            this.tabPageFiltroTamano.Controls.Add(this.panelTamano);
+            this.tabPageFiltroTamano.Controls.Add(this.panel16);
             this.tabPageFiltroTamano.Location = new System.Drawing.Point(4, 25);
             this.tabPageFiltroTamano.Name = "tabPageFiltroTamano";
             this.tabPageFiltroTamano.Padding = new System.Windows.Forms.Padding(3);
@@ -262,6 +294,70 @@
             this.tabPageFiltroTamano.TabIndex = 1;
             this.tabPageFiltroTamano.Text = "Tamaño";
             this.tabPageFiltroTamano.UseVisualStyleBackColor = true;
+            // 
+            // panel18
+            // 
+            this.panel18.Location = new System.Drawing.Point(385, 62);
+            this.panel18.Name = "panel18";
+            this.panel18.Size = new System.Drawing.Size(358, 302);
+            this.panel18.TabIndex = 2;
+            // 
+            // panelTamano
+            // 
+            this.panelTamano.Controls.Add(this.checkBoxFiltrarTamano);
+            this.panelTamano.Controls.Add(this.label8);
+            this.panelTamano.Controls.Add(this.comboBoxUnidad);
+            this.panelTamano.Controls.Add(this.numericTamanoMin);
+            this.panelTamano.Controls.Add(this.numericTamanoMax);
+            this.panelTamano.Controls.Add(this.label7);
+            this.panelTamano.Controls.Add(this.label6);
+            this.panelTamano.Location = new System.Drawing.Point(4, 62);
+            this.panelTamano.Name = "panelTamano";
+            this.panelTamano.Size = new System.Drawing.Size(369, 303);
+            this.panelTamano.TabIndex = 1;
+            // 
+            // numericTamanoMax
+            // 
+            this.numericTamanoMax.Location = new System.Drawing.Point(103, 87);
+            this.numericTamanoMax.Name = "numericTamanoMax";
+            this.numericTamanoMax.Size = new System.Drawing.Size(65, 22);
+            this.numericTamanoMax.TabIndex = 2;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 89);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(88, 16);
+            this.label7.TabIndex = 1;
+            this.label7.Text = "Tam. Máximo";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(9, 49);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(84, 16);
+            this.label6.TabIndex = 0;
+            this.label6.Text = "Tam. Mínimo";
+            // 
+            // panel16
+            // 
+            this.panel16.Controls.Add(this.label4);
+            this.panel16.Location = new System.Drawing.Point(4, 3);
+            this.panel16.Name = "panel16";
+            this.panel16.Size = new System.Drawing.Size(740, 53);
+            this.panel16.TabIndex = 0;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(3, 12);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(263, 27);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Filtro por tamaño de archivo";
             // 
             // tabPageFiltroFecha
             // 
@@ -382,6 +478,9 @@
             // 
             // tabPageFiltroContenido
             // 
+            this.tabPageFiltroContenido.Controls.Add(this.panel20);
+            this.tabPageFiltroContenido.Controls.Add(this.panel19);
+            this.tabPageFiltroContenido.Controls.Add(this.panel17);
             this.tabPageFiltroContenido.Location = new System.Drawing.Point(4, 25);
             this.tabPageFiltroContenido.Name = "tabPageFiltroContenido";
             this.tabPageFiltroContenido.Size = new System.Drawing.Size(750, 371);
@@ -1015,6 +1114,133 @@
             this.tabPageFiltroEstructura.Text = "Estructura";
             this.tabPageFiltroEstructura.UseVisualStyleBackColor = true;
             // 
+            // numericTamanoMin
+            // 
+            this.numericTamanoMin.Location = new System.Drawing.Point(103, 47);
+            this.numericTamanoMin.Name = "numericTamanoMin";
+            this.numericTamanoMin.Size = new System.Drawing.Size(65, 22);
+            this.numericTamanoMin.TabIndex = 3;
+            // 
+            // comboBoxUnidad
+            // 
+            this.comboBoxUnidad.FormattingEnabled = true;
+            this.comboBoxUnidad.Items.AddRange(new object[] {
+            "Bytes",
+            "KB",
+            "MB",
+            "GB"});
+            this.comboBoxUnidad.Location = new System.Drawing.Point(103, 124);
+            this.comboBoxUnidad.Name = "comboBoxUnidad";
+            this.comboBoxUnidad.Size = new System.Drawing.Size(57, 24);
+            this.comboBoxUnidad.TabIndex = 4;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(9, 127);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(51, 16);
+            this.label8.TabIndex = 5;
+            this.label8.Text = "Unidad";
+            // 
+            // checkBoxFiltrarTamano
+            // 
+            this.checkBoxFiltrarTamano.AutoSize = true;
+            this.checkBoxFiltrarTamano.Location = new System.Drawing.Point(12, 12);
+            this.checkBoxFiltrarTamano.Name = "checkBoxFiltrarTamano";
+            this.checkBoxFiltrarTamano.Size = new System.Drawing.Size(136, 20);
+            this.checkBoxFiltrarTamano.TabIndex = 6;
+            this.checkBoxFiltrarTamano.Text = "Filtrar por Tamaño";
+            this.checkBoxFiltrarTamano.UseVisualStyleBackColor = true;
+            // 
+            // panel17
+            // 
+            this.panel17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel17.Controls.Add(this.label9);
+            this.panel17.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel17.Location = new System.Drawing.Point(0, 0);
+            this.panel17.Name = "panel17";
+            this.panel17.Size = new System.Drawing.Size(750, 52);
+            this.panel17.TabIndex = 6;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Segoe UI Variable Display", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(3, 11);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(215, 27);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "Filtrado por contenido:";
+            // 
+            // panel19
+            // 
+            this.panel19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel19.Controls.Add(this.checkboxIgnorarMayus);
+            this.panel19.Controls.Add(this.textBoxContenido);
+            this.panel19.Controls.Add(this.label11);
+            this.panel19.Controls.Add(this.checkboxFiltrarContenido);
+            this.panel19.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel19.Location = new System.Drawing.Point(0, 52);
+            this.panel19.Name = "panel19";
+            this.panel19.Size = new System.Drawing.Size(373, 319);
+            this.panel19.TabIndex = 8;
+            // 
+            // panel20
+            // 
+            this.panel20.Controls.Add(this.label10);
+            this.panel20.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel20.Location = new System.Drawing.Point(378, 52);
+            this.panel20.Name = "panel20";
+            this.panel20.Size = new System.Drawing.Size(372, 319);
+            this.panel20.TabIndex = 9;
+            // 
+            // checkboxFiltrarContenido
+            // 
+            this.checkboxFiltrarContenido.AutoSize = true;
+            this.checkboxFiltrarContenido.Location = new System.Drawing.Point(8, 6);
+            this.checkboxFiltrarContenido.Name = "checkboxFiltrarContenido";
+            this.checkboxFiltrarContenido.Size = new System.Drawing.Size(144, 20);
+            this.checkboxFiltrarContenido.TabIndex = 0;
+            this.checkboxFiltrarContenido.Text = "Filtrar por contenido";
+            this.checkboxFiltrarContenido.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Segoe UI Variable Display", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(49, 144);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(278, 21);
+            this.label10.TabIndex = 0;
+            this.label10.Text = "Solo archivos de texto, como .txt o pdf";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(8, 45);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(96, 16);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "Palabra Clave:";
+            // 
+            // textBoxContenido
+            // 
+            this.textBoxContenido.Location = new System.Drawing.Point(110, 42);
+            this.textBoxContenido.Name = "textBoxContenido";
+            this.textBoxContenido.Size = new System.Drawing.Size(141, 22);
+            this.textBoxContenido.TabIndex = 2;
+            // 
+            // checkboxIgnorarMayus
+            // 
+            this.checkboxIgnorarMayus.AutoSize = true;
+            this.checkboxIgnorarMayus.Location = new System.Drawing.Point(11, 84);
+            this.checkboxIgnorarMayus.Name = "checkboxIgnorarMayus";
+            this.checkboxIgnorarMayus.Size = new System.Drawing.Size(143, 20);
+            this.checkboxIgnorarMayus.TabIndex = 3;
+            this.checkboxIgnorarMayus.Text = "Ignorar Mayúsculas";
+            this.checkboxIgnorarMayus.UseVisualStyleBackColor = true;
+            // 
             // MainFiltros
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1029,11 +1255,18 @@
             this.panel3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.tabPageFiltroTamano.ResumeLayout(false);
+            this.panelTamano.ResumeLayout(false);
+            this.panelTamano.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTamanoMax)).EndInit();
+            this.panel16.ResumeLayout(false);
+            this.panel16.PerformLayout();
             this.tabPageFiltroFecha.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            this.tabPageFiltroContenido.ResumeLayout(false);
             this.tabPageFiltroMetadatosDocumentos.ResumeLayout(false);
             this.panel13.ResumeLayout(false);
             this.panel13.PerformLayout();
@@ -1058,6 +1291,13 @@
             this.panel9.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTamanoMin)).EndInit();
+            this.panel17.ResumeLayout(false);
+            this.panel17.PerformLayout();
+            this.panel19.ResumeLayout(false);
+            this.panel19.PerformLayout();
+            this.panel20.ResumeLayout(false);
+            this.panel20.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1144,5 +1384,25 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button buttonAumentarLatitud;
         private System.Windows.Forms.Button buttonDisminuirLatitud;
+        private System.Windows.Forms.Panel panel16;
+        private System.Windows.Forms.Panel panel18;
+        private System.Windows.Forms.Panel panelTamano;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numericTamanoMax;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox comboBoxUnidad;
+        private System.Windows.Forms.NumericUpDown numericTamanoMin;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox checkBoxFiltrarTamano;
+        private System.Windows.Forms.Panel panel20;
+        private System.Windows.Forms.Panel panel19;
+        private System.Windows.Forms.Panel panel17;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox checkboxIgnorarMayus;
+        private System.Windows.Forms.TextBox textBoxContenido;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox checkboxFiltrarContenido;
     }
 }

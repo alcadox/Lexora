@@ -19,7 +19,10 @@ namespace Lexora.Pantallas.Menu.Filtros
         {
             TiposArchivo = new Dictionary<string, bool>();
             TiposArchivoSinFormatear = new Dictionary<string, bool>();
-            
+
+            TamanoMin = 0;
+            TamanoMax = 0;
+
             //filtros de tiempo
             Fechas = new Dictionary<string, (DateTime? Desde, DateTime? Hasta)>();
 
@@ -175,6 +178,16 @@ namespace Lexora.Pantallas.Menu.Filtros
 
         }
 
+        //FILTROS DE TAMAÑO
+        public bool FiltrarTamano { get; set; }
+        public long TamanoMin { get; set; }
+        public long TamanoMax { get; set; }
+        public string UnidadTamano { get; set; } = "MB";
+
+        // FILTROS DE CONTENIDOS
+        public bool FiltrarContenido { get; set; }
+        public string TextoContenido { get; set; }
+        public bool IgnorarMayusculas { get; set; }
 
         //FILTROS POR METADATOS DOCUMENTOS
         public string AutorDocumento { get; set; }

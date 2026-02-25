@@ -23,6 +23,15 @@ namespace Lexora.Pantallas.Menu.Filtros
             checkBoxFiltroTituloDoc.CheckedChanged += checkBoxFiltroTituloDoc_CheckedChanged;
             checkBoxFiltroAppQLoGenero.CheckedChanged += checkBoxFiltroAppQLoGenero_CheckedChanged;
             checkBoxFiltroCantPaginas.CheckedChanged += checkBoxFiltroCantPaginas_CheckedChanged;
+            checkBoxFiltrarTamano.CheckedChanged += (s, e) => {
+                ActualizarEstadoOtrosFiltrosUI();
+                botonAplicar.Enabled = true;
+            };
+
+            checkboxFiltrarContenido.CheckedChanged += (s, e) => {
+                ActualizarEstadoOtrosFiltrosUI();
+                botonAplicar.Enabled = true;
+            };
 
             textBoxAutorDoc.TextChanged += textBoxAutorDoc_TextChanged;
             textBoxTituloDoc.TextChanged += textBoxTituloDoc_TextChanged;
@@ -124,15 +133,15 @@ namespace Lexora.Pantallas.Menu.Filtros
             // Recorrer el diccionario de TiposArchivoSinFormatear y marcar los ítems correspondientes en el CheckedListBox
             foreach (var item in filtros.TiposArchivoSinFormatear)
             {
-              
+
                 if (!item.Value) continue;  // Si el valor es false, no marcar
-                
+
                 int index = checkedListBoxTipoArchivo.Items.IndexOf(item.Key); // Buscar el índice del ítem en el CheckedListBo
-                
+
                 if (index >= 0) checkedListBoxTipoArchivo.SetItemChecked(index, true); // Marcar el ítem si se encuentra
             }
 
-        // BLOQUE DE FILTRO DE FECHA
+            // BLOQUE DE FILTRO DE FECHA
             //inicializo elfiltro de fecha
             monthCalendarFecha.Enabled = false;
             buttonAceptarFecha.Enabled = false;
@@ -147,8 +156,8 @@ namespace Lexora.Pantallas.Menu.Filtros
             }
             //
 
-        //BLOQUE para precargar los metadatos por documetnos:
-         // ===== precargar filtros metadatos documentos =====
+            //BLOQUE para precargar los metadatos por documetnos:
+            // ===== precargar filtros metadatos documentos =====
 
             // autor
             checkBoxFiltroAutorDoc.Checked = filtros.FiltrarAutor;
@@ -198,6 +207,19 @@ namespace Lexora.Pantallas.Menu.Filtros
                 if (idx >= 0) checkedListBoxSeguridad.SetItemChecked(idx, true);
             }
 
+            // Cargamos el CheckBox
+            checkBoxFiltrarTamano.Checked = filtros.FiltrarTamano;
+
+            long factor = 1024 * 1024;
+
+            // Convertimos de vuelta: de Bytes a Megabytes para la UI
+            if (filtros.TamanoMin >= 0)
+                numericTamanoMin.Value = 0;
+
+            if (filtros.TamanoMax >= 0)
+                numericTamanoMax.Value = 0;
+
+            ActualizarEstadoOtrosFiltrosUI();
         }
 
         private void botonAplicar_Click(object sender, EventArgs e)
@@ -236,7 +258,7 @@ namespace Lexora.Pantallas.Menu.Filtros
 
             filtros.FormatearTipoArchivo(); // Formatear los tipos de archivo para que estén en el formato correcto
 
-           
+
 
             // ======== GUARDAR LOS METADATOS DOCUMENTOS ==========
             filtros.FiltrarAutor = checkBoxFiltroAutorDoc.Checked;
@@ -298,11 +320,42 @@ namespace Lexora.Pantallas.Menu.Filtros
                 filtros.Seguridad[nombre] = true;
             }
 
+            // FILTRO DE TAMAÑO
+
+            // Guardamos si el filtro de tamaño debe aplicarse o no según el estado del CheckBox
+            filtros.FiltrarTamano = checkBoxFiltrarTamano.Checked;
+
+            if (filtros.FiltrarTamano)
+            {
+                // Inicializamos el factor de conversión (por defecto 1 para Bytes)
+                long factor = 1;
+
+                // Obtenemos el texto de la unidad seleccionada en el ComboBox (KB, MB, GB)
+                string unidad = comboBoxUnidad.Text;
+
+                // Establecemos el multiplicador dependiendo de la unidad para convertirlo todo a Bytes
+                if (unidad == "KB") factor = 1024;
+                else if (unidad == "MB") factor = 1024 * 1024;
+                else if (unidad == "GB") factor = 1024 * 1024 * 1024;
+
+                // Convertimos los valores de los NumericUpDown a Bytes y los guardamos en la clase filtros
+                // Se realiza un casting a (long) para asegurar que soportamos tamaños de archivo grandes
+                filtros.TamanoMin = (long)numericTamanoMin.Value * factor;
+                filtros.TamanoMax = (long)numericTamanoMax.Value * factor;
+
+                // Guardamos la unidad seleccionada para que al volver a abrir el formulario se mantenga la misma
+                filtros.UnidadTamano = unidad;
+            }
+
+            filtros.FiltrarContenido = checkboxFiltrarContenido.Checked;
+            filtros.TextoContenido = textBoxContenido.Text;
+            filtros.IgnorarMayusculas = checkboxIgnorarMayus.Checked;
+
 
             // Disparar el evento para notificar que los filtros han sido aplicados
             FiltrosAplicados?.Invoke(this, EventArgs.Empty);
 
-
+    
         }
 
         //Para que los textfields estén desactivados hasta que se active su checkbox correspondiente,
@@ -610,5 +663,20 @@ namespace Lexora.Pantallas.Menu.Filtros
             filtros.ModeloMovil = comboBoxModelosMoviles.Text;
             botonAplicar.Enabled = true;
         }
+
+        private void ActualizarEstadoOtrosFiltrosUI()
+        {
+            // Filtro de Tamaño
+            bool tamanoActivo = checkBoxFiltrarTamano.Checked;
+            // Desactivamos los controles individuales para que el CheckBox siga funcional
+            numericTamanoMin.Enabled = tamanoActivo;
+            numericTamanoMax.Enabled = tamanoActivo;
+            comboBoxUnidad.Enabled = tamanoActivo;
+
+            bool contActivo = checkboxFiltrarContenido.Checked;
+            textBoxContenido.Enabled = contActivo;
+            checkboxIgnorarMayus.Enabled = contActivo;
+        }
+
     }
 }

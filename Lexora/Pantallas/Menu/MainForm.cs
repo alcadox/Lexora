@@ -141,6 +141,15 @@ namespace Lexora
                     if (!string.IsNullOrEmpty(busqueda) && !info.Name.ToLower().Contains(busqueda))
                         continue;
 
+                    // FILTRO DE TAMAÑO
+                    
+                    if (!CumpleFiltroTamano(archivo))
+                        continue;
+
+                    // FILTRO DE CONTENIDO
+                    if (!CumpleFiltroContenido(archivo)) continue;
+
+
                     // FILTROS TÉCNICOS (Tipo, Fecha, Metadatos...)
                     bool cumpleSeguridad = CumpleFiltrosSeguridad(info);
                     bool cumpleTipo = !tieneFiltrosActivos || extensionesPermitidas.Contains(info.Extension.ToLower());
@@ -215,6 +224,24 @@ namespace Lexora
                 //por si no ay permisos o falla algo pero no se rompe 
             }
             return false;
+        }
+
+        private bool CumpleFiltroTamano(string rutaArchivo)
+        {
+            if (!filtros.FiltrarTamano) return true; // Si el filtro no está activo, pasa la prueba
+
+            try
+            {
+                FileInfo info = new FileInfo(rutaArchivo);
+                long tamanoBytes = info.Length;
+
+                // Comprobar si está dentro del rango definido en ClaseFiltros
+                return tamanoBytes >= filtros.TamanoMin && tamanoBytes <= filtros.TamanoMax;
+            }
+            catch
+            {
+                return false; // Si hay error al leer el archivo (permisos, etc), no lo mostramos
+            }
         }
 
         private bool CumpleFiltrosFecha(FileInfo info)
@@ -332,6 +359,63 @@ namespace Lexora
             return true;
         }
         //========= FIN CUMPLE FILTROS FECHA PARA CARPETAS ============
+
+        // Cumple Filtros Contenido
+        private bool CumpleFiltroContenido(string ruta)
+        {
+            // Si el filtro no está activado o el campo de búsqueda está vacío, 
+            // dejamos pasar el archivo (devolvemos true)
+            if (!filtros.FiltrarContenido || string.IsNullOrEmpty(filtros.TextoContenido)) return true;
+
+            try
+            {
+                string ext = Path.GetExtension(ruta).ToLower(); // Obtenemos la extensión en minúsculas
+                string busqueda = filtros.TextoContenido;
+
+                // Configuramos si la búsqueda ignora o no las mayúsculas según el CheckBox
+                var comparacion = filtros.IgnorarMayusculas ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+                // ARCHIVOS DE TEXTO PLANO O CÓDIGO
+                string[] extTexto = { ".txt", ".cs", ".py", ".sql", ".json", ".xml", ".html", ".log", ".csv" };
+                if (extTexto.Contains(ext))
+                {
+                    // Leemos todo el contenido del archivo
+                    string textoArchivo = File.ReadAllText(ruta);
+
+                    // Verificamos si la palabra clave existe dentro del texto
+                    // Usamos IndexOf >= 0 porque es más compatible con versiones antiguas que .Contains(str, comp)
+                    return textoArchivo.IndexOf(busqueda, comparacion) >= 0;
+                }
+
+                // ARCHIVOS PDF (Usando la librería iText7)
+                if (ext == ".pdf")
+                {
+                    // Abrimos el PDF en modo lectura
+                    using (PdfReader pdfReader = new PdfReader(ruta))
+                    using (PdfDocument pdfDoc = new PdfDocument(pdfReader))
+                    {
+                        // Recorremos el PDF página por página
+                        for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
+                        {
+                            // Extraemos el texto de la página actual
+                            string textoPagina = iText.Kernel.Pdf.Canvas.Parser.PdfTextExtractor.GetTextFromPage(pdfDoc.GetPage(i));
+
+                            // Si encontramos la palabra en esta página, ya no hace falta leer el resto
+                            if (textoPagina.IndexOf(busqueda, comparacion) >= 0) return true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Si el archivo está abierto por otro programa o no tenemos permisos, 
+                // lo ignoramos para que la aplicación no se detenga
+            }
+
+            // Si llegamos aquí es porque el archivo no contenía el texto o no es de un tipo soportado
+            return false;
+        }
+
         // ===================== CUMPLE FILTROS DE SEGURIDAD =====================
         private bool CumpleFiltrosSeguridad(FileInfo info)
         {
