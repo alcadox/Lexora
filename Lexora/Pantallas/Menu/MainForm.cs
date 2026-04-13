@@ -21,13 +21,22 @@ namespace Lexora
 
         public MainForm()
         {
+
             InitializeComponent();
+
+            // INYECCIÓN DE OPTIMIZACIÓN LEXORA: Evita el parpadeo al cargar miles de archivos
+            typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(listViewArchivos, true, null);
+            
             CargarVolumenPrincipal();
         }
 
         public MainForm(string nombreUsuario)
         {
             InitializeComponent();
+
+            // INYECCIÓN DE OPTIMIZACIÓN LEXORA: Evita el parpadeo al cargar miles de archivos
+            typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(listViewArchivos, true, null);
+            
             CargarVolumenPrincipal();
             this.nombreUsuario = nombreUsuario;
         }
@@ -108,7 +117,7 @@ namespace Lexora
                 bool hayAlgúnFiltroActivo = tieneFiltrosActivos || tieneFiltrosFechaActivos || tieneFiltrosMetadatosActivos || tieneFiltrosSeguridadActivos || tieneFiltrosMetadatosImagenesActivos;
 
                 // 4. Cargar CARPETAS
-                foreach (var carpeta in Directory.GetDirectories(ruta))
+                foreach (var carpeta in Directory.EnumerateDirectories(ruta))
                 {
                     DirectoryInfo info = new DirectoryInfo(carpeta);
 
@@ -133,7 +142,7 @@ namespace Lexora
                 }
 
                 // 5. Cargar ARCHIVOS
-                foreach (var archivo in Directory.GetFiles(ruta))
+                foreach (var archivo in Directory.EnumerateFiles(ruta))
                 {
                     FileInfo info = new FileInfo(archivo);
 
@@ -163,6 +172,13 @@ namespace Lexora
                         item.SubItems.Add(info.Extension + " (Archivo)");
                         item.SubItems.Add(FormatearTamaño(info.Length));
                         item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
+
+                        // --- INYECCIÓN PREPARATIVA PARA LA IA ---
+                        // En el futuro, aquí llamaremos a la API.
+                        // Ej: string analisisIA = await IA.AnalizarDocumentoAsync(archivo);
+                        // item.SubItems.Add(analisisIA);
+                        // ----------------------------------------
+
                         listViewArchivos.Items.Add(item);
                     }
                 }
