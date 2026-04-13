@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using iText.Kernel.Pdf; //INSTALAR PAQUETE itext7
+using System.Drawing;
 
 namespace Lexora
 {
@@ -19,6 +20,9 @@ namespace Lexora
         ClaseFiltros filtros = new ClaseFiltros();
         string nombreUsuario = "";
 
+        // Motor de iconos
+        private ImageList listaIconos;
+
         public MainForm()
         {
 
@@ -26,7 +30,18 @@ namespace Lexora
 
             // INYECCIÓN DE OPTIMIZACIÓN LEXORA: Evita el parpadeo al cargar miles de archivos
             typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(listViewArchivos, true, null);
-            
+
+            //Inicializar la lista de iconos
+            listaIconos = new ImageList();
+            listaIconos.ColorDepth = ColorDepth.Depth32Bit; // Para que se vean en HD, no pixelados
+            listaIconos.ImageSize = new Size(16, 16); // Tamaño clásico de Windows
+            listViewArchivos.SmallImageList = listaIconos; // Enlazar al ListView
+
+            // REGISTRO ÚNICO: Añadimos el icono de carpeta a la lista con una clave fija
+            listaIconos.Images.Add("folder_default", Properties.Resources.carpeta_por_defecto_w11);
+            listaIconos.Images.Add("folder_default_back", Properties.Resources.carpeta_back_por_defecto_w11);
+
+
             CargarVolumenPrincipal();
         }
 
@@ -36,7 +51,18 @@ namespace Lexora
 
             // INYECCIÓN DE OPTIMIZACIÓN LEXORA: Evita el parpadeo al cargar miles de archivos
             typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(listViewArchivos, true, null);
-            
+
+            // Inicializar la lista de iconos
+            listaIconos = new ImageList();
+            listaIconos.ColorDepth = ColorDepth.Depth32Bit; // Para que se vean en HD, no pixelados
+            listaIconos.ImageSize = new Size(16, 16); // Tamaño clásico de Windows
+            listViewArchivos.SmallImageList = listaIconos; // Enlazar al ListView
+
+            // REGISTRO ÚNICO: Añadimos el icono de carpeta a la lista con una clave fija
+            listaIconos.Images.Add("folder_default", Properties.Resources.carpeta_por_defecto_w11);
+            listaIconos.Images.Add("folder_default_back", Properties.Resources.carpeta_back_por_defecto_w11);
+
+
             CargarVolumenPrincipal();
             this.nombreUsuario = nombreUsuario;
         }
@@ -99,6 +125,9 @@ namespace Lexora
                     volver.SubItems.Add("Carpeta");
                     volver.SubItems.Add("");
                     volver.SubItems.Add("");
+
+                    volver.ImageKey = "folder_default_back";
+
                     listViewArchivos.Items.Add(volver);
                 }
 
@@ -140,6 +169,10 @@ namespace Lexora
                         item.SubItems.Add("Carpeta");
                         item.SubItems.Add("");
                         item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
+
+                        // ASIGNACIÓN DEL ICONO:
+                        item.ImageKey = "folder_default";
+                        
                         listViewArchivos.Items.Add(item);
                     }
                     catch (UnauthorizedAccessException)
@@ -186,6 +219,47 @@ namespace Lexora
                             item.SubItems.Add(info.Extension + " (Archivo)");
                             item.SubItems.Add(FormatearTamaño(info.Length));
                             item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
+
+                            // ==========================================
+                            // INYECCIÓN DE ICONOS REALES
+                            // ==========================================
+                            string ext = info.Extension.ToLowerInvariant();
+
+                            // 1. Por defecto, la "llave" para guardar el icono es la extensión (ej. ".pdf")
+                            string claveIcono = ext;
+
+                            // 2. EXCEPCIÓNSi es un acceso directo o un ejecutable, 
+                            // usamos la ruta completa del archivo para que no se sobreescriban entre ellos.
+                            if (ext == ".lnk" || ext == ".exe" || ext == ".ico")
+                            {
+                                claveIcono = info.FullName;
+                            }
+
+                            // Si la clave no está en la memoria caché, extraemos el icono del archivo físico
+                            if (!string.IsNullOrEmpty(claveIcono) && !listaIconos.Images.ContainsKey(claveIcono))
+                            {
+                                try
+                                {
+                                    // Extrae el icono oficial registrado en Windows
+                                    System.Drawing.Icon iconoExtraido = System.Drawing.Icon.ExtractAssociatedIcon(archivo);
+                                    if (iconoExtraido != null)
+                                    {
+                                        listaIconos.Images.Add(claveIcono, iconoExtraido);
+                                    }
+                                }
+                                catch
+                                {
+                                    // Si falla al extraer (archivos corruptos), simplemente no tendrá icono
+                                }
+                            }
+
+                            // Asignar el icono al elemento visual
+                            if (listaIconos.Images.ContainsKey(claveIcono))
+                            {
+                                item.ImageKey = claveIcono;
+                            }
+
+
                             listViewArchivos.Items.Add(item);
                         }
                     }
@@ -245,27 +319,44 @@ namespace Lexora
         {
             try
             {
-                foreach (var archivo in Directory.GetFiles(rutaCarpeta))
+                // Usar EnumerateFiles para no saturar la RAM
+                foreach (var archivo in Directory.EnumerateFiles(rutaCarpeta))
                 {
                     FileInfo info = new FileInfo(archivo);
-                    string ext = info.Extension.ToLower();
+                    string ext = info.Extension.ToLowerInvariant();
 
+                    // Ordenamos de los filtros más RÁPIDOS a los más LENTOS.
+                    // Si un archivo no pasa un filtro rápido, saltamos al siguiente archivo al instante.
+
+                    // 1 Filtro de Tipo 
                     bool cumpleTipo = !tieneFiltrosTipo || extensionesPermitidas.Contains(ext);
+                    if (!cumpleTipo) continue;
+
+                    // 2 Filtro de Fecha (solo lee atributos de Windows)
                     bool cumpleFecha = CumpleFiltrosFecha(info);
-                    bool cumpleMetadatos = CumpleFiltrosMetadatosDocumento(archivo);
+                    if (!cumpleFecha) continue;
+
+                    // 3. Filtro de Seguridad 
                     bool cumpleSeguridad = CumpleFiltrosSeguridad(info);
+                    if (!cumpleSeguridad) continue;
 
-                    // NUEVO: Verificamos imagen para las subcarpetas
+                    // 4 Filtro de Metadatos de Documento (LENTO - Abre el archivo con iText7/Shell)
+                    // El programa SOLO llega aquí si los 3 filtros anteriores pasaron la prueba.
+                    bool cumpleMetadatos = CumpleFiltrosMetadatosDocumento(archivo);
+                    if (!cumpleMetadatos) continue;
+
+                    // 5 Filtro de Metadatos de Imagen (LENTO - Lee EXIF)
                     bool cumpleMetadatosImagen = CumpleFiltrosMetadatosImagen(archivo);
+                    if (!cumpleMetadatosImagen) continue;
 
-                    // NUEVO: Añadido al IF
-                    if (cumpleTipo && cumpleFecha && cumpleMetadatos && cumpleSeguridad && cumpleMetadatosImagen)
-                        return true;
+                    // Si el código sobrevive a todos los IFs, significa que este archivo cumple todo.
+                    // Devolvemos true inmediatamente y evitamos leer el resto de la carpeta.
+                    return true;
                 }
             }
             catch
             {
-                //por si no ay permisos o falla algo pero no se rompe 
+                // Por si no hay permisos o falla algo, la carpeta simplemente se oculta
             }
             return false;
         }
@@ -413,22 +504,28 @@ namespace Lexora
 
             try
             {
-                string ext = Path.GetExtension(ruta).ToLower(); // Obtenemos la extensión en minúsculas
+                string ext = Path.GetExtension(ruta).ToLowerInvariant(); // Usamos ToLowerInvariant por seguridad con idiomas
                 string busqueda = filtros.TextoContenido;
 
                 // Configuramos si la búsqueda ignora o no las mayúsculas según el CheckBox
                 var comparacion = filtros.IgnorarMayusculas ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
                 // ARCHIVOS DE TEXTO PLANO O CÓDIGO
-                string[] extTexto = { ".txt", ".cs", ".py", ".sql", ".json", ".xml", ".html", ".log", ".csv" };
+                string[] extTexto = { ".txt", ".cs", ".py", ".sql", ".json", ".xml", ".html", ".log", ".csv", ".ini", ".md" }; // Añadidos .ini y .md que son comunes
                 if (extTexto.Contains(ext))
                 {
-                    // Leemos todo el contenido del archivo
-                    string textoArchivo = File.ReadAllText(ruta);
-
-                    // Verificamos si la palabra clave existe dentro del texto
-                    // Usamos IndexOf >= 0 porque es más compatible con versiones antiguas que .Contains(str, comp)
-                    return textoArchivo.IndexOf(busqueda, comparacion) >= 0;
+                    // Leemos el archivo línea por línea (Lazy Evaluation).
+                    // Consumo de RAM ultra bajo
+                    foreach (var linea in File.ReadLines(ruta))
+                    {
+                        // Verificamos si la palabra clave existe dentro de esta línea concreta
+                        if (linea.IndexOf(busqueda, comparacion) >= 0)
+                        {
+                            return true; // Encontrado. Salimos al instante y el archivo se cierra.
+                        }
+                    }
+                    // Si termina el bucle, la palabra no estaba en todo el archivo.
+                    return false;
                 }
 
                 // ARCHIVOS PDF (Usando la librería iText7)
@@ -452,8 +549,8 @@ namespace Lexora
             }
             catch
             {
-                // Si el archivo está abierto por otro programa o no tenemos permisos, 
-                // lo ignoramos para que la aplicación no se detenga
+                // Si el archivo está abierto por otro programa (ej. Word usándolo) o no tenemos permisos, 
+                // lo ignoramos para que la aplicación no se detenga. Es el comportamiento correcto aquí.
             }
 
             // Si llegamos aquí es porque el archivo no contenía el texto o no es de un tipo soportado
