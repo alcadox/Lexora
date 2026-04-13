@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using iText.Kernel.Pdf; //INSTALAR PAQUETE itext7
+using System.Drawing;
 
 namespace Lexora
 {
@@ -19,6 +20,9 @@ namespace Lexora
         ClaseFiltros filtros = new ClaseFiltros();
         string nombreUsuario = "";
 
+        // Motor de iconos
+        private ImageList listaIconos;
+
         public MainForm()
         {
 
@@ -26,7 +30,18 @@ namespace Lexora
 
             // INYECCIÓN DE OPTIMIZACIÓN LEXORA: Evita el parpadeo al cargar miles de archivos
             typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(listViewArchivos, true, null);
-            
+
+            //Inicializar la lista de iconos
+            listaIconos = new ImageList();
+            listaIconos.ColorDepth = ColorDepth.Depth32Bit; // Para que se vean en HD, no pixelados
+            listaIconos.ImageSize = new Size(16, 16); // Tamaño clásico de Windows
+            listViewArchivos.SmallImageList = listaIconos; // Enlazar al ListView
+
+            // REGISTRO ÚNICO: Añadimos el icono de carpeta a la lista con una clave fija
+            listaIconos.Images.Add("folder_default", Properties.Resources.carpeta_por_defecto_w11);
+            listaIconos.Images.Add("folder_default_back", Properties.Resources.carpeta_back_por_defecto_w11);
+
+
             CargarVolumenPrincipal();
         }
 
@@ -36,7 +51,18 @@ namespace Lexora
 
             // INYECCIÓN DE OPTIMIZACIÓN LEXORA: Evita el parpadeo al cargar miles de archivos
             typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(listViewArchivos, true, null);
-            
+
+            // Inicializar la lista de iconos
+            listaIconos = new ImageList();
+            listaIconos.ColorDepth = ColorDepth.Depth32Bit; // Para que se vean en HD, no pixelados
+            listaIconos.ImageSize = new Size(16, 16); // Tamaño clásico de Windows
+            listViewArchivos.SmallImageList = listaIconos; // Enlazar al ListView
+
+            // REGISTRO ÚNICO: Añadimos el icono de carpeta a la lista con una clave fija
+            listaIconos.Images.Add("folder_default", Properties.Resources.carpeta_por_defecto_w11);
+            listaIconos.Images.Add("folder_default_back", Properties.Resources.carpeta_back_por_defecto_w11);
+
+
             CargarVolumenPrincipal();
             this.nombreUsuario = nombreUsuario;
         }
@@ -99,6 +125,9 @@ namespace Lexora
                     volver.SubItems.Add("Carpeta");
                     volver.SubItems.Add("");
                     volver.SubItems.Add("");
+
+                    volver.ImageKey = "folder_default_back";
+
                     listViewArchivos.Items.Add(volver);
                 }
 
@@ -140,6 +169,10 @@ namespace Lexora
                         item.SubItems.Add("Carpeta");
                         item.SubItems.Add("");
                         item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
+
+                        // ASIGNACIÓN DEL ICONO:
+                        item.ImageKey = "folder_default";
+                        
                         listViewArchivos.Items.Add(item);
                     }
                     catch (UnauthorizedAccessException)
@@ -186,6 +219,47 @@ namespace Lexora
                             item.SubItems.Add(info.Extension + " (Archivo)");
                             item.SubItems.Add(FormatearTamaño(info.Length));
                             item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
+
+                            // ==========================================
+                            // INYECCIÓN DE ICONOS REALES
+                            // ==========================================
+                            string ext = info.Extension.ToLowerInvariant();
+
+                            // 1. Por defecto, la "llave" para guardar el icono es la extensión (ej. ".pdf")
+                            string claveIcono = ext;
+
+                            // 2. EXCEPCIÓNSi es un acceso directo o un ejecutable, 
+                            // usamos la ruta completa del archivo para que no se sobreescriban entre ellos.
+                            if (ext == ".lnk" || ext == ".exe" || ext == ".ico")
+                            {
+                                claveIcono = info.FullName;
+                            }
+
+                            // Si la clave no está en la memoria caché, extraemos el icono del archivo físico
+                            if (!string.IsNullOrEmpty(claveIcono) && !listaIconos.Images.ContainsKey(claveIcono))
+                            {
+                                try
+                                {
+                                    // Extrae el icono oficial registrado en Windows
+                                    System.Drawing.Icon iconoExtraido = System.Drawing.Icon.ExtractAssociatedIcon(archivo);
+                                    if (iconoExtraido != null)
+                                    {
+                                        listaIconos.Images.Add(claveIcono, iconoExtraido);
+                                    }
+                                }
+                                catch
+                                {
+                                    // Si falla al extraer (archivos corruptos), simplemente no tendrá icono
+                                }
+                            }
+
+                            // Asignar el icono al elemento visual
+                            if (listaIconos.Images.ContainsKey(claveIcono))
+                            {
+                                item.ImageKey = claveIcono;
+                            }
+
+
                             listViewArchivos.Items.Add(item);
                         }
                     }
