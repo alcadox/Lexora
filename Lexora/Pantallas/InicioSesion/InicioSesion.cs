@@ -173,27 +173,45 @@ namespace Lexora
 
         private void ComprobarCorreoElectronico(string email, string token)
         {
+            // 1. Leer las credenciales de forma segura desde la configuración
+            string emisorCorreo = ConfigurationManager.AppSettings["CorreoEmisor"];
+            string emisorPassword = ConfigurationManager.AppSettings["PasswordEmisor"];
+
+            if (string.IsNullOrEmpty(emisorCorreo) || string.IsNullOrEmpty(emisorPassword))
+            {
+                throw new Exception("Faltan las credenciales del servidor de correo. Configura 'CredencialesCorreo.config'.");
+            }
+
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Lexora", "lexora.confirmacion@gmail.com"));
+            message.From.Add(new MailboxAddress("Lexora", emisorCorreo));
             message.To.Add(new MailboxAddress("", email));
-            message.Subject = "Cambio de Contrasñea Lexora";
+            message.Subject = "Cambio de Contraseña Lexora";
 
             var bodyBuilder = new BodyBuilder();
 
             bodyBuilder.HtmlBody = $@"
-            <div style='font-family: Arial; padding: 20px; border: 1px solid #ddd;'>
-                <h1>Verifica tu correo</h1>
-                <p>Para completar tu cambio de contraseña, introduce el siguiente código en la aplicación:</p>
-                <h2 style='color: #2c3e50; letter-spacing: 5px;'>{token}</h2>
-                <p>Si no has solicitado este código, ignora este mensaje.</p>
-            </div>";
+                <div style='font-family: Arial; padding: 20px; border: 1px solid #ddd; border-radius: 8px; max-width: 500px;'>
+                    <h1 style='color: #2c3e50;'>Verifica tu correo</h1>
+                    <p>Para completar tu cambio de contraseña, introduce el siguiente código en la aplicación:</p>
+                    <div style='background-color: #f8f9fa; padding: 15px; text-align: center; border-radius: 5px; margin: 20px 0;'>
+                        <h2 style='color: #e74c3c; letter-spacing: 5px; margin: 0;'>{token}</h2>
+                    </div>
+                    <p style='color: #7f8c8d; font-size: 12px;'>Si no has solicitado este código, ignora este mensaje o contacta con el soporte de Lexora.</p>
+                </div>";
 
             message.Body = bodyBuilder.ToMessageBody();
 
+            // 2. Uso de 'using' para asegurar la liberación de recursos (Optimización de red)
             using (var client = new SmtpClient())
             {
+                // El timeout evita que la app se quede colgada si no hay red
+                client.Timeout = 10000;
+
                 client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-                client.Authenticate("lexora.confirmacion@gmail.com", "edlq nuou lbkc gajd");
+
+                // Autenticación usando las variables seguras
+                client.Authenticate(emisorCorreo, emisorPassword);
+
                 client.Send(message);
                 client.Disconnect(true);
             }

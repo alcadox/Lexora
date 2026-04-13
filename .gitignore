@@ -36,3 +36,5 @@ Thumbs.db
 # Resharper
 _ReSharper*/
 *.DotSettings.user
+# Credenciales locales y secretos (NUNCA SUBIR)
+CredencialesCorreo.config
