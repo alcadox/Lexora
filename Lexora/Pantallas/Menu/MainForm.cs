@@ -413,22 +413,28 @@ namespace Lexora
 
             try
             {
-                string ext = Path.GetExtension(ruta).ToLower(); // Obtenemos la extensión en minúsculas
+                string ext = Path.GetExtension(ruta).ToLowerInvariant(); // Usamos ToLowerInvariant por seguridad con idiomas
                 string busqueda = filtros.TextoContenido;
 
                 // Configuramos si la búsqueda ignora o no las mayúsculas según el CheckBox
                 var comparacion = filtros.IgnorarMayusculas ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
                 // ARCHIVOS DE TEXTO PLANO O CÓDIGO
-                string[] extTexto = { ".txt", ".cs", ".py", ".sql", ".json", ".xml", ".html", ".log", ".csv" };
+                string[] extTexto = { ".txt", ".cs", ".py", ".sql", ".json", ".xml", ".html", ".log", ".csv", ".ini", ".md" }; // Añadidos .ini y .md que son comunes
                 if (extTexto.Contains(ext))
                 {
-                    // Leemos todo el contenido del archivo
-                    string textoArchivo = File.ReadAllText(ruta);
-
-                    // Verificamos si la palabra clave existe dentro del texto
-                    // Usamos IndexOf >= 0 porque es más compatible con versiones antiguas que .Contains(str, comp)
-                    return textoArchivo.IndexOf(busqueda, comparacion) >= 0;
+                    // Leemos el archivo línea por línea (Lazy Evaluation).
+                    // Consumo de RAM ultra bajo
+                    foreach (var linea in File.ReadLines(ruta))
+                    {
+                        // Verificamos si la palabra clave existe dentro de esta línea concreta
+                        if (linea.IndexOf(busqueda, comparacion) >= 0)
+                        {
+                            return true; // Encontrado. Salimos al instante y el archivo se cierra.
+                        }
+                    }
+                    // Si termina el bucle, la palabra no estaba en todo el archivo.
+                    return false;
                 }
 
                 // ARCHIVOS PDF (Usando la librería iText7)
@@ -452,8 +458,8 @@ namespace Lexora
             }
             catch
             {
-                // Si el archivo está abierto por otro programa o no tenemos permisos, 
-                // lo ignoramos para que la aplicación no se detenga
+                // Si el archivo está abierto por otro programa (ej. Word usándolo) o no tenemos permisos, 
+                // lo ignoramos para que la aplicación no se detenga. Es el comportamiento correcto aquí.
             }
 
             // Si llegamos aquí es porque el archivo no contenía el texto o no es de un tipo soportado
