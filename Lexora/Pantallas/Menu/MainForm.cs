@@ -245,27 +245,44 @@ namespace Lexora
         {
             try
             {
-                foreach (var archivo in Directory.GetFiles(rutaCarpeta))
+                // Usar EnumerateFiles para no saturar la RAM
+                foreach (var archivo in Directory.EnumerateFiles(rutaCarpeta))
                 {
                     FileInfo info = new FileInfo(archivo);
-                    string ext = info.Extension.ToLower();
+                    string ext = info.Extension.ToLowerInvariant();
 
+                    // Ordenamos de los filtros más RÁPIDOS a los más LENTOS.
+                    // Si un archivo no pasa un filtro rápido, saltamos al siguiente archivo al instante.
+
+                    // 1 Filtro de Tipo 
                     bool cumpleTipo = !tieneFiltrosTipo || extensionesPermitidas.Contains(ext);
+                    if (!cumpleTipo) continue;
+
+                    // 2 Filtro de Fecha (solo lee atributos de Windows)
                     bool cumpleFecha = CumpleFiltrosFecha(info);
-                    bool cumpleMetadatos = CumpleFiltrosMetadatosDocumento(archivo);
+                    if (!cumpleFecha) continue;
+
+                    // 3. Filtro de Seguridad 
                     bool cumpleSeguridad = CumpleFiltrosSeguridad(info);
+                    if (!cumpleSeguridad) continue;
 
-                    // NUEVO: Verificamos imagen para las subcarpetas
+                    // 4 Filtro de Metadatos de Documento (LENTO - Abre el archivo con iText7/Shell)
+                    // El programa SOLO llega aquí si los 3 filtros anteriores pasaron la prueba.
+                    bool cumpleMetadatos = CumpleFiltrosMetadatosDocumento(archivo);
+                    if (!cumpleMetadatos) continue;
+
+                    // 5 Filtro de Metadatos de Imagen (LENTO - Lee EXIF)
                     bool cumpleMetadatosImagen = CumpleFiltrosMetadatosImagen(archivo);
+                    if (!cumpleMetadatosImagen) continue;
 
-                    // NUEVO: Añadido al IF
-                    if (cumpleTipo && cumpleFecha && cumpleMetadatos && cumpleSeguridad && cumpleMetadatosImagen)
-                        return true;
+                    // Si el código sobrevive a todos los IFs, significa que este archivo cumple todo.
+                    // Devolvemos true inmediatamente y evitamos leer el resto de la carpeta.
+                    return true;
                 }
             }
             catch
             {
-                //por si no ay permisos o falla algo pero no se rompe 
+                // Por si no hay permisos o falla algo, la carpeta simplemente se oculta
             }
             return false;
         }
