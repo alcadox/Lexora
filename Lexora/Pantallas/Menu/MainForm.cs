@@ -116,76 +116,104 @@ namespace Lexora
 
                 bool hayAlgúnFiltroActivo = tieneFiltrosActivos || tieneFiltrosFechaActivos || tieneFiltrosMetadatosActivos || tieneFiltrosSeguridadActivos || tieneFiltrosMetadatosImagenesActivos;
 
-                // 4. Cargar CARPETAS
+                // 4. Cargar CARPETAS (Optimizado con EnumerateDirectories)
                 foreach (var carpeta in Directory.EnumerateDirectories(ruta))
                 {
-                    DirectoryInfo info = new DirectoryInfo(carpeta);
-
-                    // FILTRO DE BÚSQUEDA POR NOMBRE
-                    if (!string.IsNullOrEmpty(busqueda) && !info.Name.ToLower().Contains(busqueda))
-                        continue;
-
-                    // FILTROS DE CONTENIDO/FECHA
-                    bool cumpleFechaCarpeta = CumpleFiltrosFechaCarpeta(info);
-                    if (hayAlgúnFiltroActivo)
+                    try
                     {
-                        bool tieneArchivosCumplen = CarpetaTieneArchivosQueCumplen(carpeta, extensionesPermitidas, tieneFiltrosActivos);
-                        if (!cumpleFechaCarpeta && !tieneArchivosCumplen)
-                            continue;
-                    }
+                        DirectoryInfo info = new DirectoryInfo(carpeta);
 
-                    ListViewItem item = new ListViewItem(info.Name);
-                    item.SubItems.Add("Carpeta");
-                    item.SubItems.Add("");
-                    item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
-                    listViewArchivos.Items.Add(item);
+                        // FILTRO DE BÚSQUEDA POR NOMBRE
+                        if (!string.IsNullOrEmpty(busqueda) && !info.Name.ToLower().Contains(busqueda))
+                            continue;
+
+                        // FILTROS DE CONTENIDO/FECHA
+                        bool cumpleFechaCarpeta = CumpleFiltrosFechaCarpeta(info);
+                        if (hayAlgúnFiltroActivo)
+                        {
+                            bool tieneArchivosCumplen = CarpetaTieneArchivosQueCumplen(carpeta, extensionesPermitidas, tieneFiltrosActivos);
+                            if (!cumpleFechaCarpeta && !tieneArchivosCumplen)
+                                continue;
+                        }
+
+                        ListViewItem item = new ListViewItem(info.Name);
+                        item.SubItems.Add("Carpeta");
+                        item.SubItems.Add("");
+                        item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
+                        listViewArchivos.Items.Add(item);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        // SOLUCIÓN BOMBA 1: Si esta subcarpeta no tiene permisos, 
+                        // simplemente la saltamos y el bucle sigue vivo.
+                        continue;
+                    }
+                    catch (PathTooLongException)
+                    {
+                        // Si la ruta supera el límite de Windows, la saltamos.
+                        continue;
+                    }
                 }
 
-                // 5. Cargar ARCHIVOS
+                // 5. Cargar ARCHIVOS (Optimizado con EnumerateFiles)
                 foreach (var archivo in Directory.EnumerateFiles(ruta))
                 {
-                    FileInfo info = new FileInfo(archivo);
-
-                    // FILTRO DE BÚSQUEDA POR NOMBRE
-                    if (!string.IsNullOrEmpty(busqueda) && !info.Name.ToLower().Contains(busqueda))
-                        continue;
-
-                    // FILTRO DE TAMAÑO
-                    
-                    if (!CumpleFiltroTamano(archivo))
-                        continue;
-
-                    // FILTRO DE CONTENIDO
-                    if (!CumpleFiltroContenido(archivo)) continue;
-
-
-                    // FILTROS TÉCNICOS (Tipo, Fecha, Metadatos...)
-                    bool cumpleSeguridad = CumpleFiltrosSeguridad(info);
-                    bool cumpleTipo = !tieneFiltrosActivos || extensionesPermitidas.Contains(info.Extension.ToLower());
-                    bool cumpleFecha = CumpleFiltrosFecha(info);
-                    bool cumpleMetadatos = CumpleFiltrosMetadatosDocumento(archivo);
-                    bool cumpleMetadatosImagen = CumpleFiltrosMetadatosImagen(archivo);
-
-                    if (cumpleTipo && cumpleFecha && cumpleMetadatos && cumpleSeguridad && cumpleMetadatosImagen)
+                    try
                     {
-                        ListViewItem item = new ListViewItem(info.Name);
-                        item.SubItems.Add(info.Extension + " (Archivo)");
-                        item.SubItems.Add(FormatearTamaño(info.Length));
-                        item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
+                        FileInfo info = new FileInfo(archivo);
 
-                        // --- INYECCIÓN PREPARATIVA PARA LA IA ---
-                        // En el futuro, aquí llamaremos a la API.
-                        // Ej: string analisisIA = await IA.AnalizarDocumentoAsync(archivo);
-                        // item.SubItems.Add(analisisIA);
-                        // ----------------------------------------
+                        // FILTRO DE BÚSQUEDA POR NOMBRE
+                        if (!string.IsNullOrEmpty(busqueda) && !info.Name.ToLower().Contains(busqueda))
+                            continue;
 
-                        listViewArchivos.Items.Add(item);
+                        // FILTRO DE TAMAÑO
+                        if (!CumpleFiltroTamano(archivo))
+                            continue;
+
+                        // FILTRO DE CONTENIDO
+                        if (!CumpleFiltroContenido(archivo)) continue;
+
+                        // FILTROS TÉCNICOS (Tipo, Fecha, Metadatos...)
+                        bool cumpleSeguridad = CumpleFiltrosSeguridad(info);
+                        bool cumpleTipo = !tieneFiltrosActivos || extensionesPermitidas.Contains(info.Extension.ToLower());
+                        bool cumpleFecha = CumpleFiltrosFecha(info);
+                        bool cumpleMetadatos = CumpleFiltrosMetadatosDocumento(archivo);
+                        bool cumpleMetadatosImagen = CumpleFiltrosMetadatosImagen(archivo);
+
+                        if (cumpleTipo && cumpleFecha && cumpleMetadatos && cumpleSeguridad && cumpleMetadatosImagen)
+                        {
+                            ListViewItem item = new ListViewItem(info.Name);
+                            item.SubItems.Add(info.Extension + " (Archivo)");
+                            item.SubItems.Add(FormatearTamaño(info.Length));
+                            item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
+                            listViewArchivos.Items.Add(item);
+                        }
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        // Si un archivo específico está bloqueado por el sistema, se salta.
+                        continue;
+                    }
+                    catch (PathTooLongException)
+                    {
+                        continue;
                     }
                 }
             }
-            catch (UnauthorizedAccessException) { /* Manejar error de permisos */ }
-            catch (Exception ex) { MessageBox.Show("Error: " + ex.Message); }
-            finally { listViewArchivos.EndUpdate(); }
+            catch (UnauthorizedAccessException)
+            {
+                // Este catch externo SÓLO se dispara si la "ruta" principal (padre) 
+                // no tiene permisos en absoluto (ej: intentar entrar en C:\Windows\Prefetch).
+                MessageBox.Show("No tienes permisos de administrador para leer el contenido de esta carpeta principal.", "Acceso Denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error inesperado al cargar la carpeta: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                listViewArchivos.EndUpdate();
+            }
         }
 
         // Formatear tamaño de bytes a KB, MB, GB
