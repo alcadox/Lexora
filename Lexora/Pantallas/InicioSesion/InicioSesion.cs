@@ -95,10 +95,35 @@ namespace Lexora
                 if (!datosUsuario.Existe) { MostrarMensaje("No existe ningún usuario con ese e-mail.", colorPanelRojo); return; }
                 if (!datosUsuario.Activo) { MostrarMensaje("El usuario está desactivado.", colorPanelRojo); return; }
 
-                // USAMOS NUESTRO NUEVO GESTOR CRIPTOGRÁFICO
+                // --- ANTI-FUERZA BRUTA ---
+                if (datosUsuario.BloqueadoHasta.HasValue && datosUsuario.BloqueadoHasta.Value > DateTime.Now)
+                {
+                    TimeSpan tiempoRestante = datosUsuario.BloqueadoHasta.Value - DateTime.Now;
+                    MostrarMensaje($"Cuenta bloqueada por múltiples fallos. \nInténtalo en {tiempoRestante.Minutes} min y {tiempoRestante.Seconds} seg.", colorPanelRojo, 95);
+                    return;
+                }
+
                 string passwordHash = SeguridadUtil.CalcularHashSHA256(password);
 
-                if (datosUsuario.HashBD != passwordHash) { MostrarMensaje("Contraseña incorrecta.", colorPanelRojo); return; }
+                if (datosUsuario.HashBD != passwordHash)
+                {
+                    // Registramos el fallo en la base de datos
+                    int fallos = GestorDBAuth.RegistrarIntentoFallido(email, datosUsuario.IntentosFallidos);
+                    if (fallos >= 5)
+                        MostrarMensaje("Demasiados intentos fallidos. Cuenta bloqueada 15 minutos.", colorPanelRojo, 95);
+                    else
+                        MostrarMensaje($"Contraseña incorrecta. (Intento {fallos} de 5)", colorPanelRojo);
+
+                    return;
+                }
+
+                // --- LOGIN EXITOSO Y GENERACIÓN DE TOKEN ---
+                string tokenGenerado = GestorDBAuth.RegistrarLoginExitoso(datosUsuario.IdUsuario, email);
+
+                // Guardamos las preferencias para que no tenga que volver a loguearse
+                Properties.Settings.Default.UsuarioRecordado = datosUsuario.Nombre;
+                Properties.Settings.Default.TokenSesion = tokenGenerado; 
+                Properties.Settings.Default.Save();
 
                 NombreUsuario = datosUsuario.Nombre;
                 this.DialogResult = DialogResult.OK;
