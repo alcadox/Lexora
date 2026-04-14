@@ -187,6 +187,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\ArchivosUtil.cs" />
+    <Compile Include="Core\MotorFiltros.cs" />
+    <Compile Include="Core\UIBuilder.cs" />
     <Compile Include="Pantallas\InicioSesion\FormVerificacion.cs">
       <SubType>Form</SubType>
     </Compile>
