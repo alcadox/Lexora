@@ -140,5 +140,73 @@ namespace Lexora.Core
                 }
             }
         }
+
+        // 1. Validar un token existente para el Auto-Login
+        public static DatosUsuarioAuth ValidarTokenSesion(string token)
+        {
+            using (var conn = new NpgsqlConnection(ObtenerConexion()))
+            {
+                conn.Open();
+                // Buscamos el usuario asociado a un token que no haya expirado
+                string sql = @"SELECT u.id_usuario, u.nombre, u.activo, u.ia_puntos_diarios_restantes
+                       FROM sesion_usuario s
+                       JOIN usuario u ON s.id_usuario = u.id_usuario
+                       WHERE s.token_sesion = @token AND s.fecha_expiracion > NOW() AND u.activo = true;";
+
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@token", token);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new DatosUsuarioAuth
+                            {
+                                Existe = true,
+                                IdUsuario = reader.GetInt32(0),
+                                Nombre = reader.GetString(1),
+                                Activo = reader.GetBoolean(2),
+                                PuntosIA = reader.GetInt32(3)
+                            };
+                        }
+                    }
+                }
+            }
+            return new DatosUsuarioAuth { Existe = false };
+        }
+
+        // 2. Comprobar si un email ya está registrado (Para el formulario de registro)
+        public static bool ExisteEmail(string email)
+        {
+            using (var conn = new NpgsqlConnection(ObtenerConexion()))
+            {
+                conn.Open();
+                string sql = "SELECT COUNT(*) FROM usuario WHERE email = @email;";
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@email", email);
+                    return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                }
+            }
+        }
+
+        // 3. Crear el nuevo usuario en la DB
+        public static bool RegistrarNuevoUsuario(string nombre, string email, string hash)
+        {
+            using (var conn = new NpgsqlConnection(ObtenerConexion()))
+            {
+                conn.Open();
+                string sql = @"INSERT INTO usuario (nombre, email, contrasena_hash, activo) 
+                       VALUES (@nombre, @email, @hash, true);";
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nombre", nombre);
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("@hash", hash);
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
     }
 }

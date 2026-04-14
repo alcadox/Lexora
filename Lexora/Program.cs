@@ -18,8 +18,23 @@ namespace Lexora
             // 1. BLINDAJE DE CONEXIÓN: Auto-Encriptar App.config en la máquina del cliente
             ProtegerConfiguracion();
 
-            // 2. Aquí irá en el futuro la lógica de leer el TokenSesion para saltar el Login
-            // De momento, dejamos flujo normal
+            // 2. Lógica de Persistencia de Sesión
+            string tokenGuardado = Properties.Settings.Default.TokenSesion;
+
+            if (!string.IsNullOrEmpty(tokenGuardado))
+            {
+                // Intentamos validar el token contra la DB
+                var usuario = Lexora.Core.GestorDBAuth.ValidarTokenSesion(tokenGuardado);
+
+                if (usuario.Existe)
+                {
+                    // Sesión válida - Entramos directo al MainForm
+                    Application.Run(new MainForm(usuario.Nombre));
+                    return;
+                }
+            }
+
+            // 3. Si no hay token o no es válido, flujo normal
             Application.Run(new InicioSesion());
         }
 
