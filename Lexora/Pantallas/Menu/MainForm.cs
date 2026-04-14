@@ -273,6 +273,7 @@ namespace Lexora
                         continue;
                     }
                 }
+                ActualizarBreadcrumbs();
             }
             catch (UnauthorizedAccessException)
             {
@@ -967,5 +968,59 @@ namespace Lexora
             // Esto filtrará la vista actual basándose en el nombre y los filtros de ClaseFiltros.
             CargarCarpetas(rutaActual, txtBoxBuscador.Text);
         }
+
+        private void ActualizarBreadcrumbs()
+        {
+            pnlBreadcrumbs.Controls.Clear();
+            pnlBreadcrumbs.SuspendLayout(); // Optimización para evitar parpadeo visual
+
+            string[] partes = rutaActual.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+            string rutaAcumulada = "";
+
+            // Si estamos en la raíz (ej: C:\), la parte de la unidad se maneja diferente
+            string unidad = Path.GetPathRoot(rutaActual);
+            CrearLinkBreadcrumb(unidad, unidad);
+            rutaAcumulada = unidad;
+
+            foreach (string parte in partes)
+            {
+                // Saltamos la unidad porque ya la añadimos arriba
+                if (unidad.Contains(parte)) continue;
+
+                // Añadimos el separador visual ">"
+                Label separador = new Label { Text = ">", AutoSize = true, ForeColor = Color.Gray, Margin = new Padding(0, 5, 0, 0) };
+                pnlBreadcrumbs.Controls.Add(separador);
+
+                rutaAcumulada = Path.Combine(rutaAcumulada, parte);
+                CrearLinkBreadcrumb(parte, rutaAcumulada);
+            }
+
+            pnlBreadcrumbs.ResumeLayout();
+        }
+
+        private void CrearLinkBreadcrumb(string texto, string rutaDestino)
+        {
+            LinkLabel link = new LinkLabel
+            {
+                Text = texto,
+                Tag = rutaDestino,
+                AutoSize = true,
+                LinkBehavior = LinkBehavior.HoverUnderline,
+                LinkColor = Color.Black,
+                ActiveLinkColor = Color.Blue,
+                Font = new Font("Segoe UI", 9, FontStyle.Regular),
+                Margin = new Padding(5, 5, 5, 5)
+            };
+
+            link.LinkClicked += (s, e) =>
+            {
+                rutaActual = (string)((Control)s).Tag;
+                txtBoxBuscador.Text = ""; // Limpiamos el buscador al navegar
+                CargarCarpetas(rutaActual);
+            };
+
+            pnlBreadcrumbs.Controls.Add(link);
+        }
+
     }
 }

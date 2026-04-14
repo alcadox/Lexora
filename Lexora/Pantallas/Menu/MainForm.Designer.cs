@@ -30,6 +30,7 @@
         {
             this.panelTop = new System.Windows.Forms.Panel();
             this.panelBuscador = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.txtBoxBuscador = new System.Windows.Forms.TextBox();
             this.btnIA = new System.Windows.Forms.Button();
             this.btnFiltros = new System.Windows.Forms.Button();
@@ -43,7 +44,7 @@
             this.columnaTipo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnaTamaño = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnaCreacion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label1 = new System.Windows.Forms.Label();
+            this.pnlBreadcrumbs = new System.Windows.Forms.FlowLayoutPanel();
             this.panelTop.SuspendLayout();
             this.panelBuscador.SuspendLayout();
             this.panelIzquierdo.SuspendLayout();
@@ -72,6 +73,16 @@
             this.panelBuscador.Name = "panelBuscador";
             this.panelBuscador.Size = new System.Drawing.Size(947, 35);
             this.panelBuscador.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Variable Small", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(67, 17);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Buscador:";
             // 
             // txtBoxBuscador
             // 
@@ -150,6 +161,7 @@
             // 
             // panelArchivos
             // 
+            this.panelArchivos.Controls.Add(this.pnlBreadcrumbs);
             this.panelArchivos.Controls.Add(this.listViewArchivos);
             this.panelArchivos.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelArchivos.Location = new System.Drawing.Point(188, 71);
@@ -195,15 +207,13 @@
             this.columnaCreacion.Text = "Fecha de Creación";
             this.columnaCreacion.Width = 240;
             // 
-            // label1
+            // pnlBreadcrumbs
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Variable Small", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(3, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(67, 17);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Buscador:";
+            this.pnlBreadcrumbs.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlBreadcrumbs.Location = new System.Drawing.Point(0, 0);
+            this.pnlBreadcrumbs.Name = "pnlBreadcrumbs";
+            this.pnlBreadcrumbs.Size = new System.Drawing.Size(996, 17);
+            this.pnlBreadcrumbs.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -245,5 +255,6 @@
         private System.Windows.Forms.ColumnHeader columnaTamaño;
         private System.Windows.Forms.ColumnHeader columnaCreacion;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.FlowLayoutPanel pnlBreadcrumbs;
     }
 }
