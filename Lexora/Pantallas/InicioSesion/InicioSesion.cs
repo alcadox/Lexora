@@ -21,7 +21,7 @@ namespace Lexora
 
         private void MostrarMensaje(string mensaje, Color colorFondo, int alto = 75)
         {
-            panelInformacion.BackColor = colorFondo;
+            panelInformacion.FillColor = colorFondo;
             panelInformacion.Size = new Size(364, alto);
             labelTextoInformacion.Text = mensaje;
             panelInformacion.Visible = true;
@@ -32,12 +32,12 @@ namespace Lexora
             string email = emailUser.Text.Trim();
             if (string.IsNullOrEmpty(email))
             {
-                MostrarMensaje("Debes introducir tu e-mail para recuperar la contraseña...", colorPanelRojo, 95);
-                lblEmail.ForeColor = Color.Red; emailUser.BackColor = colorPanelRojo; emailUser.Focus();
+                MostrarMensaje("Debes introducir tu e-mail para recuperar la \ncontraseña...", colorPanelRojo, 95);
+                lblEmail.ForeColor = Color.Red; emailUser.FillColor = colorPanelRojo; emailUser.Focus();
                 return;
             }
 
-            lblEmail.ForeColor = colorOriginalLetras; emailUser.BackColor = Color.White; panelInformacion.Visible = false;
+            lblEmail.ForeColor = colorOriginalLetras; emailUser.FillColor = Color.White; panelInformacion.Visible = false;
 
             try
             {
@@ -58,7 +58,7 @@ namespace Lexora
                 {
                     lblContrasena.Text = "Nueva Contraseña";
                     MostrarMensaje("Ya puedes introducir tu nueva contraseña...", colorPanelAmarillo, 110);
-                    pwUser.Focus(); pwUser.BackColor = colorPanelAmarillo;
+                    pwUser.Focus(); pwUser.FillColor = colorPanelAmarillo;
                     cambioContrasena = true;
                 }
             }
@@ -73,8 +73,8 @@ namespace Lexora
             string email = emailUser.Text.Trim();
             string password = pwUser.Text;
 
-            emailUser.BackColor = string.IsNullOrEmpty(email) ? colorPanelRojo : Color.White;
-            pwUser.BackColor = string.IsNullOrEmpty(password) ? colorPanelRojo : Color.White;
+            emailUser.FillColor = string.IsNullOrEmpty(email) ? colorPanelRojo : Color.White;
+            pwUser.FillColor = string.IsNullOrEmpty(password) ? colorPanelRojo : Color.White;
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
@@ -150,12 +150,10 @@ namespace Lexora
                 else
                 {
                     MostrarMensaje("Contraseña actualizada correctamente.", Color.LightGreen);
-                    this.DialogResult = DialogResult.OK;
                     cambioContrasena = false;
 
-                    if (desdeMainForm) this.Close();
-                    else { new MainForm(NombreUsuario).Show(); }
-                    this.Hide();
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
                 }
             }
             catch (Exception ex)
@@ -173,9 +171,7 @@ namespace Lexora
 
         private void lblCrearCuenta_Click(object sender, EventArgs e)
         {
-            Hide();
-            var result = new RegistrarCuenta().ShowDialog();
-            if (result == DialogResult.OK || result == DialogResult.Cancel) Show();
+
         }
     }
 }
