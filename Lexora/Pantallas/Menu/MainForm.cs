@@ -183,12 +183,23 @@ namespace Lexora
 
                 bool hayAlgúnFiltroActivo = tieneFiltrosActivos || tieneFiltrosFechaActivos || tieneFiltrosMetadatosActivos || tieneFiltrosSeguridadActivos || tieneFiltrosMetadatosImagenesActivos;
 
-                // 4. Cargar CARPETAS (Optimizado con EnumerateDirectories)
-                foreach (var carpeta in Directory.EnumerateDirectories(ruta))
+                // ==========================================
+                // 4. Cargar CARPETAS (Blindado contra Trampas del OS)
+                // ==========================================
+                string[] carpetasSeguras = new string[0];
+                try { carpetasSeguras = Directory.GetDirectories(ruta); }
+                catch { /* Si la carpeta raíz está ultra-bloqueada, devolvemos array vacío */ }
+
+                foreach (var carpeta in carpetasSeguras)
                 {
                     try
                     {
                         DirectoryInfo info = new DirectoryInfo(carpeta);
+
+                        // FILTRO ÉLITE: Saltamos los "Junction Points" del sistema (Enlaces falsos bloqueados)
+                        // Esto oculta el falso "Archivos de programa" o "Documents and Settings" que causan bloqueos.
+                        if (info.Attributes.HasFlag(FileAttributes.ReparsePoint) && info.Attributes.HasFlag(FileAttributes.System))
+                            continue;
 
                         // FILTRO DE BÚSQUEDA POR NOMBRE
                         if (!string.IsNullOrEmpty(busqueda) && !info.Name.ToLower().Contains(busqueda))
@@ -208,26 +219,25 @@ namespace Lexora
                         item.SubItems.Add("");
                         item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
 
-                        // ASIGNACIÓN DEL ICONO:
+                        // ASIGNACIÓN DEL ICONO
                         item.ImageKey = "folder_default";
-                        
+
                         listViewArchivos.Items.Add(item);
                     }
-                    catch (UnauthorizedAccessException)
-                    {
-                        // SOLUCIÓN BOMBA 1: Si esta subcarpeta no tiene permisos, 
-                        // simplemente la saltamos y el bucle sigue vivo.
-                        continue;
-                    }
-                    catch (PathTooLongException)
-                    {
-                        // Si la ruta supera el límite de Windows, la saltamos.
-                        continue;
-                    }
+                    catch (UnauthorizedAccessException) { continue; }
+                    catch (PathTooLongException) { continue; }
                 }
 
-                // 5. Cargar ARCHIVOS (Optimizado con EnumerateFiles)
-                foreach (var archivo in Directory.EnumerateFiles(ruta))
+                // ==========================================
+                // 5. Cargar ARCHIVOS (Blindado)
+                // ==========================================
+                // Extraemos GetFiles en un bloque try-catch separado. 
+                // Si usamos EnumerateFiles y falla a la mitad, rompe el bucle entero. 
+                string[] archivosSeguros = new string[0];
+                try { archivosSeguros = Directory.GetFiles(ruta); }
+                catch { /* Si hay conflicto de lectura, la lista de archivos queda vacía pero la app no crashea */ }
+
+                foreach (var archivo in archivosSeguros)
                 {
                     try
                     {
@@ -238,13 +248,12 @@ namespace Lexora
                             continue;
 
                         // FILTRO DE TAMAÑO
-                        if (!CumpleFiltroTamano(archivo))
-                            continue;
+                        if (!CumpleFiltroTamano(archivo)) continue;
 
                         // FILTRO DE CONTENIDO
                         if (!CumpleFiltroContenido(archivo)) continue;
 
-                        // FILTROS TÉCNICOS (Tipo, Fecha, Metadatos...)
+                        // FILTROS TÉCNICOS
                         bool cumpleSeguridad = CumpleFiltrosSeguridad(info);
                         bool cumpleTipo = !tieneFiltrosActivos || extensionesPermitidas.Contains(info.Extension.ToLower());
                         bool cumpleFecha = CumpleFiltrosFecha(info);
@@ -258,66 +267,56 @@ namespace Lexora
                             item.SubItems.Add(FormatearTamaño(info.Length));
                             item.SubItems.Add(info.CreationTime.ToString("dd/MM/yyyy HH:mm"));
 
-                            // ==========================================
-                            // INYECCIÓN DE ICONOS REALES
-                            // ==========================================
                             string ext = info.Extension.ToLowerInvariant();
-
-                            // 1. Por defecto, la "llave" para guardar el icono es la extensión (ej. ".pdf")
                             string claveIcono = ext;
 
-                            // 2. EXCEPCIÓNSi es un acceso directo o un ejecutable, 
-                            // usamos la ruta completa del archivo para que no se sobreescriban entre ellos.
                             if (ext == ".lnk" || ext == ".exe" || ext == ".ico")
                             {
                                 claveIcono = info.FullName;
                             }
 
-                            // Si la clave no está en la memoria caché, extraemos el icono del archivo físico
                             if (!string.IsNullOrEmpty(claveIcono) && !listaIconos.Images.ContainsKey(claveIcono))
                             {
                                 try
                                 {
-                                    // Extrae el icono oficial registrado en Windows
                                     System.Drawing.Icon iconoExtraido = System.Drawing.Icon.ExtractAssociatedIcon(archivo);
-                                    if (iconoExtraido != null)
-                                    {
-                                        listaIconos.Images.Add(claveIcono, iconoExtraido);
-                                    }
+                                    if (iconoExtraido != null) listaIconos.Images.Add(claveIcono, iconoExtraido);
                                 }
-                                catch
-                                {
-                                    // Si falla al extraer (archivos corruptos), simplemente no tendrá icono
-                                }
+                                catch { }
                             }
 
-                            // Asignar el icono al elemento visual
                             if (listaIconos.Images.ContainsKey(claveIcono))
                             {
                                 item.ImageKey = claveIcono;
                             }
 
-
                             listViewArchivos.Items.Add(item);
                         }
                     }
-                    catch (UnauthorizedAccessException)
-                    {
-                        // Si un archivo específico está bloqueado por el sistema, se salta.
-                        continue;
-                    }
-                    catch (PathTooLongException)
-                    {
-                        continue;
-                    }
+                    catch (UnauthorizedAccessException) { continue; }
+                    catch (PathTooLongException) { continue; }
                 }
                 ActualizarBreadcrumbs();
             }
             catch (UnauthorizedAccessException)
             {
                 // Este catch externo SÓLO se dispara si la "ruta" principal (padre) 
-                // no tiene permisos en absoluto (ej: intentar entrar en C:\Windows\Prefetch).
-                MessageBox.Show("No tienes permisos de administrador para leer el contenido de esta carpeta principal.", "Acceso Denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // está protegida por SYSTEM o TrustedInstaller.
+
+                MessageBox.Show("Esta carpeta está protegida por el núcleo de Windows (SYSTEM/TrustedInstaller).\n\nPor seguridad del sistema operativo, su lectura está bloqueada incluso para Administradores.",
+                                "Lexora Security - Acceso Restringido",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Stop);
+
+                // SISTEMA DE AUTO-RESCATE: 
+                // Si entramos en una carpeta prohibida, la lista se queda en blanco. 
+                // Para evitar que el usuario se quede atrapado, forzamos un retroceso automático a la carpeta anterior.
+                var padre = Directory.GetParent(rutaActual);
+                if (padre != null)
+                {
+                    rutaActual = padre.FullName;
+                    CargarCarpetas(rutaActual); // Recargamos el padre automáticamente
+                }
             }
             catch (Exception ex)
             {
