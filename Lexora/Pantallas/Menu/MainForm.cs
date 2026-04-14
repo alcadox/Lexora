@@ -1,11 +1,12 @@
-﻿using Lexora.Pantallas.Menu.Filtros;
-using Lexora.Core; // Importación obligatoria de nuestra nueva arquitectura
+﻿using Lexora.Core; // Importación obligatoria de nuestra nueva arquitectura
+using Lexora.Pantallas.Menu.Filtros;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Drawing;
 
 namespace Lexora
 {
@@ -15,6 +16,7 @@ namespace Lexora
         ClaseFiltros filtros = new ClaseFiltros();
         MotorFiltros motorFiltros; // Instancia de nuestro motor refactorizado
         string nombreUsuario = "";
+        GestorMenuContextual menuContextual;
 
         private ImageList listaIconos;
         private FlowLayoutPanel panelDiscosDinamicos;
@@ -41,6 +43,16 @@ namespace Lexora
         {
             // Inicializar Motores
             motorFiltros = new MotorFiltros(filtros);
+
+            // INSTANCIAR EL GESTOR DE MENÚ
+            menuContextual = new GestorMenuContextual(
+                listViewArchivos,
+                () => rutaActual,
+                () => CargarCarpetas(rutaActual, txtBoxBuscador.Text) //refresh automático
+            );
+
+            // 3. SUSCRIPCIÓN AL EVENTO DE EDICIÓN 
+            listViewArchivos.AfterLabelEdit += ListViewArchivos_AfterLabelEdit;
 
             AjustarColumnas();
             listViewArchivos.Resize += (s, e) => AjustarColumnas();
@@ -189,12 +201,44 @@ namespace Lexora
         private void listViewArchivos_DoubleClick(object sender, EventArgs e)
         {
             if (listViewArchivos.SelectedItems.Count == 0) return;
-            string seleccion = listViewArchivos.SelectedItems[0].Text;
 
-            if (seleccion == "..") { rutaActual = Directory.GetParent(rutaActual).FullName; txtBoxBuscador.Text = ""; CargarCarpetas(rutaActual); return; }
+            ListViewItem itemSeleccionado = listViewArchivos.SelectedItems[0];
+            string nombreSeleccion = itemSeleccionado.Text;
 
-            string nuevaRuta = Path.Combine(rutaActual, seleccion);
-            if (Directory.Exists(nuevaRuta)) { rutaActual = nuevaRuta; txtBoxBuscador.Text = ""; CargarCarpetas(rutaActual); }
+            // Caso especial: Subir de nivel (Carpeta padre)
+            if (nombreSeleccion == "..")
+            {
+                rutaActual = Directory.GetParent(rutaActual).FullName;
+                txtBoxBuscador.Text = "";
+                CargarCarpetas(rutaActual);
+                return;
+            }
+
+            string nuevaRuta = Path.Combine(rutaActual, nombreSeleccion);
+            bool esCarpeta = itemSeleccionado.SubItems[1].Text == "Carpeta";
+
+            if (esCarpeta)
+            {
+                // Si es carpeta, entramos en ella
+                if (Directory.Exists(nuevaRuta))
+                {
+                    rutaActual = nuevaRuta;
+                    txtBoxBuscador.Text = "";
+                    CargarCarpetas(rutaActual);
+                }
+            }
+            else
+            {
+                // SI ES UN ARCHIVO: Lo abrimos con la aplicación predeterminada del sistema
+                try
+                {
+                    Process.Start(new ProcessStartInfo(nuevaRuta) { UseShellExecute = true });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"No se pudo abrir el archivo: {ex.Message}", "Error en Lexora", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void btnSesion_Click(object sender, EventArgs e)
@@ -326,5 +370,34 @@ namespace Lexora
                 if (rutaActual != rutaSeleccionada) { rutaActual = rutaSeleccionada; txtBoxBuscador.Text = ""; CargarCarpetas(rutaActual); }
             }
         }
+
+        private void ListViewArchivos_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            if (e.Label == null) return; // Si el usuario canceló la edición
+
+            string nombreViejo = listViewArchivos.Items[e.Item].Text;
+            string nombreNuevo = e.Label;
+            string rutaVieja = Path.Combine(rutaActual, nombreViejo);
+            string rutaNueva = Path.Combine(rutaActual, nombreNuevo);
+
+            try
+            {
+                if (listViewArchivos.Items[e.Item].SubItems[1].Text == "Carpeta")
+                    Directory.Move(rutaVieja, rutaNueva);
+                else
+                    File.Move(rutaVieja, rutaNueva);
+
+                // Forzamos el refresco para que los iconos y filtros se reapliquen correctamente
+                // Usamos BeginInvoke para asegurar que la edición del Label termine antes de recargar
+                this.BeginInvoke(new Action(() => CargarCarpetas(rutaActual, txtBoxBuscador.Text)));
+
+            }
+            catch (Exception ex)
+            {
+                e.CancelEdit = true;
+                MessageBox.Show($"No se pudo renombrar: {ex.Message}", "Error Lexora", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }

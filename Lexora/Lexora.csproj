@@ -188,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ArchivosUtil.cs" />
+    <Compile Include="Core\GestorMenuContextual.cs" />
     <Compile Include="Core\MotorFiltros.cs" />
     <Compile Include="Core\UIBuilder.cs" />
     <Compile Include="Pantallas\InicioSesion\FormVerificacion.cs">
