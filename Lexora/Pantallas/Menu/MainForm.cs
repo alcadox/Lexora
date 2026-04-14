@@ -1006,58 +1006,97 @@ namespace Lexora
             CargarCarpetas(rutaActual, txtBoxBuscador.Text);
         }
 
+        // =========================================================================
+        // UX / NAVEGACIÓN: BARRA DE DIRECCIONES INTELIGENTE (EDITABLE Y COPIABLE)
+        // =========================================================================
+        private Siticone.Desktop.UI.WinForms.SiticoneTextBox txtDireccion;
+
         private void ActualizarBreadcrumbs()
         {
-            pnlBreadcrumbs.Controls.Clear();
-            pnlBreadcrumbs.SuspendLayout(); // Optimización para evitar parpadeo visual
-
-            string[] partes = rutaActual.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
-            string rutaAcumulada = "";
-
-            // Si estamos en la raíz (ej: C:\), la parte de la unidad se maneja diferente
-            string unidad = Path.GetPathRoot(rutaActual);
-            CrearLinkBreadcrumb(unidad, unidad);
-            rutaAcumulada = unidad;
-
-            foreach (string parte in partes)
+            // 1. Patrón de inicialización perezosa: Si la caja de texto no existe aún, la creamos
+            if (txtDireccion == null)
             {
-                // Saltamos la unidad porque ya la añadimos arriba
-                if (unidad.Contains(parte)) continue;
+                // Limpiamos cualquier control residual
+                pnlBreadcrumbs.Controls.Clear();
 
-                // Añadimos el separador visual ">"
-                Label separador = new Label { Text = ">", AutoSize = true, ForeColor = Color.Gray, Margin = new Padding(0, 5, 0, 0) };
-                pnlBreadcrumbs.Controls.Add(separador);
+                // =========================================================================
+                // CÁLCULO DE LÍMITES
+                // =========================================================================
+                pnlBreadcrumbs.Height = 32;
 
-                rutaAcumulada = Path.Combine(rutaAcumulada, parte);
-                CrearLinkBreadcrumb(parte, rutaAcumulada);
+                // 1. Anclamos la barra de direcciones 10 píxeles por encima del borde inferior total
+                pnlBreadcrumbs.Location = new Point(10, panelArchivos.ClientSize.Height - pnlBreadcrumbs.Height - 10);
+
+                // 2. Encogemos un pelín el fondo del listView para que no se superponga con la barra
+                listViewArchivos.Height = pnlBreadcrumbs.Top - listViewArchivos.Top - 5;
+
+                // 3. Le decimos a Windows que cuando la ventana cambie de tamaño, los ancle
+                pnlBreadcrumbs.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+                listViewArchivos.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+
+                // Creamos la caja de texto con el motor de diseño de Lexora
+                txtDireccion = new Siticone.Desktop.UI.WinForms.SiticoneTextBox
+                {
+                    Width = pnlBreadcrumbs.Width - 5,
+                    Height = 30,
+                    BorderRadius = 4,
+                    FillColor = Color.FromArgb(245, 238, 255), // Estilo Lexora Pastel
+                    BorderColor = Color.FromArgb(187, 167, 255),
+                    ForeColor = Color.Black,
+                    Font = new Font("Segoe UI", 9.5F, FontStyle.Regular),
+                    Margin = new Padding(0),
+                    PlaceholderText = "Escribe o pega una ruta y pulsa ENTER...",
+                    Cursor = Cursors.IBeam
+                };
+
+                // Efectos visuales de Siticone al hacer focus
+                txtDireccion.HoverState.BorderColor = Color.FromArgb(142, 108, 253);
+                txtDireccion.FocusedState.BorderColor = Color.FromArgb(142, 108, 253);
+
+                // Asignamos el Event Listener para detectar cuando el usuario pulsa ENTER
+                txtDireccion.KeyDown += TxtDireccion_KeyDown;
+
+                pnlBreadcrumbs.Controls.Add(txtDireccion);
             }
 
-            pnlBreadcrumbs.ResumeLayout();
+            // 2. Cada vez que el explorador cambia de carpeta, actualizamos el texto de la caja
+            txtDireccion.Text = rutaActual;
+
+            // Movemos el cursor de texto visualmente al final (UX de élite)
+            txtDireccion.SelectionStart = txtDireccion.Text.Length;
         }
 
-        private void CrearLinkBreadcrumb(string texto, string rutaDestino)
+        private void TxtDireccion_KeyDown(object sender, KeyEventArgs e)
         {
-            LinkLabel link = new LinkLabel
+            // Interceptamos la pulsación de teclas
+            if (e.KeyCode == Keys.Enter)
             {
-                Text = texto,
-                Tag = rutaDestino,
-                AutoSize = true,
-                LinkBehavior = LinkBehavior.HoverUnderline,
-                LinkColor = Color.Black,
-                ActiveLinkColor = Color.Blue,
-                Font = new Font("Segoe UI", 9, FontStyle.Regular),
-                Margin = new Padding(5, 5, 5, 5)
-            };
+                // ÉLITE: Evita el molesto sonido de error ("ding") que hace Windows por defecto en WinForms al pulsar ENTER
+                e.SuppressKeyPress = true;
 
-            link.LinkClicked += (s, e) =>
-            {
-                rutaActual = (string)((Control)s).Tag;
-                txtBoxBuscador.Text = ""; // Limpiamos el buscador al navegar
-                CargarCarpetas(rutaActual);
-            };
+                string rutaEscrita = txtDireccion.Text.Trim();
 
-            pnlBreadcrumbs.Controls.Add(link);
+                // VALIDACIÓN Y CIBERSEGURIDAD: Comprobamos si la ruta que ha pegado el usuario existe realmente
+                if (Directory.Exists(rutaEscrita))
+                {
+                    rutaActual = rutaEscrita;
+                    txtBoxBuscador.Text = ""; // Limpiamos el buscador general si estaba en uso
+                    CargarCarpetas(rutaActual);
+                }
+                else
+                {
+                    MessageBox.Show("La ruta introducida no existe, está mal escrita o es inaccesible.",
+                                    "Ruta no válida",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+
+                    // Sistema de Auto-Rescate: Si se equivoca, le restauramos la ruta válida anterior
+                    txtDireccion.Text = rutaActual;
+                    txtDireccion.SelectionStart = txtDireccion.Text.Length;
+                }
+            }
         }
+
 
         // =========================================================================
         // OPTIMIZACIÓN: AUTO-AJUSTE DE COLUMNAS

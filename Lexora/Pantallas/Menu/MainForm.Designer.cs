@@ -197,7 +197,7 @@
             this.pnlBreadcrumbs.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pnlBreadcrumbs.Location = new System.Drawing.Point(7, 581);
             this.pnlBreadcrumbs.Name = "pnlBreadcrumbs";
-            this.pnlBreadcrumbs.Size = new System.Drawing.Size(974, 22);
+            this.pnlBreadcrumbs.Size = new System.Drawing.Size(974, 26);
             this.pnlBreadcrumbs.TabIndex = 1;
             // 
             // listViewArchivos
