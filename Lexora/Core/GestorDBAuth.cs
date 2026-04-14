@@ -12,6 +12,7 @@ namespace Lexora.Core
         public bool Existe { get; set; }
         public bool Activo { get; set; }
         public string Nombre { get; set; }
+        public string Email { get; set; }
         public string HashBD { get; set; }
         public int IntentosFallidos { get; set; }
         public DateTime? BloqueadoHasta { get; set; }
@@ -147,11 +148,10 @@ namespace Lexora.Core
             using (var conn = new NpgsqlConnection(ObtenerConexion()))
             {
                 conn.Open();
-                // Buscamos el usuario asociado a un token que no haya expirado
-                string sql = @"SELECT u.id_usuario, u.nombre, u.activo, u.ia_puntos_diarios_restantes
-                       FROM sesion_usuario s
-                       JOIN usuario u ON s.id_usuario = u.id_usuario
-                       WHERE s.token_sesion = @token AND s.fecha_expiracion > NOW() AND u.activo = true;";
+                string sql = @"SELECT u.id_usuario, u.nombre, u.activo, u.ia_puntos_diarios_restantes, u.email
+               FROM sesion_usuario s
+               JOIN usuario u ON s.id_usuario = u.id_usuario
+               WHERE s.token_sesion = @token AND s.fecha_expiracion > NOW() AND u.activo = true;";
 
                 using (var cmd = new NpgsqlCommand(sql, conn))
                 {
@@ -166,7 +166,8 @@ namespace Lexora.Core
                                 IdUsuario = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
                                 Activo = reader.GetBoolean(2),
-                                PuntosIA = reader.GetInt32(3)
+                                PuntosIA = reader.GetInt32(3),
+                                Email = reader.GetString(4)
                             };
                         }
                     }
@@ -203,6 +204,22 @@ namespace Lexora.Core
                     cmd.Parameters.AddWithValue("@nombre", nombre);
                     cmd.Parameters.AddWithValue("@email", email);
                     cmd.Parameters.AddWithValue("@hash", hash);
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+        public static bool ActualizarPerfil(int idUsuario, string nuevoNombre, string nuevoEmail)
+        {
+            using (var conn = new NpgsqlConnection(ObtenerConexion()))
+            {
+                conn.Open();
+                string sql = "UPDATE usuario SET nombre = @nombre, email = @email WHERE id_usuario = @id;";
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nombre", nuevoNombre);
+                    cmd.Parameters.AddWithValue("@email", nuevoEmail);
+                    cmd.Parameters.AddWithValue("@id", idUsuario);
                     return cmd.ExecuteNonQuery() > 0;
                 }
             }

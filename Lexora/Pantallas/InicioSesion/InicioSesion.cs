@@ -120,17 +120,15 @@ namespace Lexora
                 // --- LOGIN EXITOSO Y GENERACIÓN DE TOKEN ---
                 string tokenGenerado = GestorDBAuth.RegistrarLoginExitoso(datosUsuario.IdUsuario, email);
 
-                // Guardamos las preferencias para que no tenga que volver a loguearse
                 Properties.Settings.Default.UsuarioRecordado = datosUsuario.Nombre;
-                Properties.Settings.Default.TokenSesion = tokenGenerado; 
+                Properties.Settings.Default.TokenSesion = tokenGenerado;
                 Properties.Settings.Default.Save();
 
                 NombreUsuario = datosUsuario.Nombre;
-                this.DialogResult = DialogResult.OK;
 
-                if (desdeMainForm) this.Close();
-                else { new MainForm(NombreUsuario).Show(); }
-                this.Hide();
+                // ESTA ES LA CLAVE: Solo devolvemos OK y nos suicidamos (Close).
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
             catch (Exception ex)
             {
@@ -168,9 +166,9 @@ namespace Lexora
 
         private void btnOmitir_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            if (desdeMainForm) { this.Close(); return; }
-            new MainForm().Show(); this.Hide();
+            // Usamos Ignore para indicarle a Program.cs que se ha omitido el login
+            this.DialogResult = DialogResult.Ignore;
+            this.Close();
         }
 
         private void lblCrearCuenta_Click(object sender, EventArgs e)

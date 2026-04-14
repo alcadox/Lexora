@@ -1,5 +1,6 @@
 ﻿using Lexora.Core; // Importación obligatoria de nuestra nueva arquitectura
 using Lexora.Pantallas.Menu.Filtros;
+using Lexora.Pantallas.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,17 +27,18 @@ namespace Lexora
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
 
+        private DatosUsuarioAuth usuarioActual = null;
+
         public MainForm()
         {
             InitializeComponent();
             ConfigurarInterfaz();
+            VerificarSesion(); // Analizamos si hay sesión guardada
         }
 
-        public MainForm(string nombreUsuario)
+        public MainForm(string nombreUsuario) : this()
         {
-            InitializeComponent();
-            this.nombreUsuario = nombreUsuario;
-            ConfigurarInterfaz();
+            // Delegamos en el constructor por defecto usando : this()
         }
 
         private void ConfigurarInterfaz()
@@ -243,15 +245,39 @@ namespace Lexora
 
         private void btnSesion_Click(object sender, EventArgs e)
         {
-            Hide();
-            using (InicioSesion ventanaLogin = new InicioSesion(true))
+            if (usuarioActual != null)
             {
-                if (ventanaLogin.ShowDialog() == DialogResult.OK && !string.IsNullOrEmpty(ventanaLogin.NombreUsuario))
+                // SI ESTÁ LOGUEADO: ABRIR EL PANEL DE PERFIL
+                using (PerfilUsuario ventanaPerfil = new PerfilUsuario(usuarioActual))
                 {
-                    btnSesion.Text = "Bienvenido, " + ventanaLogin.NombreUsuario;
-                    btnSesion.Enabled = false;
+                    var resultado = ventanaPerfil.ShowDialog();
+
+                    if (resultado == DialogResult.Abort) // Código que definimos para Cerrar Sesión
+                    {
+                        CerrarSesion();
+                    }
+                    else if (resultado == DialogResult.Ignore) // Código para Cambiar de Cuenta
+                    {
+                        CerrarSesion();
+                        btnSesion_Click(null, null); // Reabre el Login
+                    }
+                    else if (resultado == DialogResult.OK)
+                    {
+                        VerificarSesion(); // Refresca por si cambió el nombre o email
+                    }
                 }
-                Show();
+            }
+            else
+            {
+                // NO ESTÁ LOGUEADO: ABRIR INICIO DE SESIÓN EN MODO MODAL
+                using (InicioSesion ventanaLogin = new InicioSesion(true))
+                {
+                    if (ventanaLogin.ShowDialog() == DialogResult.OK)
+                    {
+                        // Si se loguea bien, evaluamos el nuevo token
+                        VerificarSesion();
+                    }
+                }
             }
         }
 
@@ -398,6 +424,45 @@ namespace Lexora
                 MessageBox.Show($"No se pudo renombrar: {ex.Message}", "Error Lexora", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void VerificarSesion()
+        {
+            try
+            {
+                string tokenGuardado = Properties.Settings.Default.TokenSesion;
+                if (!string.IsNullOrEmpty(tokenGuardado))
+                {
+                    var datos = GestorDBAuth.ValidarTokenSesion(tokenGuardado);
+                    if (datos.Existe && datos.Activo)
+                    {
+                        usuarioActual = datos;
+                        btnSesion.Text = "Ver Perfil";
+                        btnSesion.FillColor = Color.FromArgb(73, 33, 173); // Un morado más oscuro
+                        return;
+                    }
+                }
+
+                // Si el token es inválido o no hay
+                usuarioActual = null;
+                btnSesion.Text = "Iniciar Sesión";
+                btnSesion.FillColor = Color.FromArgb(142, 108, 253); // Color original
+            }
+            catch
+            {
+                usuarioActual = null;
+                btnSesion.Text = "Iniciar Sesión";
+            }
+        }
+
+        private void CerrarSesion()
+        {
+            Properties.Settings.Default.TokenSesion = string.Empty;
+            Properties.Settings.Default.UsuarioRecordado = string.Empty;
+            Properties.Settings.Default.Save();
+            VerificarSesion(); // Forzamos a que el botón vuelva a "Iniciar Sesión"
+            MessageBox.Show("Sesión cerrada correctamente.", "Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
 
     }
 }
