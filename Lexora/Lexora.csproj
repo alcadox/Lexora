@@ -188,8 +188,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ArchivosUtil.cs" />
+    <Compile Include="Core\CorreoUtil.cs" />
+    <Compile Include="Core\GestorDBAuth.cs" />
     <Compile Include="Core\GestorMenuContextual.cs" />
     <Compile Include="Core\MotorFiltros.cs" />
+    <Compile Include="Core\SeguridadUtil.cs" />
     <Compile Include="Core\UIBuilder.cs" />
     <Compile Include="Pantallas\InicioSesion\FormVerificacion.cs">
       <SubType>Form</SubType>
