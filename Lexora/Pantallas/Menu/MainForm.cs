@@ -23,6 +23,8 @@ namespace Lexora
         // Motor de iconos
         private ImageList listaIconos;
 
+        private FlowLayoutPanel panelDiscosDinamicos;
+
         public MainForm()
         {
 
@@ -52,9 +54,9 @@ namespace Lexora
             // REGISTRO ÚNICO: Añadimos el icono de carpeta a la lista con una clave fija
             listaIconos.Images.Add("folder_default", Properties.Resources.carpeta_por_defecto_w11);
             listaIconos.Images.Add("folder_default_back", Properties.Resources.carpeta_back_por_defecto_w11);
-
-
-            CargarVolumenPrincipal();
+            
+            // LLAMADA AL SISTEMA DINÁMICO
+            CargarDiscosDinamicos();
         }
 
         public MainForm(string nombreUsuario)
@@ -86,9 +88,10 @@ namespace Lexora
             listaIconos.Images.Add("folder_default", Properties.Resources.carpeta_por_defecto_w11);
             listaIconos.Images.Add("folder_default_back", Properties.Resources.carpeta_back_por_defecto_w11);
 
-
-            CargarVolumenPrincipal();
             this.nombreUsuario = nombreUsuario;
+            
+            // LLAMADA AL SISTEMA DINÁMICO
+            CargarDiscosDinamicos();
         }
 
         // =========================================================================
@@ -133,40 +136,7 @@ namespace Lexora
         {
             e.DrawDefault = true;
         }
-        // =========================================================================
-
-        private void CargarVolumenPrincipal()
-        {
-
-            if (!string.IsNullOrEmpty(nombreUsuario))
-            {
-                btnSesion.Text = "Bienvenido, " + nombreUsuario;
-                btnSesion.Enabled = false;
-            }
-            // Seleccionamos el volumen del sistema (donde está Windows)
-            var drive = DriveInfo.GetDrives()
-                                 .FirstOrDefault(d => d.IsReady && d.RootDirectory.FullName == Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)));
-
-            if (drive != null)
-            {
-                // Nombre del volumen 
-                string nombreVolumen = string.IsNullOrEmpty(drive.VolumeLabel) ? "Disco Local" : drive.VolumeLabel;
-
-                // Botón muestra: NombreVolumen (C:)
-                btnDiscoPrincipal.Text = $"{nombreVolumen} ({drive.Name})";
-
-                // Guardamos ruta principal
-                rutaActual = drive.RootDirectory.FullName;
-            }
-        }
-        private void btnDiscoPrincipal_Click(object sender, EventArgs e)
-        {
-
-            string texto = string.Join("\n", filtros.TiposArchivo.Select(f => $"{f.Key}: {f.Value}"));
-            MessageBox.Show(texto);
-
-            CargarCarpetas(rutaActual);
-        }
+        
         // ========================= MÉTODO PARA APLICAR FILTROS DE TIPO DE ARCHIVO A TODO EL DISCO =========================
         private void AplicarFiltrosTipoArchivo()
         {
@@ -1115,6 +1085,222 @@ namespace Lexora
                 }
             }
         }
-    
+
+        // =========================================================================
+        // BACKEND / UI: MOTOR DINÁMICO DE UNIDADES DE ALMACENAMIENTO
+        // =========================================================================
+        private void CargarDiscosDinamicos()
+        {
+            // 1. Configuración del contenedor si es la primera vez
+            if (panelDiscosDinamicos == null)
+            {
+                siticonePanel2.Controls.Clear(); // Limpiamos el botón estático del diseñador
+                panelDiscosDinamicos = new FlowLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    FlowDirection = FlowDirection.TopDown,
+                    WrapContents = false,
+                    AutoScroll = true,
+                    Padding = new Padding(12, 15, 0, 10)
+                };
+                siticonePanel2.Controls.Add(panelDiscosDinamicos);
+            }
+
+            // 2. Limpiamos para refrescar
+            panelDiscosDinamicos.SuspendLayout();
+            panelDiscosDinamicos.Controls.Clear();
+
+            // 3. Obtenemos todos los discos del sistema
+            DriveInfo[] discos = DriveInfo.GetDrives();
+
+            foreach (DriveInfo disco in discos)
+            {
+                if (disco.IsReady)
+                {
+                    CrearTarjetaDisco(disco); // LLAMADA A LA NUEVA TARJETA
+                }
+            }
+
+            panelDiscosDinamicos.ResumeLayout();
+
+            // 4. Si acabamos de arrancar la app y no hay ruta actual, cargamos C: por defecto
+            if (string.IsNullOrEmpty(rutaActual))
+            {
+                var discoSistema = discos.FirstOrDefault(d => d.IsReady && d.RootDirectory.FullName == Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System)));
+                if (discoSistema != null)
+                {
+                    rutaActual = discoSistema.RootDirectory.FullName;
+                    CargarCarpetas(rutaActual);
+                }
+            }
+        }
+
+        // =========================================================================
+        // CIBERSEGURIDAD Y OPTIMIZACIÓN: ESCUCHA NATIVA DE HARDWARE (USB PLUG & PLAY)
+        // =========================================================================
+        private const int WM_DEVICECHANGE = 0x0219;           // Código de mensaje de cambio de hardware
+        private const int DBT_DEVICEARRIVAL = 0x8000;         // Dispositivo conectado
+        private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;  // Dispositivo desconectado
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m); // Dejamos que Windows procese el mensaje normal
+
+            // Si el mensaje es un cambio de hardware
+            if (m.Msg == WM_DEVICECHANGE)
+            {
+                // Si se ha enchufado o desenchufado algo
+                if ((int)m.WParam == DBT_DEVICEARRIVAL || (int)m.WParam == DBT_DEVICEREMOVECOMPLETE)
+                {
+                    // Recargamos silenciosamente los botones del panel izquierdo
+                    CargarDiscosDinamicos();
+                }
+            }
+        }
+
+        // =========================================================================
+        // DISEÑO Y UX: TARJETAS INTELIGENTES DE UNIDADES CON EXTRACCIÓN DE ICONOS NATIVOS
+        // =========================================================================
+        private void CrearTarjetaDisco(DriveInfo disco)
+        {
+            // 1. Contenedor principal (La Tarjeta)
+            Siticone.Desktop.UI.WinForms.SiticonePanel tarjeta = new Siticone.Desktop.UI.WinForms.SiticonePanel
+            {
+                Size = new Size(150, 75), // Tamaño ajustado al ancho del panel izquierdo
+                BorderRadius = 8,
+                FillColor = Color.FromArgb(245, 238, 255), // Fondo pastel muy limpio
+                BorderColor = Color.FromArgb(187, 167, 255),
+                BorderThickness = 1,
+                Margin = new Padding(0, 0, 0, 10),
+                Cursor = Cursors.Hand,
+                Tag = disco.RootDirectory.FullName // VITAL: Guardamos la ruta aquí
+            };
+
+            // Efecto Hover Visual para la tarjeta
+            tarjeta.MouseEnter += (s, e) => tarjeta.FillColor = Color.FromArgb(228, 215, 255);
+            tarjeta.MouseLeave += (s, e) => tarjeta.FillColor = Color.FromArgb(245, 238, 255);
+
+            // 2. Extraer icono nativo de Windows 
+            Image iconoDrive = null;
+            try
+            {
+                // Usamos la API de Windows que ya tienes instalada para sacar el icono real del disco/USB
+                var shellFile = ShellObject.FromParsingName(disco.Name);
+                iconoDrive = shellFile.Thumbnail.MediumBitmap;
+            }
+            catch
+            {
+                // Fallback por si Windows bloquea la lectura de un disco vacío
+                iconoDrive = SystemIcons.WinLogo.ToBitmap();
+            }
+
+            PictureBox picIcono = new PictureBox
+            {
+                Image = iconoDrive,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Size = new Size(32, 32),
+                Location = new Point(10, 10),
+                BackColor = Color.Transparent,
+                Cursor = Cursors.Hand,
+                Tag = disco.RootDirectory.FullName
+            };
+
+            // 3. Nombre del disco
+            string nombreMostrar = string.IsNullOrEmpty(disco.VolumeLabel) ? (disco.DriveType == DriveType.Removable ? "USB" : "Disco Local") : disco.VolumeLabel;
+            Label lblNombre = new Label
+            {
+                Text = $"{nombreMostrar} ({disco.Name.Replace("\\", "")})",
+                Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(40, 40, 40),
+                Location = new Point(48, 10),
+                AutoSize = true,
+                BackColor = Color.Transparent,
+                Cursor = Cursors.Hand,
+                Tag = disco.RootDirectory.FullName
+            };
+
+            // 4. Barra de espacio y cálculo (SiticoneProgressBar)
+            Siticone.Desktop.UI.WinForms.SiticoneProgressBar barraEspacio = new Siticone.Desktop.UI.WinForms.SiticoneProgressBar
+            {
+                Size = new Size(120, 6),
+                Location = new Point(10, 48),
+                BorderRadius = 3,
+                FillColor = Color.FromArgb(225, 215, 240),
+                ProgressColor = Color.FromArgb(142, 108, 253),
+                ProgressColor2 = Color.FromArgb(173, 145, 255),
+                Cursor = Cursors.Hand,
+                Tag = disco.RootDirectory.FullName
+            };
+
+            Label lblEspacio = new Label
+            {
+                Font = new Font("Segoe UI", 7.5F, FontStyle.Regular),
+                ForeColor = Color.DimGray,
+                Location = new Point(7, 57),
+                AutoSize = true,
+                BackColor = Color.Transparent,
+                Cursor = Cursors.Hand,
+                Tag = disco.RootDirectory.FullName
+            };
+
+            // Intentamos calcular el espacio (Try-Catch por si hay unidades de red protegidas)
+            try
+            {
+                long total = disco.TotalSize;
+                long libre = disco.TotalFreeSpace;
+                long usado = total - libre;
+                int porcentaje = (int)((usado * 100) / total);
+
+                barraEspacio.Value = porcentaje;
+
+                // DETALLE PRO: Cambiar color a rojo si está muy lleno (Alerta visual)
+                if (porcentaje > 90)
+                {
+                    barraEspacio.ProgressColor = Color.FromArgb(255, 60, 60);
+                    barraEspacio.ProgressColor2 = Color.FromArgb(255, 100, 100);
+                }
+
+                // Usamos el método FormatearTamaño que ya tienes en tu código
+                lblEspacio.Text = $"{FormatearTamaño(libre)} libres de {FormatearTamaño(total)}";
+            }
+            catch
+            {
+                barraEspacio.Value = 0;
+                lblEspacio.Text = "Espacio desconocido";
+            }
+
+            // 5. Asignar el evento Click a TODOS los elementos para que reaccionen sin importar dónde pulse el usuario
+            tarjeta.Click += TarjetaDisco_Click;
+            picIcono.Click += TarjetaDisco_Click;
+            lblNombre.Click += TarjetaDisco_Click;
+            barraEspacio.Click += TarjetaDisco_Click;
+            lblEspacio.Click += TarjetaDisco_Click;
+
+            // 6. Ensamblaje Final
+            tarjeta.Controls.Add(picIcono);
+            tarjeta.Controls.Add(lblNombre);
+            tarjeta.Controls.Add(barraEspacio);
+            tarjeta.Controls.Add(lblEspacio);
+
+            // Añadir al panel lateral
+            panelDiscosDinamicos.Controls.Add(tarjeta);
+        }
+
+        private void TarjetaDisco_Click(object sender, EventArgs e)
+        {
+            // Extraemos la ruta desde el 'Tag' de cualquier control que hayamos clicado
+            if (sender is Control control && control.Tag != null)
+            {
+                string rutaSeleccionada = control.Tag.ToString();
+
+                if (rutaActual != rutaSeleccionada)
+                {
+                    rutaActual = rutaSeleccionada;
+                    txtBoxBuscador.Text = ""; // Limpiar buscador
+                    CargarCarpetas(rutaActual);
+                }
+            }
+        }
+
     }
 }
