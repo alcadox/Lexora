@@ -28,13 +28,25 @@ namespace Lexora
 
             InitializeComponent();
 
+            // --- VISUAL: Columnas Dinámicas ---
+            AjustarColumnas(); // Ajuste inicial al abrir
+            listViewArchivos.Resize += (s, e) => AjustarColumnas(); // Ajuste dinámico al redimensionar
+            // ----------------------------------------------
+
+            // --- VISUAL: Cabeceras modernas para el ListView ---
+            listViewArchivos.OwnerDraw = true;
+            listViewArchivos.DrawColumnHeader += ListView_DrawColumnHeader;
+            listViewArchivos.DrawItem += ListView_DrawItem;
+            listViewArchivos.DrawSubItem += ListView_DrawSubItem;
+            // ---------------------------------------------------------------
+
             // INYECCIÓN DE OPTIMIZACIÓN LEXORA: Evita el parpadeo al cargar miles de archivos
             typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(listViewArchivos, true, null);
 
             //Inicializar la lista de iconos
             listaIconos = new ImageList();
             listaIconos.ColorDepth = ColorDepth.Depth32Bit; // Para que se vean en HD, no pixelados
-            listaIconos.ImageSize = new Size(16, 16); // Tamaño clásico de Windows
+            listaIconos.ImageSize = new Size(20, 20); // Tamaño clásico de Windows
             listViewArchivos.SmallImageList = listaIconos; // Enlazar al ListView
 
             // REGISTRO ÚNICO: Añadimos el icono de carpeta a la lista con una clave fija
@@ -49,13 +61,25 @@ namespace Lexora
         {
             InitializeComponent();
 
+            // --- VISUAL: Columnas Dinámicas ---
+            AjustarColumnas(); // Ajuste inicial al abrir
+            listViewArchivos.Resize += (s, e) => AjustarColumnas(); // Ajuste dinámico al redimensionar
+            // ----------------------------------------------
+
+            // --- VISUAL: Cabeceras modernas para el ListView ---
+            listViewArchivos.OwnerDraw = true;
+            listViewArchivos.DrawColumnHeader += ListView_DrawColumnHeader;
+            listViewArchivos.DrawItem += ListView_DrawItem;
+            listViewArchivos.DrawSubItem += ListView_DrawSubItem;
+            // ---------------------------------------------------------------
+
             // INYECCIÓN DE OPTIMIZACIÓN LEXORA: Evita el parpadeo al cargar miles de archivos
             typeof(Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(listViewArchivos, true, null);
 
             // Inicializar la lista de iconos
             listaIconos = new ImageList();
             listaIconos.ColorDepth = ColorDepth.Depth32Bit; // Para que se vean en HD, no pixelados
-            listaIconos.ImageSize = new Size(16, 16); // Tamaño clásico de Windows
+            listaIconos.ImageSize = new Size(20, 20); // Tamaño clásico de Windows
             listViewArchivos.SmallImageList = listaIconos; // Enlazar al ListView
 
             // REGISTRO ÚNICO: Añadimos el icono de carpeta a la lista con una clave fija
@@ -66,6 +90,50 @@ namespace Lexora
             CargarVolumenPrincipal();
             this.nombreUsuario = nombreUsuario;
         }
+
+        // =========================================================================
+        // VISUAL: MOTOR DE RENDERIZADO PERSONALIZADO PARA CABECERAS
+        // =========================================================================
+
+        private void ListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            // Colores Lexora:
+            using (SolidBrush pincelFondo = new SolidBrush(Color.FromArgb(245, 235, 255)))
+            using (SolidBrush pincelTexto = new SolidBrush(Color.Black))
+            {
+                // 1. Pintamos el fondo de la cabecera
+                e.Graphics.FillRectangle(pincelFondo, e.Bounds);
+
+                // 2. Formateamos cómo se alinea el texto (centrado verticalmente, alineado a la izquierda)
+                using (StringFormat formato = new StringFormat())
+                {
+                    formato.Alignment = StringAlignment.Near;
+                    formato.LineAlignment = StringAlignment.Center;
+
+                    // Le damos un pequeño margen para que no se pegue al borde izquierdo
+                    Rectangle limitesTexto = e.Bounds;
+                    limitesTexto.X += 5;
+
+                    // 3. Pintamos el texto con fuente Segoe UI en Negrita
+                    Font fuenteCabecera = new Font("Segoe UI", 10, FontStyle.Regular);
+                    e.Graphics.DrawString(e.Header.Text, fuenteCabecera, pincelTexto, limitesTexto, formato);
+                }
+            }
+        }
+
+        // Al activar OwnerDraw=true, Windows deja de dibujar TODO.
+        // Estas dos líneas le dicen a Windows: "Vale, yo he pintado las cabeceras, 
+        // pero tú sigue pintando los archivos e iconos normales como sabes hacerlo".
+        private void ListView_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        private void ListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+        // =========================================================================
 
         private void CargarVolumenPrincipal()
         {
@@ -1022,5 +1090,31 @@ namespace Lexora
             pnlBreadcrumbs.Controls.Add(link);
         }
 
+        // =========================================================================
+        // OPTIMIZACIÓN: AUTO-AJUSTE DE COLUMNAS
+        // =========================================================================
+        private void AjustarColumnas()
+        {
+            // Verificamos que tengamos las 4 columnas creadas
+            if (listViewArchivos.Columns.Count >= 4)
+            {
+                // Sumamos el ancho de las columnas Tipo, Tamaño y Fecha (índices 1, 2 y 3)
+                int anchoOcupado = listViewArchivos.Columns[1].Width +
+                                   listViewArchivos.Columns[2].Width +
+                                   listViewArchivos.Columns[3].Width;
+
+                // Calculamos cuánto espacio libre queda en el ListView. 
+                // Le restamos unos 20 píxeles por si aparece la barra de desplazamiento vertical.
+                int anchoLibre = listViewArchivos.ClientSize.Width - anchoOcupado - 20;
+
+                // Le damos todo el espacio libre a la primera columna (Nombre, índice 0)
+                // Solo lo hacemos si el espacio libre es razonable (evitamos que se encoja a 0)
+                if (anchoLibre > 100)
+                {
+                    listViewArchivos.Columns[0].Width = anchoLibre;
+                }
+            }
+        }
+    
     }
 }

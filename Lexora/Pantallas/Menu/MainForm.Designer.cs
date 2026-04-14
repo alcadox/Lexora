@@ -84,26 +84,26 @@
             // pnlBreadcrumbs
             // 
             this.pnlBreadcrumbs.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pnlBreadcrumbs.Location = new System.Drawing.Point(10, 0);
+            this.pnlBreadcrumbs.Location = new System.Drawing.Point(7, 581);
             this.pnlBreadcrumbs.Name = "pnlBreadcrumbs";
             this.pnlBreadcrumbs.Size = new System.Drawing.Size(974, 22);
             this.pnlBreadcrumbs.TabIndex = 1;
             // 
             // listViewArchivos
             // 
-            this.listViewArchivos.BackColor = System.Drawing.Color.White;
+            this.listViewArchivos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(251)))), ((int)(((byte)(247)))), ((int)(((byte)(255)))));
+            this.listViewArchivos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewArchivos.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnaNombre,
             this.columnaTipo,
             this.columnaTamaño,
             this.columnaCreacion});
-            this.listViewArchivos.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listViewArchivos.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listViewArchivos.FullRowSelect = true;
-            this.listViewArchivos.GridLines = true;
             this.listViewArchivos.HideSelection = false;
-            this.listViewArchivos.Location = new System.Drawing.Point(10, 27);
+            this.listViewArchivos.Location = new System.Drawing.Point(10, 9);
             this.listViewArchivos.Name = "listViewArchivos";
-            this.listViewArchivos.Size = new System.Drawing.Size(974, 551);
+            this.listViewArchivos.Size = new System.Drawing.Size(974, 569);
             this.listViewArchivos.TabIndex = 0;
             this.listViewArchivos.UseCompatibleStateImageBehavior = false;
             this.listViewArchivos.View = System.Windows.Forms.View.Details;
