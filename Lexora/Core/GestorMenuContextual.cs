@@ -29,36 +29,47 @@ namespace Lexora.Core
         private void ConstruirMenu()
         {
             _menu = new ContextMenuStrip();
-            _menu.BackColor = Color.FromArgb(250, 245, 255); // Tonos Lexora
+            _menu.BackColor = Color.FromArgb(250, 245, 255);
             _menu.ShowImageMargin = false;
             _menu.Font = new Font("Segoe UI", 9.5F);
 
-            // 1. Opciones Básicas (Usan el enrutador síncrono)
+            // --- OPCIONES BÁSICAS ---
             _menu.Items.Add("Abrir", null, (s, e) => EjecutarAccion(Abrir));
+            // 👇 Añadimos de vuelta Ejecutar como Administrador
             _menu.Items.Add("Ejecutar como Administrador", null, (s, e) => EjecutarAccion(EjecutarComoAdmin));
             _menu.Items.Add(new ToolStripSeparator());
 
-            // 2. Operaciones de Portapapeles
-            _menu.Items.Add("Copiar", null, (s, e) => EjecutarAccion(Copiar));
-            _menu.Items.Add("Copiar Ruta de Acceso", null, (s, e) => EjecutarAccion(CopiarRuta));
+            // --- SEGURIDAD LEXORA ---
+            var menuSeguridad = new ToolStripMenuItem("🛡️ Seguridad Lexora");
+            menuSeguridad.ForeColor = Color.DarkSlateBlue;
+
+            menuSeguridad.DropDownItems.Add("Cifrar/Descifrar (AES-256)", null, async (s, e) => await EjecutarAccionAsync(CifrarDescifrar));
+            menuSeguridad.DropDownItems.Add("Bloquear/Desbloquear Bóveda", null, (s, e) => EjecutarAccion(AlternarBoveda));
+            menuSeguridad.DropDownItems.Add("Ocultación Fuerte (Nivel OS)", null, (s, e) => EjecutarAccion(AlternarOcultacion));
+            menuSeguridad.DropDownItems.Add("Escanear Malware en VirusTotal", null, (s, e) => EjecutarAccion(EscanearMalware));
+            menuSeguridad.DropDownItems.Add(new ToolStripSeparator());
+
+            var itemWipeDoD = new ToolStripMenuItem("🔥 Wipe DoD 5220.22-M (3 Pasadas)");
+            itemWipeDoD.ForeColor = Color.Red;
+            itemWipeDoD.Click += async (s, e) => await EjecutarAccionAsync(DestruccionSeguraDoD);
+            menuSeguridad.DropDownItems.Add(itemWipeDoD);
+
+            _menu.Items.Add(menuSeguridad);
             _menu.Items.Add(new ToolStripSeparator());
 
-            // 3. Modificaciones
+            // --- EDICIÓN Y PORTAPAPELES ---
+            _menu.Items.Add("Copiar", null, (s, e) => EjecutarAccion(Copiar));
+            // 👇 Añadimos de vuelta Copiar Ruta
+            _menu.Items.Add("Copiar Ruta de Acceso", null, (s, e) => EjecutarAccion(CopiarRuta));
             _menu.Items.Add("Renombrar", null, (s, e) => EjecutarAccion(Renombrar, false));
             _menu.Items.Add("Eliminar", null, (s, e) => EjecutarAccion(Eliminar));
             _menu.Items.Add(new ToolStripSeparator());
 
-            // 4. OPCIONES EXCLUSIVAS DE LEXORA
+            // --- IA Y PROPIEDADES ---
             var itemIA = new ToolStripMenuItem("✨ Analizar con Lexora IA");
             itemIA.ForeColor = Color.FromArgb(142, 108, 253);
             itemIA.Click += (s, e) => EjecutarAccion(AnalizarConIA);
             _menu.Items.Add(itemIA);
-
-            var itemWipe = new ToolStripMenuItem("🔥 Destrucción Segura (Wipe)");
-            itemWipe.ForeColor = Color.Red;
-            // IMPORTANTE: Aquí llamamos al enrutador ASÍNCRONO
-            itemWipe.Click += async (s, e) => await EjecutarAccionAsync(DestruccionSegura);
-            _menu.Items.Add(itemWipe);
 
             _menu.Items.Add(new ToolStripSeparator());
             _menu.Items.Add("Propiedades", null, (s, e) => EjecutarAccion(MostrarPropiedades));
@@ -202,5 +213,58 @@ namespace Lexora.Core
         {
             MessageBox.Show($"Llamando al motor IA para analizar: {Path.GetFileName(ruta)}...\n(Implementación pendiente en el módulo de IA)", "Lexora AI", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        // --- NUEVOS ENRUTADORES DE SEGURIDAD ---
+
+        private async Task CifrarDescifrar(string ruta, bool esCarpeta)
+        {
+            if (esCarpeta) { MessageBox.Show("Por ahora, el cifrado es solo para archivos."); return; }
+
+            // Un simple InputBox improvisado usando forms de .NET para pedir la clave
+            string promptText = ruta.EndsWith(".lxr") ? "Introduce contraseña para DESCIFRAR:" : "Introduce contraseña para CIFRAR:";
+            string password = Microsoft.VisualBasic.Interaction.InputBox(promptText, "Seguridad Lexora", "");
+
+            if (string.IsNullOrEmpty(password)) return;
+
+            await Task.Run(() =>
+            {
+                if (ruta.EndsWith(".lxr"))
+                    SeguridadAvanzadaUtil.DescifrarArchivo(ruta, password);
+                else
+                    SeguridadAvanzadaUtil.CifrarArchivo(ruta, password);
+            });
+
+            MessageBox.Show("Operación criptográfica completada.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void AlternarBoveda(string ruta, bool esCarpeta)
+        {
+            if (!esCarpeta) { MessageBox.Show("La bóveda solo se aplica a carpetas."); return; }
+            SeguridadAvanzadaUtil.AlternarBloqueoCarpeta(ruta);
+            MessageBox.Show("Permisos de la bóveda actualizados. Si la bloqueaste, Windows denegará el acceso.", "Bóveda Lexora", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void AlternarOcultacion(string ruta, bool esCarpeta)
+        {
+            SeguridadAvanzadaUtil.AlternarOcultacionFuerte(ruta);
+        }
+
+        private void EscanearMalware(string ruta, bool esCarpeta)
+        {
+            if (esCarpeta) return;
+            SeguridadAvanzadaUtil.EscanearEnVirusTotal(ruta);
+        }
+
+        private async Task DestruccionSeguraDoD(string ruta, bool esCarpeta)
+        {
+            if (esCarpeta) { MessageBox.Show("Solo archivos individuales."); return; }
+
+            if (MessageBox.Show("ESTA ACCIÓN ES TOTALMENTE IRREVERSIBLE. Se aplicará el estándar militar DoD 5220.22-M (3 pasadas). ¿Continuar?", "⚠️ Destrucción Militar", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                await SeguridadAvanzadaUtil.DestruccionDoD(ruta);
+                MessageBox.Show("Archivo aniquilado con éxito. Es irrecuperable.", "Lexora Security", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
     }
 }

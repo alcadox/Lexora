@@ -103,6 +103,7 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Core.1.1.1\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
@@ -193,6 +194,7 @@
     <Compile Include="Core\GestorDBAuth.cs" />
     <Compile Include="Core\GestorMenuContextual.cs" />
     <Compile Include="Core\MotorFiltros.cs" />
+    <Compile Include="Core\SeguridadAvanzadaUtil.cs" />
     <Compile Include="Core\SeguridadUtil.cs" />
     <Compile Include="Core\UIBuilder.cs" />
     <Compile Include="Pantallas\InicioSesion\FormVerificacion.cs">
