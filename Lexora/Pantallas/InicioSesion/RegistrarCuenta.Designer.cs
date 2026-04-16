@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegistrarCuenta));
             this.PanelPrincipal = new System.Windows.Forms.Panel();
             this.textBoxVerificarContrasena = new System.Windows.Forms.TextBox();
             this.labelVerificarContrasena = new System.Windows.Forms.Label();
@@ -171,6 +172,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ClientSize = new System.Drawing.Size(1184, 661);
             this.Controls.Add(this.PanelPrincipal);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RegistrarCuenta";
             this.Text = "Registrar Cuenta - Lexora";
             this.PanelPrincipal.ResumeLayout(false);

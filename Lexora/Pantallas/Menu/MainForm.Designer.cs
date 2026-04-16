@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panelTop = new System.Windows.Forms.Panel();
             this.panelBuscador = new Siticone.Desktop.UI.WinForms.SiticonePanel();
             this.btnFiltros = new Siticone.Desktop.UI.WinForms.SiticoneButton();
@@ -249,10 +250,11 @@
             this.Controls.Add(this.panelIzquierdo);
             this.Controls.Add(this.panelTop);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(1200, 700);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Lexora";
+            this.Text = "Lexora - Explorador de Archivos";
             this.panelTop.ResumeLayout(false);
             this.panelBuscador.ResumeLayout(false);
             this.panelIzquierdo.ResumeLayout(false);
