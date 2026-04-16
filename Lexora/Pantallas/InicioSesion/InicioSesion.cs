@@ -106,7 +106,7 @@ namespace Lexora
                 {
                     int fallos = GestorDBAuth.RegistrarIntentoFallido(email, datosUsuario.IntentosFallidos);
                     if (fallos >= 5)
-                        MostrarMensaje("Demasiados intentos fallidos. Cuenta bloqueada 15 minutos.", colorPanelRojo, 95);
+                        MostrarMensaje("Demasiados intentos fallidos. \nCuenta bloqueada 15 minutos.", colorPanelRojo, 95);
                     else
                         MostrarMensaje($"Contraseña incorrecta. (Intento {fallos} de 5)", colorPanelRojo);
 
