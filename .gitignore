@@ -38,3 +38,4 @@ _ReSharper*/
 *.DotSettings.user
 # Credenciales locales y secretos (NUNCA SUBIR)
 CredencialesCorreo.config
+CredencialesDb.config
