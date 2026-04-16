@@ -1,4 +1,6 @@
-﻿using System;
+﻿using iText.Kernel.Pdf.Canvas.Wmf;
+using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -36,6 +38,7 @@ namespace Lexora.Core
                 }
             }
             File.Delete(ruta); // Borrar original (Opcional: usar Wipe aquí)
+            GestorLogs.Registrar("CIFRADO_AES", $"Archivo '{Path.GetFileName(ruta)}' cifrado con éxito. Extensión mutada a '.lxr'.");
         }
 
         public static void DescifrarArchivo(string ruta, string password)
@@ -62,6 +65,7 @@ namespace Lexora.Core
                 }
             }
             File.Delete(ruta);
+            GestorLogs.Registrar("DESCIFRADO_AES", $"Archivo '.lxr' descifrado y restaurado como '{Path.GetFileName(rutaSalida)}'.");
         }
 
         // --- 2. BÓVEDA LEXORA (PERMISOS ACL) ---
@@ -93,6 +97,8 @@ namespace Lexora.Core
                 dSecurity.AddAccessRule(new FileSystemAccessRule(usuarioActual, FileSystemRights.FullControl, AccessControlType.Deny));
             }
             Directory.SetAccessControl(ruta, dSecurity);
+            string estado = estaBloqueada ? "Desbloqueada" : "Bloqueada (Acceso Denegado)";
+            GestorLogs.Registrar("SEGURIDAD_BÓVEDA", $"Permisos alterados en la carpeta '{new DirectoryInfo(ruta).Name}'. Estado actual: {estado}.");
         }
 
         // --- 3. OCULTACIÓN FUERTE (ROOTKIT BÁSICO) ---
@@ -103,11 +109,15 @@ namespace Lexora.Core
             {
                 // Quitar System y Hidden
                 File.SetAttributes(ruta, atributos & ~FileAttributes.System & ~FileAttributes.Hidden);
+                GestorLogs.Registrar("SEGURIDAD_DESOCULTAR", $"Archivo '{Path.GetFileName(ruta)}' ahora visible.");
+
             }
             else
             {
                 // Poner System y Hidden
                 File.SetAttributes(ruta, atributos | FileAttributes.System | FileAttributes.Hidden);
+                GestorLogs.Registrar("SEGURIDAD_OCULTAR", $"Archivo '{Path.GetFileName(ruta)}' ahora oculto.");
+
             }
         }
 
@@ -139,6 +149,7 @@ namespace Lexora.Core
                 string rutaTemp = Path.Combine(dirPadre, Guid.NewGuid().ToString("N"));
                 Directory.Move(rutaActual, rutaTemp);
                 Directory.Delete(rutaTemp);
+                GestorLogs.Registrar("DESTRUCCION_DOD", $"Carpeta '{Path.GetFileName(rutaActual)}' destruida de forma irrecuperable (3 pasadas).");
             }
             else
             {
@@ -169,10 +180,11 @@ namespace Lexora.Core
                     string rutaTemp = Path.Combine(dirPadre, Guid.NewGuid().ToString("N") + ".tmp");
                     File.Move(rutaActual, rutaTemp);
                     File.Delete(rutaTemp);
+                    GestorLogs.Registrar("DESTRUCCION_DOD", $"Archivo '{Path.GetFileName(rutaActual)}' destruido de forma irrecuperable (3 pasadas).");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error al triturar {rutaActual}: {ex.Message}");
+                    GestorLogs.Registrar("ERROR", $"Archivo '{Path.GetFileName(rutaActual)}' no pudo ser destruido de forma irrecuperable (3 pasadas). {ex.Message}");
                 }
             }
         }
@@ -199,10 +211,11 @@ namespace Lexora.Core
                 
                 // Usamos el endpoint de búsqueda (/search/) que es más robusto
                 Process.Start(new ProcessStartInfo($"https://www.virustotal.com/gui/search/{hash}") { UseShellExecute = true });
+                GestorLogs.Registrar("VIRUSTOTAL_SCAN", $"Archivo '{Path.GetFileName(ruta)}' escaneado en VirusTotal. Hash: {hash}");
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show($"Error al leer el archivo para VirusTotal: {ex.Message}", "Lexora Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                GestorLogs.Registrar("ERROR", $"No se pudo escanear '{Path.GetFileName(ruta)}' en VirusTotal. {ex.Message}");
             }
         }
 
@@ -313,12 +326,74 @@ namespace Lexora.Core
                     else File.SetAccessControl(nuevaRuta, (FileSecurity)seguridad);
                 }
                 catch { } // Ignoramos si el PC tiene las ACL bloqueadas en este archivo
+
+                string tipo = esCarpetaActual ? "Carpeta" : "Archivo";
+                GestorLogs.Registrar("ANTI_FORENSE", $"{tipo} aniquilado: '{Path.GetFileName(rutaActual)}' mutado a '{nuevoNombre}'. Metadatos y fechas falsificados.");
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al aniquilar {rutaActual}: {ex.Message}");
+                GestorLogs.Registrar("ERROR", $"Error al aniquilar '{Path.GetFileName(rutaActual)}'. {ex.Message}");
             }
         }
 
+        // --- CIFRADO DE TEXTO AES-256 (MILITARY GRADE) ---
+        // La clave debe ser estática o generada por el entorno de forma segura (32 bytes = 256 bits)
+        private static readonly string MasterLogKey = ConfigurationManager.AppSettings["MasterKey"];
+
+        public static string CifrarTextoLog(string textoPlano)
+        {
+            if (string.IsNullOrEmpty(textoPlano)) return string.Empty;
+
+            using (var aes = Aes.Create())
+            {
+                aes.KeySize = 256;
+                // Derivamos una clave fija de 32 bytes de forma segura a partir de nuestra MasterKey
+                using (var sha256 = SHA256.Create())
+                {
+                    aes.Key = sha256.ComputeHash(Encoding.UTF8.GetBytes(MasterLogKey));
+                }
+                aes.GenerateIV(); // IV Aleatorio único por cada log
+
+                using (var msEncrypt = new MemoryStream())
+                {
+                    // Guardamos el IV al principio del stream para poder descifrarlo después
+                    msEncrypt.Write(aes.IV, 0, aes.IV.Length);
+                    using (var csEncrypt = new CryptoStream(msEncrypt, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                    using (var swEncrypt = new StreamWriter(csEncrypt))
+                    {
+                        swEncrypt.Write(textoPlano);
+                    }
+                    return Convert.ToBase64String(msEncrypt.ToArray());
+                }
+            }
+        }
+
+        public static string DescifrarTextoLog(string textoCifradoBase64)
+        {
+            if (string.IsNullOrEmpty(textoCifradoBase64)) return string.Empty;
+
+            byte[] fullCipher = Convert.FromBase64String(textoCifradoBase64);
+            using (var aes = Aes.Create())
+            {
+                aes.KeySize = 256;
+                using (var sha256 = SHA256.Create())
+                {
+                    aes.Key = sha256.ComputeHash(Encoding.UTF8.GetBytes(MasterLogKey));
+                }
+
+                // Extraemos el IV del principio (los primeros 16 bytes)
+                byte[] iv = new byte[16];
+                Array.Copy(fullCipher, 0, iv, 0, iv.Length);
+                aes.IV = iv;
+
+                using (var msDecrypt = new MemoryStream(fullCipher, iv.Length, fullCipher.Length - iv.Length))
+                using (var csDecrypt = new CryptoStream(msDecrypt, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                using (var srDecrypt = new StreamReader(csDecrypt))
+                {
+                    return srDecrypt.ReadToEnd();
+                }
+            }
+        }
     }
 }

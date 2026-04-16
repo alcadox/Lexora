@@ -86,6 +86,7 @@ namespace Lexora.Pantallas.Usuario
             {
                 if (GestorDBAuth.ActualizarPerfil(usuario.IdUsuario, nuevoNombre, nuevoEmail))
                 {
+                    GestorLogs.Registrar("ACTUALIZAR_PERFIL", $"El usuario actualizó sus datos. Nuevo email: '{nuevoEmail}', Nuevo Nombre: '{nuevoNombre}'.");
                     MessageBox.Show("Perfil actualizado con éxito.", "Lexora", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     // Como ahora es diseño "Single-Page", actualizamos los datos sin cerrar la ventana.
@@ -161,13 +162,15 @@ namespace Lexora.Pantallas.Usuario
                 {
                     if (frm.ShowDialog() == DialogResult.OK)
                     {
-                        // 5. EL PASO QUE FALTABA: Guardar en la Base de Datos
+                        // 5.Guardar en la Base de Datos
                         string hashNuevo = SeguridadUtil.CalcularHashSHA256(passNueva);
 
                         if (GestorDBAuth.ActualizarContrasena(usuario.Email, hashNuevo))
                         {
                             // Actualizamos en memoria por si acaso
                             usuario.HashBD = hashNuevo;
+                            // Después de if (GestorDBAuth.ActualizarContrasena(...))
+                            GestorLogs.Registrar("CAMBIO_CREDENCIALES", "El usuario cambió su contraseña con éxito mediante verificación en dos pasos (Correo).");
 
                             MessageBox.Show("Contraseña actualizada. Por seguridad, vuelve a iniciar sesión.", "Lexora", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -207,28 +210,36 @@ namespace Lexora.Pantallas.Usuario
         {
             try
             {
-                
-                DataTable dtMockup = new DataTable();
-                dtMockup.Columns.Add("Fecha", typeof(string));
-                dtMockup.Columns.Add("Acción", typeof(string));
-                dtMockup.Columns.Add("Estado", typeof(string));
+                // Llamamos a nuestro motor extractor y descifrador
+                DataTable dtLogs = GestorLogs.ObtenerHistorialLogs(usuario.IdUsuario);
 
-                dtMockup.Rows.Add(DateTime.Now.ToString("g"), "Inicio de Sesión", "Exitoso");
-                dtMockup.Rows.Add(DateTime.Now.AddDays(-1).ToString("g"), "Consulta IA Realizada", "Completado");
-                dtMockup.Rows.Add(DateTime.Now.AddDays(-2).ToString("g"), "Actualización de Perfil", "Exitoso");
-
-                // Asigna los datos al DataGridView
                 if (dgvLogsUsuario != null)
                 {
-                    dgvLogsUsuario.DataSource = dtMockup;
+                    dgvLogsUsuario.DataSource = dtLogs;
+
+                    // --- AJUSTES DE DISEÑO Y VISUALIZACIÓN ---
                     dgvLogsUsuario.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    dgvLogsUsuario.AllowUserToAddRows = false;
+                    dgvLogsUsuario.ReadOnly = true;
+                    dgvLogsUsuario.RowHeadersVisible = false;
+                    dgvLogsUsuario.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+                    // Le damos más espacio a la descripción para que se lea perfectamente
+                    dgvLogsUsuario.Columns["Fecha"].FillWeight = 20;
+                    dgvLogsUsuario.Columns["Acción"].FillWeight = 25;
+                    dgvLogsUsuario.Columns["Descripción Detallada"].FillWeight = 40;
+                    dgvLogsUsuario.Columns["Dirección IP"].FillWeight = 15;
+
+                    // Centramos el texto de algunas columnas para que quede elegante
+                    dgvLogsUsuario.Columns["Fecha"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    dgvLogsUsuario.Columns["Dirección IP"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
 
-                logsCargados = true;
+                logsCargados = true; // Evita que se vuelva a cargar si el usuario sale y entra de la pestaña
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar los logs: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Fallo de Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

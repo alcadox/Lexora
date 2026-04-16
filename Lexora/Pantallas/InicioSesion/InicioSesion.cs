@@ -115,6 +115,9 @@ namespace Lexora
 
                 string tokenGenerado = GestorDBAuth.RegistrarLoginExitoso(datosUsuario.IdUsuario, email);
 
+                GestorLogs.IdUsuarioActual = datosUsuario.IdUsuario;
+                GestorLogs.Registrar("LOGIN", "Usuario inició sesión con éxito desde la pantalla principal.");
+
                 Properties.Settings.Default.UsuarioRecordado = datosUsuario.Nombre;
                 Properties.Settings.Default.TokenSesion = tokenGenerado;
                 Properties.Settings.Default.Save();
@@ -151,6 +154,12 @@ namespace Lexora
                     if (datosUsuario.Existe)
                     {
                         string tokenGenerado = GestorDBAuth.RegistrarLoginExitoso(datosUsuario.IdUsuario, email);
+
+                        GestorLogs.IdUsuarioActual = datosUsuario.IdUsuario;
+
+                        GestorLogs.Registrar("RESET_PASS", "Contraseña restablecida.");
+                        GestorLogs.Registrar("LOGIN_RECUPERACION", "Sesión iniciada automáticamente tras restablecer contraseña.");
+
                         Properties.Settings.Default.UsuarioRecordado = datosUsuario.Nombre;
                         Properties.Settings.Default.TokenSesion = tokenGenerado;
                         Properties.Settings.Default.Save();

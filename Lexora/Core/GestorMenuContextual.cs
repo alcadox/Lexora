@@ -132,11 +132,13 @@ namespace Lexora.Core
                 if (tipo == "Carpeta")
                 {
                     Directory.CreateDirectory(Path.Combine(rutaActual, nombre));
+                    GestorLogs.Registrar("CREAR_CARPETA", $"Directorio '{nombre}' creado en '{rutaActual}'.");
                 }
                 else if (tipo == "Texto")
                 {
                     string rutaArchivo = Path.Combine(rutaActual, nombre.EndsWith(".txt") ? nombre : nombre + ".txt");
                     File.Create(rutaArchivo).Close(); // Crea y libera el archivo
+                    GestorLogs.Registrar("CREAR_ARCHIVO", $"Archivo de texto '{Path.GetFileName(rutaArchivo)}' creado en '{rutaActual}'.");
                 }
                 _notificarCambio?.Invoke();
             }

@@ -40,6 +40,7 @@ namespace Lexora.Core
 
             // Inicia la operación de arrastre hacia el sistema (Windows Explorer, etc)
             _listView.DoDragDrop(new DataObject(DataFormats.FileDrop, archivos), DragDropEffects.Copy | DragDropEffects.Move);
+            GestorLogs.Registrar("MOVER_ARCHIVO", $"Archivos arrastrados desde '{_obtenerRutaActual()}' hacia el sistema.");
         }
 
         // 2. CUANDO EL USUARIO MANTIENE ARCHIVOS SOBRE LA VENTANA DE LEXORA
@@ -96,6 +97,8 @@ namespace Lexora.Core
                                 Microsoft.VisualBasic.FileIO.FileSystem.CopyDirectory(rutaOrigen, destinoFinal, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs);
                             else
                                 Directory.Move(rutaOrigen, destinoFinal);
+
+                            GestorLogs.Registrar("MOVER_CARPETA", $"Carpeta desplazada de '{rutaOrigen}' hacia '{rutaDestino}'.");
                         }
                         else if (File.Exists(rutaOrigen)) // Es archivo
                         {
@@ -103,12 +106,14 @@ namespace Lexora.Core
                                 File.Copy(rutaOrigen, destinoFinal, false);
                             else
                                 File.Move(rutaOrigen, destinoFinal);
+
+                            GestorLogs.Registrar("MOVER_ARCHIVO", $"Archivo desplazada de '{rutaOrigen}' hacia '{rutaDestino}'.");
                         }
                     }
                     catch (Exception ex)
                     {
-                        // Evitamos MessageBox aquí dentro del Task para no bloquear, ideal para el futuro Logger
-                        Console.WriteLine($"Error al mover/copiar: {ex.Message}");
+                        // Evitamos MessageBox aquí dentro del Task para no bloquear
+                        GestorLogs.Registrar("ERROR_MOVIMIENTO", $"Error al mover/copiar de '{rutaOrigen}' a '{rutaDestino}': {ex.Message}");
                     }
                 }
             });

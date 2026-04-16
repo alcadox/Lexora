@@ -193,6 +193,7 @@
     <Compile Include="Core\CorreoUtil.cs" />
     <Compile Include="Core\GestorDBAuth.cs" />
     <Compile Include="Core\GestorDragAndDrop.cs" />
+    <Compile Include="Core\GestorLogs.cs" />
     <Compile Include="Core\GestorMenuContextual.cs" />
     <Compile Include="Core\GestorMenuDiscos.cs" />
     <Compile Include="Core\MotorFiltros.cs" />
@@ -268,7 +269,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.manifest" />
-    <None Include="CredencialesCorreo.config">
+    <None Include="CredencialesSensibles.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="CredencialesDb.config">

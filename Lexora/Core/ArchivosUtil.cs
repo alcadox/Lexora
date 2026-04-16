@@ -61,6 +61,7 @@ namespace Lexora.Core
             info.nShow = 5; // SW_SHOW
             info.fMask = 0x0000000C; // SEE_MASK_INVOKEIDLIST
             ShellExecuteEx(ref info);
+            GestorLogs.Registrar("MOSTRAR_PROPIEDADES", $"Propiedades del elemento '{ruta}' mostradas.");
         }
 
         // --- NATIVO: ENVIAR A LA PAPELERA DE RECICLAJE ---
@@ -90,6 +91,7 @@ namespace Lexora.Core
             shf.pFrom = ruta + '\0' + '\0'; // Windows API exige doble terminación nula
 
             SHFileOperation(ref shf);
+            GestorLogs.Registrar("ELIMINACION", $"Elemento '{ruta}' enviado a la papelera.");
         }
 
     }

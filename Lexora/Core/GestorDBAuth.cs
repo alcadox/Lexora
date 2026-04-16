@@ -62,6 +62,7 @@ namespace Lexora.Core
         // 3. SEGURIDAD: REGISTRAR INTENTO FALLIDO Y BLOQUEAR SI ES NECESARIO
         public static int RegistrarIntentoFallido(string email, int intentosActuales)
         {
+            GestorLogs.Registrar("INTENTO_FALLIDO", $"Intento fallido de inicio de sesión para el usuario '{email}'.");
             int nuevosIntentos = intentosActuales + 1;
             DateTime? bloqueo = null;
 

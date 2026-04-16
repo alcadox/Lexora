@@ -432,9 +432,15 @@ namespace Lexora
             try
             {
                 if (listViewArchivos.Items[e.Item].SubItems[1].Text == "Carpeta")
+                {
                     Directory.Move(rutaVieja, rutaNueva);
+                    GestorLogs.Registrar("RENOMBRADO", $"Carpeta renombrada de '{nombreViejo}' a '{nombreNuevo}' en '{rutaActual}'.");
+                }
                 else
+                {
                     File.Move(rutaVieja, rutaNueva);
+                    GestorLogs.Registrar("RENOMBRADO", $"Archivo renombrado de '{nombreViejo}' a '{nombreNuevo}' en '{rutaActual}'.");
+                }
 
                 // Forzamos el refresco para que los iconos y filtros se reapliquen correctamente
                 // Usamos BeginInvoke para asegurar que la edición del Label termine antes de recargar
@@ -459,6 +465,13 @@ namespace Lexora
                     if (datos.Existe && datos.Activo)
                     {
                         usuarioActual = datos;
+
+                        if (GestorLogs.IdUsuarioActual != datos.IdUsuario) // Evita registrarlo doble si solo está refrescando la UI
+                        {
+                            GestorLogs.IdUsuarioActual = datos.IdUsuario;
+                            GestorLogs.Registrar("AUTO_LOGIN", "Sesión verificada silenciosamente mediante Token de seguridad.");
+                        }
+
                         btnSesion.Text = "Ver Perfil";
                         btnSesion.FillColor = Color.FromArgb(73, 33, 173); // Un morado más oscuro
                         return;
@@ -479,6 +492,10 @@ namespace Lexora
 
         private void CerrarSesion()
         {
+
+            GestorLogs.Registrar("LOGOUT", "Usuario cerró su sesión o fue desconectado por seguridad.");
+            GestorLogs.IdUsuarioActual = null; // IMPORTANTE: Corta el grifo de los logs
+
             Properties.Settings.Default.TokenSesion = string.Empty;
             Properties.Settings.Default.UsuarioRecordado = string.Empty;
             Properties.Settings.Default.Save();

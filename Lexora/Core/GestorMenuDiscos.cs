@@ -91,6 +91,7 @@ namespace Lexora.Core
         private void MostrarPropiedades(string letra)
         {
             ArchivosUtil.MostrarPropiedadesWindows(letra);
+            GestorLogs.Registrar("MOSTRAR_PROPIEDADES", $"Se ha mostrado las propiedades del volumen '{letra}:'");
         }
 
         private void EscanearDefender(string letra)
@@ -106,6 +107,8 @@ namespace Lexora.Core
                     Arguments = $"-Scan -ScanType 3 -File {letra}",
                     UseShellExecute = true
                 });
+                GestorLogs.Registrar("ESCANEAR_DEFENDER", $"Se ha iniciado un escaneo de seguridad en el volumen '{letra}:'");
+
             }
             else
             {
@@ -123,6 +126,8 @@ namespace Lexora.Core
                 UseShellExecute = true
             });
             MessageBox.Show($"Se ha abierto la utilidad de formateo. Asegúrate de seleccionar la letra ({letra}) correcta.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            GestorLogs.Registrar("FORMATEAR_UNIDAD", $"Se ha abierto la utilidad de formateo para el volumen '{letra}:'");
+
         }
     }
 }
