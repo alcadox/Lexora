@@ -59,7 +59,20 @@ namespace Lexora.Pantallas.InicioSesion
 
                     if (GestorDBAuth.RegistrarNuevoUsuario(nombre, email, passwordHash))
                     {
-                        MessageBox.Show("Cuenta verificada y creada con éxito. Ya puedes iniciar sesión.", "Registro completado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        // CORRECCIÓN: Auto-Login inmediato tras registro exitoso
+                        var datosUsuario = GestorDBAuth.ObtenerDatosUsuario(email);
+                        if (datosUsuario.Existe)
+                        {
+                            string tokenGenerado = GestorDBAuth.RegistrarLoginExitoso(datosUsuario.IdUsuario, email);
+
+                            // Guardamos en Settings de la aplicación para que el MainForm lo reciba activo
+                            Properties.Settings.Default.UsuarioRecordado = datosUsuario.Nombre;
+                            Properties.Settings.Default.TokenSesion = tokenGenerado;
+                            Properties.Settings.Default.Save();
+                        }
+
+                        MessageBox.Show("Cuenta verificada y creada con éxito. Entrando a Lexora...", "Registro completado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                         DialogResult = DialogResult.OK;
                         Close();
                     }

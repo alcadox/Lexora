@@ -41,7 +41,6 @@ namespace Lexora
 
             try
             {
-                // USAMOS NUESTRO NUEVO GESTOR MODULAR
                 var datosUsuario = GestorDBAuth.ObtenerDatosUsuario(email);
 
                 if (!datosUsuario.Existe) { MostrarMensaje("No existe ningún usuario con ese e-mail.", colorPanelRojo); return; }
@@ -50,7 +49,6 @@ namespace Lexora
                 NombreUsuario = datosUsuario.Nombre;
                 string token = Guid.NewGuid().ToString().Substring(0, 7).ToUpper();
 
-                // USAMOS NUESTRO NUEVO SERVICIO DE CORREO
                 CorreoUtil.EnviarTokenRecuperacion(email, token);
 
                 FormVerificacion formularioVerificar = new FormVerificacion(email, token);
@@ -95,7 +93,6 @@ namespace Lexora
                 if (!datosUsuario.Existe) { MostrarMensaje("No existe ningún usuario con ese e-mail.", colorPanelRojo); return; }
                 if (!datosUsuario.Activo) { MostrarMensaje("El usuario está desactivado.", colorPanelRojo); return; }
 
-                // --- ANTI-FUERZA BRUTA ---
                 if (datosUsuario.BloqueadoHasta.HasValue && datosUsuario.BloqueadoHasta.Value > DateTime.Now)
                 {
                     TimeSpan tiempoRestante = datosUsuario.BloqueadoHasta.Value - DateTime.Now;
@@ -107,7 +104,6 @@ namespace Lexora
 
                 if (datosUsuario.HashBD != passwordHash)
                 {
-                    // Registramos el fallo en la base de datos
                     int fallos = GestorDBAuth.RegistrarIntentoFallido(email, datosUsuario.IntentosFallidos);
                     if (fallos >= 5)
                         MostrarMensaje("Demasiados intentos fallidos. Cuenta bloqueada 15 minutos.", colorPanelRojo, 95);
@@ -117,7 +113,6 @@ namespace Lexora
                     return;
                 }
 
-                // --- LOGIN EXITOSO Y GENERACIÓN DE TOKEN ---
                 string tokenGenerado = GestorDBAuth.RegistrarLoginExitoso(datosUsuario.IdUsuario, email);
 
                 Properties.Settings.Default.UsuarioRecordado = datosUsuario.Nombre;
@@ -126,7 +121,6 @@ namespace Lexora
 
                 NombreUsuario = datosUsuario.Nombre;
 
-                // ESTA ES LA CLAVE: Solo devolvemos OK y nos suicidamos (Close).
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
@@ -149,8 +143,19 @@ namespace Lexora
                 }
                 else
                 {
-                    MostrarMensaje("Contraseña actualizada correctamente.", Color.LightGreen);
+                    MostrarMensaje("Contraseña actualizada. Iniciando sesión de forma segura...", Color.LightGreen);
                     cambioContrasena = false;
+
+                    // CORRECCIÓN: Iniciar sesión automáticamente tras recuperar la contraseña
+                    var datosUsuario = GestorDBAuth.ObtenerDatosUsuario(email);
+                    if (datosUsuario.Existe)
+                    {
+                        string tokenGenerado = GestorDBAuth.RegistrarLoginExitoso(datosUsuario.IdUsuario, email);
+                        Properties.Settings.Default.UsuarioRecordado = datosUsuario.Nombre;
+                        Properties.Settings.Default.TokenSesion = tokenGenerado;
+                        Properties.Settings.Default.Save();
+                        NombreUsuario = datosUsuario.Nombre;
+                    }
 
                     this.DialogResult = DialogResult.OK;
                     this.Close();
@@ -164,14 +169,28 @@ namespace Lexora
 
         private void btnOmitir_Click(object sender, EventArgs e)
         {
-            // Usamos Ignore para indicarle a Program.cs que se ha omitido el login
             this.DialogResult = DialogResult.Ignore;
             this.Close();
         }
 
+        // CORRECCIÓN: Evento asignado y funcional con manejo de recursos limpio (using)
         private void lblCrearCuenta_Click(object sender, EventArgs e)
         {
-
+            this.Hide(); // Ocultamos el login temporalmente
+            using (RegistrarCuenta formRegistro = new RegistrarCuenta())
+            {
+                if (formRegistro.ShowDialog() == DialogResult.OK)
+                {
+                    // Si el registro devuelve OK (es decir, ya generó el token), cerramos el login también con OK
+                    this.DialogResult = DialogResult.OK;
+                    this.Close();
+                }
+                else
+                {
+                    // Si el usuario canceló el registro, volvemos a mostrar la pantalla de Login
+                    this.Show();
+                }
+            }
         }
     }
 }
