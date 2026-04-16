@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Lexora.Core
@@ -16,5 +17,22 @@ namespace Lexora.Core
                 return sb.ToString();
             }
         }
+
+        // ---HASH DE ARCHIVOS REALES (NO TEXTO) ---
+        public static string CalcularHashArchivoSHA256(string ruta)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                // Abrimos el archivo en modo solo lectura para no bloquearlo
+                using (FileStream fs = File.OpenRead(ruta))
+                {
+                    byte[] hash = sha256.ComputeHash(fs);
+                    StringBuilder sb = new StringBuilder();
+                    foreach (byte b in hash) sb.Append(b.ToString("x2"));
+                    return sb.ToString();
+                }
+            }
+        }
+
     }
 }

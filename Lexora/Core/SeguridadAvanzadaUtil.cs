@@ -163,9 +163,18 @@ namespace Lexora.Core
         // --- 5. DETECTOR DE MALWARE (HASH SCANNER VIRUSTOTAL) ---
         public static void EscanearEnVirusTotal(string ruta)
         {
-            // Usamos tu utilidad ya creada
-            string hash = SeguridadUtil.CalcularHashSHA256(ruta);
-            Process.Start(new ProcessStartInfo($"https://www.virustotal.com/gui/file/{hash}") { UseShellExecute = true });
+            try
+            {
+                // Ahora sí calculamos el hash del contenido del archivo
+                string hash = SeguridadUtil.CalcularHashArchivoSHA256(ruta);
+                
+                // Usamos el endpoint de búsqueda (/search/) que es más robusto
+                Process.Start(new ProcessStartInfo($"https://www.virustotal.com/gui/search/{hash}") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show($"Error al leer el archivo para VirusTotal: {ex.Message}", "Lexora Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+            }
         }
     }
 }
