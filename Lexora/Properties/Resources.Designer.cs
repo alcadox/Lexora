@@ -129,5 +129,15 @@ namespace Lexora.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
+        internal static byte[] logo_lexora__1_ {
+            get {
+                object obj = ResourceManager.GetObject("logo_lexora (1)", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
