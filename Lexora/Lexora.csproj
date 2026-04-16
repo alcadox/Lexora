@@ -192,6 +192,7 @@
     <Compile Include="Core\ArchivosUtil.cs" />
     <Compile Include="Core\CorreoUtil.cs" />
     <Compile Include="Core\GestorDBAuth.cs" />
+    <Compile Include="Core\GestorDragAndDrop.cs" />
     <Compile Include="Core\GestorMenuContextual.cs" />
     <Compile Include="Core\MotorFiltros.cs" />
     <Compile Include="Core\SeguridadAvanzadaUtil.cs" />

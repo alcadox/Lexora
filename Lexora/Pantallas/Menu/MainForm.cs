@@ -17,7 +17,8 @@ namespace Lexora
         ClaseFiltros filtros = new ClaseFiltros();
         MotorFiltros motorFiltros; // Instancia de nuestro motor refactorizado
         string nombreUsuario = "";
-        GestorMenuContextual menuContextual;
+        GestorMenuContextual gestorMenu;
+        GestorDragAndDrop gestorArrastre;
 
         private ImageList listaIconos;
         private FlowLayoutPanel panelDiscosDinamicos;
@@ -46,11 +47,18 @@ namespace Lexora
             // Inicializar Motores
             motorFiltros = new MotorFiltros(filtros);
 
-            // INSTANCIAR EL GESTOR DE MENÚ
-            menuContextual = new GestorMenuContextual(
+            // 1. INICIALIZAR EL GESTOR DE MENÚS (Fondo y Archivos)
+            gestorMenu = new GestorMenuContextual(
+                listViewArchivos,
+                () => rutaActual, // Pasa la ruta actual en tiempo real
+                () => CargarCarpetas(rutaActual, txtBoxBuscador.Text) // Llama al recargo cuando terminan
+            );
+
+            // 2. INICIALIZAR EL GESTOR DE ARRASTRAR Y SOLTAR
+            gestorArrastre = new GestorDragAndDrop(
                 listViewArchivos,
                 () => rutaActual,
-                () => CargarCarpetas(rutaActual, txtBoxBuscador.Text) //refresh automático
+                () => CargarCarpetas(rutaActual, txtBoxBuscador.Text)
             );
 
             // 3. SUSCRIPCIÓN AL EVENTO DE EDICIÓN 
