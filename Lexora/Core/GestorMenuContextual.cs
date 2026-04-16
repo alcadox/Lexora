@@ -255,7 +255,7 @@ namespace Lexora.Core
             if (MessageBox.Show($"DESTRUCCIÓN MILITAR DoD 5220.22-M\n\n{advertencia}\n\nEl sistema sobrescribirá los datos físicos 3 veces (Ceros, Unos y Datos Aleatorios) y destruirá los nombres originales.\n\nNi con software forense profesional se podrán recuperar.\n\n¿Estás absolutamente seguro?", "Aniquilación Total", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
             {
                 await SeguridadAvanzadaUtil.DestruccionDoD(r, c);
-                MessageBox.Show("Operación militar completada. Los datos han dejado de existir en este universo.", "Lexora Security", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Operación militar completada. Los datos han dejado de existir.", "Lexora Security", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         private void AnalizarConIA(string r, bool c) { MessageBox.Show("Pendiente IA", "Lexora"); }
