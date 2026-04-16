@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PerfilUsuario));
             this.txtNombre = new Siticone.Desktop.UI.WinForms.SiticoneTextBox();
             this.txtEmail = new Siticone.Desktop.UI.WinForms.SiticoneTextBox();
             this.lblPuntosIA = new Siticone.Desktop.UI.WinForms.SiticoneHtmlLabel();
@@ -49,30 +50,30 @@
             this.btnTabSeguridad = new Siticone.Desktop.UI.WinForms.SiticoneButton();
             this.btnTabDatos = new Siticone.Desktop.UI.WinForms.SiticoneButton();
             this.panelContenedorVistas = new Siticone.Desktop.UI.WinForms.SiticonePanel();
-            this.panelVistaDatos = new Siticone.Desktop.UI.WinForms.SiticonePanel();
             this.panelVistaSeguridad = new Siticone.Desktop.UI.WinForms.SiticonePanel();
-            this.panelVistaLogs = new Siticone.Desktop.UI.WinForms.SiticonePanel();
-            this.dgvLogsUsuario = new Siticone.Desktop.UI.WinForms.SiticoneDataGridView();
             this.siticoneHtmlLabel5 = new Siticone.Desktop.UI.WinForms.SiticoneHtmlLabel();
             this.txtPassConfirmar = new Siticone.Desktop.UI.WinForms.SiticoneTextBox();
             this.siticoneHtmlLabel3 = new Siticone.Desktop.UI.WinForms.SiticoneHtmlLabel();
             this.siticoneHtmlLabel4 = new Siticone.Desktop.UI.WinForms.SiticoneHtmlLabel();
             this.txtPassActual = new Siticone.Desktop.UI.WinForms.SiticoneTextBox();
             this.txtPassNueva = new Siticone.Desktop.UI.WinForms.SiticoneTextBox();
-            this.siticoneHtmlLabel2 = new Siticone.Desktop.UI.WinForms.SiticoneHtmlLabel();
-            this.siticoneHtmlLabel1 = new Siticone.Desktop.UI.WinForms.SiticoneHtmlLabel();
             this.siticonePanel1 = new Siticone.Desktop.UI.WinForms.SiticonePanel();
             this.lblTituloVista = new Siticone.Desktop.UI.WinForms.SiticoneHtmlLabel();
+            this.panelVistaLogs = new Siticone.Desktop.UI.WinForms.SiticonePanel();
+            this.dgvLogsUsuario = new Siticone.Desktop.UI.WinForms.SiticoneDataGridView();
+            this.panelVistaDatos = new Siticone.Desktop.UI.WinForms.SiticonePanel();
+            this.siticoneHtmlLabel2 = new Siticone.Desktop.UI.WinForms.SiticoneHtmlLabel();
+            this.siticoneHtmlLabel1 = new Siticone.Desktop.UI.WinForms.SiticoneHtmlLabel();
             this.panelIdentidad.SuspendLayout();
             this.panelPuntosIA.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picAvatar)).BeginInit();
             this.panelMenu.SuspendLayout();
             this.panelContenedorVistas.SuspendLayout();
-            this.panelVistaDatos.SuspendLayout();
             this.panelVistaSeguridad.SuspendLayout();
+            this.siticonePanel1.SuspendLayout();
             this.panelVistaLogs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLogsUsuario)).BeginInit();
-            this.siticonePanel1.SuspendLayout();
+            this.panelVistaDatos.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtNombre
@@ -368,19 +369,6 @@
             this.panelContenedorVistas.Size = new System.Drawing.Size(450, 600);
             this.panelContenedorVistas.TabIndex = 10;
             // 
-            // panelVistaDatos
-            // 
-            this.panelVistaDatos.Controls.Add(this.siticoneHtmlLabel2);
-            this.panelVistaDatos.Controls.Add(this.siticoneHtmlLabel1);
-            this.panelVistaDatos.Controls.Add(this.txtNombre);
-            this.panelVistaDatos.Controls.Add(this.txtEmail);
-            this.panelVistaDatos.Controls.Add(this.btnGuardar);
-            this.panelVistaDatos.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelVistaDatos.Location = new System.Drawing.Point(0, 0);
-            this.panelVistaDatos.Name = "panelVistaDatos";
-            this.panelVistaDatos.Size = new System.Drawing.Size(450, 600);
-            this.panelVistaDatos.TabIndex = 0;
-            // 
             // panelVistaSeguridad
             // 
             this.panelVistaSeguridad.Controls.Add(this.siticoneHtmlLabel5);
@@ -395,69 +383,6 @@
             this.panelVistaSeguridad.Name = "panelVistaSeguridad";
             this.panelVistaSeguridad.Size = new System.Drawing.Size(450, 0);
             this.panelVistaSeguridad.TabIndex = 14;
-            // 
-            // panelVistaLogs
-            // 
-            this.panelVistaLogs.Controls.Add(this.dgvLogsUsuario);
-            this.panelVistaLogs.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelVistaLogs.Location = new System.Drawing.Point(0, 0);
-            this.panelVistaLogs.Name = "panelVistaLogs";
-            this.panelVistaLogs.Size = new System.Drawing.Size(450, 550);
-            this.panelVistaLogs.TabIndex = 21;
-            // 
-            // dgvLogsUsuario
-            // 
-            this.dgvLogsUsuario.AllowUserToAddRows = false;
-            this.dgvLogsUsuario.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.White;
-            this.dgvLogsUsuario.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvLogsUsuario.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
-            this.dgvLogsUsuario.ColumnHeadersHeight = 4;
-            this.dgvLogsUsuario.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvLogsUsuario.DefaultCellStyle = dataGridViewCellStyle15;
-            this.dgvLogsUsuario.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvLogsUsuario.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.dgvLogsUsuario.Location = new System.Drawing.Point(0, 0);
-            this.dgvLogsUsuario.Name = "dgvLogsUsuario";
-            this.dgvLogsUsuario.ReadOnly = true;
-            this.dgvLogsUsuario.RowHeadersVisible = false;
-            this.dgvLogsUsuario.Size = new System.Drawing.Size(450, 550);
-            this.dgvLogsUsuario.TabIndex = 0;
-            this.dgvLogsUsuario.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
-            this.dgvLogsUsuario.ThemeStyle.AlternatingRowsStyle.Font = null;
-            this.dgvLogsUsuario.ThemeStyle.AlternatingRowsStyle.ForeColor = System.Drawing.Color.Empty;
-            this.dgvLogsUsuario.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = System.Drawing.Color.Empty;
-            this.dgvLogsUsuario.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = System.Drawing.Color.Empty;
-            this.dgvLogsUsuario.ThemeStyle.BackColor = System.Drawing.Color.White;
-            this.dgvLogsUsuario.ThemeStyle.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
-            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.White;
-            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.Height = 4;
-            this.dgvLogsUsuario.ThemeStyle.ReadOnly = true;
-            this.dgvLogsUsuario.ThemeStyle.RowsStyle.BackColor = System.Drawing.Color.White;
-            this.dgvLogsUsuario.ThemeStyle.RowsStyle.BorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvLogsUsuario.ThemeStyle.RowsStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dgvLogsUsuario.ThemeStyle.RowsStyle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            this.dgvLogsUsuario.ThemeStyle.RowsStyle.Height = 22;
-            this.dgvLogsUsuario.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.dgvLogsUsuario.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
             // 
             // siticoneHtmlLabel5
             // 
@@ -555,28 +480,6 @@
             this.txtPassNueva.Size = new System.Drawing.Size(200, 36);
             this.txtPassNueva.TabIndex = 15;
             // 
-            // siticoneHtmlLabel2
-            // 
-            this.siticoneHtmlLabel2.BackColor = System.Drawing.Color.Transparent;
-            this.siticoneHtmlLabel2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.siticoneHtmlLabel2.Location = new System.Drawing.Point(28, 134);
-            this.siticoneHtmlLabel2.Name = "siticoneHtmlLabel2";
-            this.siticoneHtmlLabel2.Size = new System.Drawing.Size(47, 19);
-            this.siticoneHtmlLabel2.TabIndex = 13;
-            this.siticoneHtmlLabel2.Text = "Correo:";
-            this.siticoneHtmlLabel2.TextAlignment = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // siticoneHtmlLabel1
-            // 
-            this.siticoneHtmlLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.siticoneHtmlLabel1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.siticoneHtmlLabel1.Location = new System.Drawing.Point(28, 56);
-            this.siticoneHtmlLabel1.Name = "siticoneHtmlLabel1";
-            this.siticoneHtmlLabel1.Size = new System.Drawing.Size(55, 19);
-            this.siticoneHtmlLabel1.TabIndex = 11;
-            this.siticoneHtmlLabel1.Text = "Nombre:";
-            this.siticoneHtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // siticonePanel1
             // 
             this.siticonePanel1.Controls.Add(this.lblTituloVista);
@@ -600,6 +503,104 @@
             this.lblTituloVista.Text = "Mis Datos Personales";
             this.lblTituloVista.TextAlignment = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // panelVistaLogs
+            // 
+            this.panelVistaLogs.Controls.Add(this.dgvLogsUsuario);
+            this.panelVistaLogs.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelVistaLogs.Location = new System.Drawing.Point(0, 0);
+            this.panelVistaLogs.Name = "panelVistaLogs";
+            this.panelVistaLogs.Size = new System.Drawing.Size(450, 550);
+            this.panelVistaLogs.TabIndex = 21;
+            // 
+            // dgvLogsUsuario
+            // 
+            this.dgvLogsUsuario.AllowUserToAddRows = false;
+            this.dgvLogsUsuario.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            this.dgvLogsUsuario.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLogsUsuario.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvLogsUsuario.ColumnHeadersHeight = 4;
+            this.dgvLogsUsuario.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvLogsUsuario.DefaultCellStyle = dataGridViewCellStyle3;
+            this.dgvLogsUsuario.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvLogsUsuario.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            this.dgvLogsUsuario.Location = new System.Drawing.Point(0, 0);
+            this.dgvLogsUsuario.Name = "dgvLogsUsuario";
+            this.dgvLogsUsuario.ReadOnly = true;
+            this.dgvLogsUsuario.RowHeadersVisible = false;
+            this.dgvLogsUsuario.Size = new System.Drawing.Size(450, 550);
+            this.dgvLogsUsuario.TabIndex = 0;
+            this.dgvLogsUsuario.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
+            this.dgvLogsUsuario.ThemeStyle.AlternatingRowsStyle.Font = null;
+            this.dgvLogsUsuario.ThemeStyle.AlternatingRowsStyle.ForeColor = System.Drawing.Color.Empty;
+            this.dgvLogsUsuario.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = System.Drawing.Color.Empty;
+            this.dgvLogsUsuario.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = System.Drawing.Color.Empty;
+            this.dgvLogsUsuario.ThemeStyle.BackColor = System.Drawing.Color.White;
+            this.dgvLogsUsuario.ThemeStyle.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
+            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.White;
+            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
+            this.dgvLogsUsuario.ThemeStyle.HeaderStyle.Height = 4;
+            this.dgvLogsUsuario.ThemeStyle.ReadOnly = true;
+            this.dgvLogsUsuario.ThemeStyle.RowsStyle.BackColor = System.Drawing.Color.White;
+            this.dgvLogsUsuario.ThemeStyle.RowsStyle.BorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgvLogsUsuario.ThemeStyle.RowsStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dgvLogsUsuario.ThemeStyle.RowsStyle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            this.dgvLogsUsuario.ThemeStyle.RowsStyle.Height = 22;
+            this.dgvLogsUsuario.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            this.dgvLogsUsuario.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            // 
+            // panelVistaDatos
+            // 
+            this.panelVistaDatos.Controls.Add(this.siticoneHtmlLabel2);
+            this.panelVistaDatos.Controls.Add(this.siticoneHtmlLabel1);
+            this.panelVistaDatos.Controls.Add(this.txtNombre);
+            this.panelVistaDatos.Controls.Add(this.txtEmail);
+            this.panelVistaDatos.Controls.Add(this.btnGuardar);
+            this.panelVistaDatos.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelVistaDatos.Location = new System.Drawing.Point(0, 0);
+            this.panelVistaDatos.Name = "panelVistaDatos";
+            this.panelVistaDatos.Size = new System.Drawing.Size(450, 600);
+            this.panelVistaDatos.TabIndex = 0;
+            // 
+            // siticoneHtmlLabel2
+            // 
+            this.siticoneHtmlLabel2.BackColor = System.Drawing.Color.Transparent;
+            this.siticoneHtmlLabel2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.siticoneHtmlLabel2.Location = new System.Drawing.Point(28, 134);
+            this.siticoneHtmlLabel2.Name = "siticoneHtmlLabel2";
+            this.siticoneHtmlLabel2.Size = new System.Drawing.Size(47, 19);
+            this.siticoneHtmlLabel2.TabIndex = 13;
+            this.siticoneHtmlLabel2.Text = "Correo:";
+            this.siticoneHtmlLabel2.TextAlignment = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // siticoneHtmlLabel1
+            // 
+            this.siticoneHtmlLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.siticoneHtmlLabel1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.siticoneHtmlLabel1.Location = new System.Drawing.Point(28, 56);
+            this.siticoneHtmlLabel1.Name = "siticoneHtmlLabel1";
+            this.siticoneHtmlLabel1.Size = new System.Drawing.Size(55, 19);
+            this.siticoneHtmlLabel1.TabIndex = 11;
+            this.siticoneHtmlLabel1.Text = "Nombre:";
+            this.siticoneHtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // PerfilUsuario
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -610,22 +611,23 @@
             this.Controls.Add(this.panelMenu);
             this.Controls.Add(this.panelIdentidad);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PerfilUsuario";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "PerfilUsuario";
+            this.Text = "Mi Perfil - Lexora";
             this.panelIdentidad.ResumeLayout(false);
             this.panelPuntosIA.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picAvatar)).EndInit();
             this.panelMenu.ResumeLayout(false);
             this.panelContenedorVistas.ResumeLayout(false);
-            this.panelVistaDatos.ResumeLayout(false);
-            this.panelVistaDatos.PerformLayout();
             this.panelVistaSeguridad.ResumeLayout(false);
             this.panelVistaSeguridad.PerformLayout();
-            this.panelVistaLogs.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLogsUsuario)).EndInit();
             this.siticonePanel1.ResumeLayout(false);
             this.siticonePanel1.PerformLayout();
+            this.panelVistaLogs.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLogsUsuario)).EndInit();
+            this.panelVistaDatos.ResumeLayout(false);
+            this.panelVistaDatos.PerformLayout();
             this.ResumeLayout(false);
 
         }

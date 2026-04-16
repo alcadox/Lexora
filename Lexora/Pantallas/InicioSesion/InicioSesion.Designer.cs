@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InicioSesion));
             this.PanelPrincipal = new Siticone.Desktop.UI.WinForms.SiticonePanel();
             this.btnIniciarSesion = new Siticone.Desktop.UI.WinForms.SiticoneButton();
             this.btnOmitir = new Siticone.Desktop.UI.WinForms.SiticoneButton();
@@ -279,6 +280,7 @@
             this.Controls.Add(this.panelInformacion);
             this.Controls.Add(this.PanelPrincipal);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(1200, 700);
             this.Name = "InicioSesion";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
