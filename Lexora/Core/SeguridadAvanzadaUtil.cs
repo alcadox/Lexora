@@ -111,11 +111,38 @@ namespace Lexora.Core
             }
         }
 
-        // --- 4. DESTRUCCIÓN DoD 5220.22-M (3 PASADAS) ---
-        public static async Task DestruccionDoD(string ruta)
+        // --- 4. DESTRUCCIÓN DoD 5220.22-M (3 PASADAS RECURSIVA) ---
+        public static async Task DestruccionDoD(string ruta, bool esCarpeta)
         {
             await Task.Run(() =>
             {
+                EjecutarWipeRecursivo(ruta, esCarpeta);
+            });
+        }
+
+        private static void EjecutarWipeRecursivo(string rutaActual, bool esCarpetaActual)
+        {
+            if (esCarpetaActual)
+            {
+                // 1. RECURSIVIDAD: Trituramos el interior de la carpeta primero
+                foreach (string subCarpeta in Directory.GetDirectories(rutaActual))
+                {
+                    EjecutarWipeRecursivo(subCarpeta, true);
+                }
+                foreach (string archivo in Directory.GetFiles(rutaActual))
+                {
+                    EjecutarWipeRecursivo(archivo, false);
+                }
+
+                // 2. Destruimos el nombre de la carpeta y la borramos
+                string dirPadre = Path.GetDirectoryName(rutaActual);
+                string rutaTemp = Path.Combine(dirPadre, Guid.NewGuid().ToString("N"));
+                Directory.Move(rutaActual, rutaTemp);
+                Directory.Delete(rutaTemp);
+            }
+            else
+            {
+                // 1. WIPE MILITAR DE ARCHIVO (3 Pasadas)
                 byte[] bufferCeros = new byte[64 * 1024];
                 byte[] bufferUnos = new byte[64 * 1024];
                 for (int i = 0; i < bufferUnos.Length; i++) bufferUnos[i] = 0xFF;
@@ -123,29 +150,31 @@ namespace Lexora.Core
                 byte[] bufferRandom = new byte[64 * 1024];
                 var rng = new Random();
 
-                using (FileStream fs = new FileStream(ruta, FileMode.Open, FileAccess.Write, FileShare.None))
+                try
                 {
-                    long length = fs.Length;
+                    using (FileStream fs = new FileStream(rutaActual, FileMode.Open, FileAccess.Write, FileShare.None))
+                    {
+                        long length = fs.Length;
 
-                    // Pasada 1: Ceros
-                    fs.Position = 0;
-                    EscribirBuffer(fs, bufferCeros, length);
+                        // Pasada 1: Ceros
+                        fs.Position = 0; EscribirBuffer(fs, bufferCeros, length);
+                        // Pasada 2: Unos
+                        fs.Position = 0; EscribirBuffer(fs, bufferUnos, length);
+                        // Pasada 3: Random
+                        fs.Position = 0; rng.NextBytes(bufferRandom); EscribirBuffer(fs, bufferRandom, length);
+                    }
 
-                    // Pasada 2: Unos
-                    fs.Position = 0;
-                    EscribirBuffer(fs, bufferUnos, length);
-
-                    // Pasada 3: Random
-                    fs.Position = 0;
-                    rng.NextBytes(bufferRandom);
-                    EscribirBuffer(fs, bufferRandom, length);
+                    // 2. Destruimos el nombre del archivo y lo borramos
+                    string dirPadre = Path.GetDirectoryName(rutaActual);
+                    string rutaTemp = Path.Combine(dirPadre, Guid.NewGuid().ToString("N") + ".tmp");
+                    File.Move(rutaActual, rutaTemp);
+                    File.Delete(rutaTemp);
                 }
-
-                // Renombrar el archivo antes de borrarlo para destruir el rastro del nombre
-                string rutaTemp = Path.Combine(Path.GetDirectoryName(ruta), Guid.NewGuid().ToString() + ".tmp");
-                File.Move(ruta, rutaTemp);
-                File.Delete(rutaTemp);
-            });
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al triturar {rutaActual}: {ex.Message}");
+                }
+            }
         }
 
         private static void EscribirBuffer(FileStream fs, byte[] buffer, long length)
@@ -176,5 +205,120 @@ namespace Lexora.Core
                 System.Windows.Forms.MessageBox.Show($"Error al leer el archivo para VirusTotal: {ex.Message}", "Lexora Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
+
+        // --- 6. ANIQUILACIÓN DE METADATOS (ANTI-FORENSE RECURSIVO) ---
+        public static async Task AniquilarMetadatos(string ruta, bool esCarpeta)
+        {
+            await Task.Run(() =>
+            {
+                Random rng = new Random();
+                EjecutarAniquilacionRecursiva(ruta, esCarpeta, rng);
+            });
+        }
+
+        private static void EjecutarAniquilacionRecursiva(string rutaActual, bool esCarpetaActual, Random rng)
+        {
+            try
+            {
+                // 1. RECURSIVIDAD: Si es carpeta, nos metemos hasta el fondo primero (Bottom-Up)
+                if (esCarpetaActual)
+                {
+                    // Aniquilamos todo el contenido interior primero
+                    foreach (string subCarpeta in Directory.GetDirectories(rutaActual))
+                    {
+                        EjecutarAniquilacionRecursiva(subCarpeta, true, rng);
+                    }
+                    foreach (string archivo in Directory.GetFiles(rutaActual))
+                    {
+                        EjecutarAniquilacionRecursiva(archivo, false, rng);
+                    }
+                }
+
+                // 2. LÓGICA DE ANIQUILACIÓN PARA EL ELEMENTO ACTUAL
+                string nuevaRuta = rutaActual;
+
+                // Renombrado Criptográfico
+                string directorio = Path.GetDirectoryName(rutaActual);
+                string extension = esCarpetaActual ? "" : Path.GetExtension(rutaActual).ToLowerInvariant();
+                string nuevoNombre = Guid.NewGuid().ToString("N") + extension;
+                nuevaRuta = Path.Combine(directorio, nuevoNombre);
+
+                if (esCarpetaActual) Directory.Move(rutaActual, nuevaRuta);
+                else File.Move(rutaActual, nuevaRuta);
+
+                // Borrado de ADS
+                if (!esCarpetaActual)
+                {
+                    try { File.Delete(nuevaRuta + ":Zone.Identifier"); } catch { }
+                }
+
+                // Aniquilación EXIF (Imágenes)
+                if (!esCarpetaActual && (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".bmp"))
+                {
+                    string rutaTemp = nuevaRuta + ".tmp";
+                    using (Image imgOriginal = Image.FromFile(nuevaRuta))
+                    using (Bitmap copiaVirgen = new Bitmap(imgOriginal.Width, imgOriginal.Height))
+                    {
+                        using (Graphics g = Graphics.FromImage(copiaVirgen))
+                        {
+                            g.DrawImage(imgOriginal, 0, 0, imgOriginal.Width, imgOriginal.Height);
+                        }
+                        copiaVirgen.Save(rutaTemp, imgOriginal.RawFormat);
+                    }
+                    File.Delete(nuevaRuta);
+                    File.Move(rutaTemp, nuevaRuta);
+                }
+
+                // Data Padding (Ruido binario al archivo para mutar el peso y el Hash)
+                if (!esCarpetaActual)
+                {
+                    try
+                    {
+                        int bytesExtra = rng.Next(1024, 51200);
+                        byte[] ruido = new byte[bytesExtra];
+                        rng.NextBytes(ruido);
+                        using (var stream = new FileStream(nuevaRuta, FileMode.Append, FileAccess.Write, FileShare.None))
+                        {
+                            stream.Write(ruido, 0, ruido.Length);
+                        }
+                    }
+                    catch { }
+                }
+
+                // Fechas Falsas (Años 90s - 2005)
+                DateTime fechaFalsa = new DateTime(rng.Next(1990, 2005), rng.Next(1, 13), rng.Next(1, 28), rng.Next(0, 24), rng.Next(0, 60), rng.Next(0, 60));
+
+                if (esCarpetaActual)
+                {
+                    Directory.SetCreationTime(nuevaRuta, fechaFalsa);
+                    Directory.SetLastWriteTime(nuevaRuta, fechaFalsa);
+                    Directory.SetLastAccessTime(nuevaRuta, fechaFalsa);
+                }
+                else
+                {
+                    File.SetCreationTime(nuevaRuta, fechaFalsa);
+                    File.SetLastWriteTime(nuevaRuta, fechaFalsa);
+                    File.SetLastAccessTime(nuevaRuta, fechaFalsa);
+                }
+
+                // Limpieza de Atributos, Propiedad y Equipo
+                File.SetAttributes(nuevaRuta, FileAttributes.Normal);
+                try
+                {
+                    var seguridad = esCarpetaActual ? (FileSystemSecurity)Directory.GetAccessControl(nuevaRuta) : File.GetAccessControl(nuevaRuta);
+                    var adminGroup = new System.Security.Principal.SecurityIdentifier(System.Security.Principal.WellKnownSidType.BuiltinAdministratorsSid, null);
+                    seguridad.SetOwner(adminGroup);
+
+                    if (esCarpetaActual) Directory.SetAccessControl(nuevaRuta, (DirectorySecurity)seguridad);
+                    else File.SetAccessControl(nuevaRuta, (FileSecurity)seguridad);
+                }
+                catch { } // Ignoramos si el PC tiene las ACL bloqueadas en este archivo
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al aniquilar {rutaActual}: {ex.Message}");
+            }
+        }
+
     }
 }

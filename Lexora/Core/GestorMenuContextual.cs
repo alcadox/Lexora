@@ -46,6 +46,10 @@ namespace Lexora.Core
             menuSeguridad.DropDownItems.Add("🛑 Bloquear/Desbloquear Bóveda", null, (s, e) => EjecutarAccionItem(AlternarBoveda));
             menuSeguridad.DropDownItems.Add("👻 Ocultación Fuerte (Nivel OS)", null, (s, e) => EjecutarAccionItem(AlternarOcultacion));
             menuSeguridad.DropDownItems.Add("🦠 Escanear Malware en VirusTotal", null, (s, e) => EjecutarAccionItem(EscanearMalware));
+            var itemAniquilarMeta = new ToolStripMenuItem("🥷 Aniquilar Metadatos (Anti-Forense)");
+            itemAniquilarMeta.ForeColor = Color.DarkOrange;
+            itemAniquilarMeta.Click += async (s, e) => await EjecutarAccionItemAsync(AniquilarMetadatosApp);
+            menuSeguridad.DropDownItems.Add(itemAniquilarMeta);
             menuSeguridad.DropDownItems.Add(new ToolStripSeparator());
             var itemWipeDoD = new ToolStripMenuItem("🔥 Wipe DoD 5220.22-M (3 Pasadas)");
             itemWipeDoD.ForeColor = Color.Red;
@@ -244,10 +248,29 @@ namespace Lexora.Core
         private void EscanearMalware(string r, bool c) { if (!c) SeguridadAvanzadaUtil.EscanearEnVirusTotal(r); }
         private async Task DestruccionSeguraDoD(string r, bool c)
         {
-            if (c) return;
-            if (MessageBox.Show("¿Destrucción Irreversible DoD?", "Alerta", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                await SeguridadAvanzadaUtil.DestruccionDoD(r);
+            string advertencia = c
+                ? "Vas a TRITURAR esta carpeta Y TODO SU CONTENIDO RECURSIVAMENTE. No quedará ni rastro en el disco duro."
+                : "Vas a TRITURAR este archivo de forma irreversible.";
+
+            if (MessageBox.Show($"DESTRUCCIÓN MILITAR DoD 5220.22-M\n\n{advertencia}\n\nEl sistema sobrescribirá los datos físicos 3 veces (Ceros, Unos y Datos Aleatorios) y destruirá los nombres originales.\n\nNi con software forense profesional se podrán recuperar.\n\n¿Estás absolutamente seguro?", "Aniquilación Total", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+            {
+                await SeguridadAvanzadaUtil.DestruccionDoD(r, c);
+                MessageBox.Show("Operación militar completada. Los datos han dejado de existir en este universo.", "Lexora Security", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
         private void AnalizarConIA(string r, bool c) { MessageBox.Show("Pendiente IA", "Lexora"); }
+
+        private async Task AniquilarMetadatosApp(string r, bool c)
+        {
+            string advertencia = c
+                ? "Vas a aniquilar esta carpeta Y TODO SU CONTENIDO RECURSIVAMENTE (archivos y subcarpetas)."
+                : "Vas a aniquilar este archivo.";
+
+            if (MessageBox.Show($"ACCIÓN DESTRUCTIVA MASIVA\n\n{advertencia}\n\nCambiará los nombres a hashes ininteligibles, borrará datos de origen, inyectará ruido binario y falsificará las fechas a los años 90.\n\n¿Estás completamente seguro de proceder con la aniquilación total?", "Seguridad Anti-Forense", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                await SeguridadAvanzadaUtil.AniquilarMetadatos(r, c);
+                MessageBox.Show("Rastros digitales eliminados. Los elementos ahora son 'fantasmas'.", "Lexora Security", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
 }

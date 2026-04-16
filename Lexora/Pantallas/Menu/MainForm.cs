@@ -19,6 +19,7 @@ namespace Lexora
         string nombreUsuario = "";
         GestorMenuContextual gestorMenu;
         GestorDragAndDrop gestorArrastre;
+        GestorMenuDiscos gestorDiscos;
 
         private ImageList listaIconos;
         private FlowLayoutPanel panelDiscosDinamicos;
@@ -61,7 +62,14 @@ namespace Lexora
                 () => CargarCarpetas(rutaActual, txtBoxBuscador.Text)
             );
 
-            // 3. SUSCRIPCIÓN AL EVENTO DE EDICIÓN 
+            // 3. INICIALIZAR EL GESTOR DE DISCOS
+            gestorDiscos = new GestorMenuDiscos((letra) => {
+                rutaActual = letra;
+                txtBoxBuscador.Text = "";
+                CargarCarpetas(rutaActual);
+            });
+
+            // 4. SUSCRIPCIÓN AL EVENTO DE EDICIÓN 
             listViewArchivos.AfterLabelEdit += ListViewArchivos_AfterLabelEdit;
 
             AjustarColumnas();
@@ -378,8 +386,15 @@ namespace Lexora
 
             foreach (DriveInfo disco in DriveInfo.GetDrives())
             {
-                // Uso ultra limpio de nuestro nuevo componente UIBuilder
-                if (disco.IsReady) panelDiscosDinamicos.Controls.Add(UIBuilder.ConstruirTarjetaDisco(disco, TarjetaDisco_Click));
+                if (disco.IsReady)
+                {
+                    Control tarjeta = UIBuilder.ConstruirTarjetaDisco(disco, TarjetaDisco_Click);
+
+                    //Enganchamos nuestro menú a cada tarjeta
+                    gestorDiscos.AdjuntarATarjeta(tarjeta, disco.RootDirectory.FullName);
+
+                    panelDiscosDinamicos.Controls.Add(tarjeta);
+                }
             }
             panelDiscosDinamicos.ResumeLayout();
 
