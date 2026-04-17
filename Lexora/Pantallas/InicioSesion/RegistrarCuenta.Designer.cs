@@ -174,6 +174,7 @@
             this.Controls.Add(this.PanelPrincipal);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RegistrarCuenta";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Registrar Cuenta - Lexora";
             this.PanelPrincipal.ResumeLayout(false);
             this.PanelPrincipal.PerformLayout();
